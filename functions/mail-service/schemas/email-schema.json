@@ -1,0 +1,56 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://parcely.us/schemas/email-schema.json",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "email": "tstark@avengers.io",
+            "name": "Tony Stark",
+            "body": "Playboy. Billionaire. Genius"
+        }
+    ],
+    "required": [
+        "email",
+        "name",
+        "body"
+    ],
+    "properties": {
+        "email": {
+            "$id": "#/properties/email",
+            "default": "",
+            "description": "An explanation about the purpose of this instance.",
+            "examples": [
+                "tstark@avengers.io"
+            ],
+            "title": "The email schema",
+            "minLength": 6,
+            "type": "string"
+        },
+        "name": {
+            "$id": "#/properties/name",
+            "default": "",
+            "description": "An explanation about the purpose of this instance.",
+            "examples": [
+                "Tony Stark"
+            ],
+            "title": "The name schema",
+            "minLength": 6,
+            "type": "string"
+        },
+        "body": {
+            "$id": "#/properties/body",
+            "type": "string",
+            "title": "The body schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "minLength": 50,
+            "examples": [
+                "Playboy. Billionaire. Genius"
+            ]
+        }
+    },
+    "additionalProperties": true
+}
