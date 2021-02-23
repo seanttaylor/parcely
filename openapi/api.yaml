@@ -1,0 +1,143 @@
+openapi: 3.0.0
+info:
+  description: API contract for Parcely real-time logistics platform
+  version: 0.0.1
+  title: Parcely
+paths:
+  /crate/{uuid}:
+    post:
+      description: Endpoint for updating multiple data points for a Parcely crate
+      tags:
+        - Crate
+      parameters: 
+        - name: uuid
+          in: path
+          required: true
+          description: UUID for the Parcely crate using version 4 UUID standards
+          schema:
+            type: string
+            example: cce2a91d-af27-42d8-9bc9-0c01e57b55dd
+      requestBody:
+        required: true
+        description: Request body required to update a Parcely crate
+        content: 
+          'application/json':
+            schema:
+              required:
+              - location
+              - location.latitude
+              - location.longitude
+              - temperature
+              - moisture
+              - liquidExposure
+              - metadata
+              - metadata.batteryLevel
+              type: object
+              properties:
+                location:
+                  type: object
+                  properties:
+                    latitude:
+                      type: string
+                      example: 40.7128 N
+                      description: The latitude of the Parcely crate
+                    longitude:
+                      type: string
+                      example: 74.0060 W
+                      description: The longitude of the Parcely crate
+                temperature:
+                  type: string
+                  description: Tempature (in degrees Fahrenheit) of the Parcely crate
+                  example: "59"
+                moisture:
+                  type: string
+                  description: The moisture level inside the Parcely crate (from 0-100)
+                  example: "75"
+                liquidExposure:
+                  type: boolean
+                  example: false
+                  description: Determines if the inside of the Parcely crate has been exposed to any liquids
+                metadata:
+                  type: object
+                  properties:
+                    batteryLevel:
+                      type: integer
+                      example: 58
+                    errors:
+                      type: string
+                      example: "1099"
+                      description: A predetermiend error code that the Parcely crate will send to help determine if the create is still in working order
+      responses:
+        '201':
+          description: Successful response for updating datapoints for a Parcely crate
+        '401':
+          description: Forbidden
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+  /packages:
+    get:
+      description: Endpoint for fetching data about a Parcely crate(s)
+      tags:
+        - Crate
+      parameters: 
+        - name: userUUID
+          in: query
+          description: UUID for the user making the request (This will eventually be a path parameter, but does not make sense for now, since we do not have a notion of users (if it is currently set to be a path parameter, OpenAPI requires it to be true))
+          schema:
+            type: string
+            example: cce2a91d-af27-42d8-9bc9-0c01e57b55dd
+        - name: crateUUID
+          in: query
+          description: UUID for the Parcely crate
+          schema:
+            type: string
+            example: cce2a91d-af27-42d8-9bc9-0c01e57b55dd
+      responses:
+        '200':
+          description: Successful response for fetch datapoints about a Parcely crate
+          content:
+            'application/json': 
+              schema:
+                type: array
+                items: 
+                  type: object
+                  properties:
+                    uuid:
+                      type: string
+                      example: cce2a91d-af27-42d8-9bc9-0c01e57b55dd
+                      description: UUID for the Parcely crate using version 4 UUID standards
+                    location:
+                      type: object
+                      properties:
+                        latitude:
+                          type: string
+                          example: 40.7128 N
+                          description: The latitude of the Parcely crate
+                        longitude:
+                          type: string
+                          example: 74.0060 W
+                          description: The longitude of the Parcely crate
+                    temperature:
+                      type: string
+                      description: The tempature (in degress Fahrenheit) of the Parcely crate
+                      example: "59"
+                    moisture:
+                      type: string
+                      description: The moisture level inside the Parcely crate (from 0-100)
+                      example: "75"
+                    liquidExposure:
+                      type: boolean
+                      example: false
+                      description: Determines if the inside of the Parcely crate has been exposed to any type of liquids
+        '401':
+          description: Forbidden
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
