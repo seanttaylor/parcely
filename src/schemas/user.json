@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "http://schemas.parcely.com/user.json",
+    "$id": "http://schemas.parcely.com/user.json?version=0.0.1",
     "type": "object",
     "title": "The User schema",
     "description": "The root schema comprises the entire JSON document.",

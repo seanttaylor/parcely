@@ -1,1 +1,18 @@
-{}
+{
+  "name": "parcely",
+  "version": "0.0.1",
+  "description": "A real-time logistics platform",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest --coverage true --detectOpenHandles"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seanttaylor/parcely.git"
+  },
+  "author": "omegalabs",
+  "homepage": "https://github.com/seanttaylor/parcely#readme",
+  "devDependencies": {},
+  "dependencies": {}
+}
