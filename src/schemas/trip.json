@@ -1,8 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "http://schemas.parcely.com/crate-trip.json",
+    "$id": "http://schemas.parcely.com/trip.json?version=0.0.1",
     "type": "object",
-    "title": "The Crate Trip schema",
+    "title": "The Trip schema",
     "description": "The root schema comprises the entire JSON document.",
     "default": {},
     "examples": [
@@ -284,7 +284,7 @@
                                         "$id": "#/properties/telemetry/properties/location",
                                         "type": "object",
                                         "title": "The location schema",
-                                        "description": "An explanation about the purpose of this instance.",
+                                        "description": "A summary of location data from the crate sensor array.",
                                         "default": {},
                                         "examples": [
                                             {
@@ -304,7 +304,7 @@
                                                 "$id": "#/properties/telemetry/properties/location/properties/coords",
                                                 "type": "object",
                                                 "title": "The coords schema",
-                                                "description": "An explanation about the purpose of this instance.",
+                                                "description": "The current lattitude and longitude coordinates of the crate.",
                                                 "default": {},
                                                 "examples": [
                                                     {
@@ -321,7 +321,7 @@
                                                         "$id": "#/properties/telemetry/properties/location/properties/coords/properties/lat",
                                                         "type": "string",
                                                         "title": "The lat schema",
-                                                        "description": "An explanation about the purpose of this instance.",
+                                                        "description": "The current lattitude of the crate.",
                                                         "default": "",
                                                         "examples": [
                                                             "40.7128 N"
@@ -331,7 +331,7 @@
                                                         "$id": "#/properties/telemetry/properties/location/properties/coords/properties/long",
                                                         "type": "string",
                                                         "title": "The long schema",
-                                                        "description": "An explanation about the purpose of this instance.",
+                                                        "description": "The current longtitude of the crate.",
                                                         "default": "",
                                                         "examples": [
                                                             "74.0060 W"
@@ -344,7 +344,7 @@
                                                 "$id": "#/properties/telemetry/properties/location/properties/zip",
                                                 "type": "string",
                                                 "title": "The zip schema",
-                                                "description": "An explanation about the purpose of this instance.",
+                                                "description": "The current zip code of the crate.",
                                                 "default": "",
                                                 "examples": [
                                                     "40508-0000"
