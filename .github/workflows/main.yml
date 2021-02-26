@@ -1,0 +1,35 @@
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - "v*.*.*.*"
+  pull_request:
+    branches:
+      - master
+    tags:
+      - "v*.*.*.*"
+
+jobs:
+  build-and-push:
+    name: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: "[STEP] Checkout"
+        uses: actions/checkout@v2
+
+      - name: "[STEP] Setup pipeline environment variables"
+        run: |
+          echo "::set-output name=MY_GIT_SHA::$(git rev-parse --short "$GITHUB_SHA")"
+          echo "::set-output name=MY_IMAGE_TAG::${GITHUB_REF#refs/*/}"
+
+      - name: "[STEP] Set Node.js version"
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+
+      - name: "[STEP] Install app dependencies"
+        run: npm install
+
+      - name: "[STEP] Run Integration Tests"
+        run: npm test
