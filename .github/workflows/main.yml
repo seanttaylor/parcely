@@ -1,3 +1,5 @@
+name: Run Unit & Integration Tests
+
 on:
   push:
     branches:
