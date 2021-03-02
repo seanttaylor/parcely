@@ -226,6 +226,99 @@ Factory Functions combined with composition (as opposed to class inheritance) pr
 
 ## Data Transfer Objects (DTOs)
 
+Data-Transfer Objects hae a specific meaning in Object-Oriented programming but Parcely Engineering uses them a somewhat differently. 
+
+We use DTOs to move immutable data across our application, especially between the business logic and the data access layer where our persistence solution lives.
+
+The DTO contains *all* the data required by our application entities; it also validates the data against a JSON Schema document. 
+
+We try to use objects to move data around the application instead of language primitives like strings, numbers, arrays and plain objects because these items are mutable and thus subject to unintended changes that may break our application.
+
+If we want to edit our DTO we have to create a new one.
+
+If we want to extract the data from our DTO we call the object's one and only `value` method, which returns the object's contents.
+
+We can of course use TypeScript or a strongly typed programming language to enforce the correct type usage during our application's execution but correct types are distinct from data that is valid for our business logic. 
+
+An object whose fields are all of the correct type is still mutable and vulnerable to breakage.
+
+Futher, using JSON Schema allows us to do more robust validation on dat,a beyond type enforcement, as that data moves through our application.
+
+Here's an example of how we've used DTOs:
+
+
+```
+    const Ajv = require("ajv");
+    const ajv = new Ajv();
+    const userSchema = require("../../database/connectors/json/schemas/users.json");
+    const userSchemaValidation = ajv.compile(userSchema);
+
+    /*
+    * @param {String} emailAddress - email address for a user
+    * @param {String} avatarURL - URL of avatar image for a user
+    * @param {String} firstName - user first name
+    * @param {String} lastName - user last name
+    */
+
+    function UserDTO({emailAddress, avatarURL, firstName, lastName}) {
+        const userData = {
+            emailAddress,
+            avatarURL,
+            firstName,
+            lastName,
+            createdDate = new Date().toISOString()
+        };
+
+        if(!userSchemaValidation(userData)) {
+            throw new Error(`UserDTOError/InvalidUserDTO => ${JSON.stringify(userSchemaValidation.errors, null, 2)}`);
+        }
+
+        this.value = function() {
+            return userData;
+        }
+    }
+
+```
+
+We're pulling `ajv` to validate a JSON schema that describes what are records need to look like before we commit them to our datastore.
+
+This object doesn't do much and that's really the point. It exists to gather the consumer-supplied arguments required for creating a new `User` entity into an immutable object. As we pass this DTO along, we have a guarantee that it's data can't be tampered with. 
+
+The data is validated before we exit this function. If we provide invalid data we can't instantiate the object and throw an error. If our JSON schema is configured correctly it should be impossible to create this DTO in an invalid state.
+
+> If we wanted to be maximally rigorous we could do an `Object.freeze` (in JavaScript) to make certain the result of the `value` method cannot be altered either.
+
+Let's see a quick example of extract data from the DTO:
+
+```
+//userRepo instantiated here blah...
+
+const userDTO = new UserDTO({
+    emailAddress: "tstark@avengers.io"
+    avatarURL: "https://placehold.it/120x120"
+    firstName: "Tony",
+    lastName: "Stark"
+});
+
+
+await usersRepo.addUser(userDTO);
+```
+
+Our `Users` repository takes the `userDTO` object via the `addUser` method. Deeper inside the implementation of our repository the data from `userDTO` is extracted:
+
+```
+//Other repository implementation details blah...
+
+async function addUser(userDTO) {
+    await mongoDbClient.collection("users").add(userDTO.value());
+}
+
+```
+
+A naive example but the point should be clear enough. The `value` method is really only called in the implementation details of consumer objects, in this case the `userRepo`. 
+
+We pass our data from our business logic to the data access layer, here implemented as a MongoDB collection.
+
 
 ## Key Themes
 
