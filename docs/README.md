@@ -42,12 +42,12 @@ Maybe we're on Mongo but we want to try Google Cloud Firestore or go full on rel
 
 This also enables parallel development (which product managers love.) While the implementation of the updated dependency is in development, our teammates aren't blocked; they can mock the updated dependency. When the production version of the dependency is available, we don't need to touch _any_ other code in our module. We just instantiate our module with the new dependency.
 
-Though this workflow is well-known and well-documented, it isn't practiced as much as it should be, with a lot of blocked devs, delays and wasted time as the inevitable result. 
+Though this workflow is well-known and well-documented it isn't practiced as much as it should be, with a lot of blocked devs, project delays and wasted time as the inevitable result. 
 
 
 ## Services, Interfaces and Libraries
 
-Services, Interfaces and Libraries are system components that have a specific meanings within Parcely Engineering. This section goes into detail on each component and how that component adds value to our systems as a whole.
+Services, Interfaces and Libraries are system components that have a specific meanings within Parcely Engineering. This section details each component and how that component adds value to our systems as a whole.
 
 ### Services
 
@@ -63,7 +63,7 @@ In this example, whatever QuickBooks functionality we need would best be represe
 
 #### A Note on Names
 
-Services and their methods should be as generic as possible and their names should reflect this. Methods should also describe business capabilities foremost. This is an aspiration however, and won't always be achievable. 
+Services and their methods should be as generic as possible and their names should reflect this. Methods should describe business capabilities foremost. This is an aspiration however and won't always be achievable. 
 
 Above all, business users should be able to ascertain the point of a _majority_ of methods exposed on an API and API methods should map as closely to the business doman and operations as possible.  
 
@@ -98,18 +98,17 @@ const IRepository = function(myImpl={}) {
 };
 
 ```
-
 Above is an example of an interface for any CRUD-able datasource (i.e. any datasource we can perform CRUD operations upon.) This datasource could be in-memory, cloud-based and accessible only via REST API, a document store or a traditional relational database. 
 
 Thing is: for consumers of the interface it doesn't and _shouldn't_ matter. What matters is the business capabilities exposed on the API. Further, what consumers should **depend** on is the interface, _not_ the implementation.
 
-In the example above (an admittedly naive example of an interface in JavaScript that still makes the point) we must provide an implementation for all of the methods on the interface. If we don't, an error is thrown when a method for which no implementation is called. 
+In the example above (a naive example of an interface in JavaScript) we must provide an implementation for all of the methods on the interface. If we don't, an error is thrown when a method for which no implementation exists is called. 
 
 >In some languages, we can't even instantiate an instance of the interface without _all_ methods having an implementation. Here we cut ourselves some slack.
 
-Below, we provide a number of implementations for the `create` method of the interface we defined earlier.
+Below we provide a number of implementations for the `create` method of the interface we defined earlier.
 
-Whe have implementations for production and non-production enviroments and we also have an experimental implementation that allows us to explore solutions to an existing problem or an emerging business opportunity.
+Whe have implementations for production and non-production environments and we also have an experimental implementation that allows us to explore solutions to an existing problem or an emerging business opportunity.
 
 ```
     const prodImpl = {
@@ -141,10 +140,8 @@ Here we instantiate our interface with different implementations with different 
 
 ```
     const myProdDb = new IRepository(prodImpl);
-    myProdDb.create();
 
     const myNonProdDb = new IRepository(nonProdImpl);
-    myNonProdDb.create();
 ```
 
 We get (2) different versions of our database according to environment (i.e. prod and non-prod): 
@@ -161,7 +158,7 @@ We also get experimental behavior essentially for free in our non-prod database 
 
 ```
     //1.
-    const myExperimentalNonProdDb = Object.assign({},myNonProdDb, expImpl);
+    const myExperimentalNonProdDb = Object.assign({}, myNonProdDb, expImpl);
     //2.
     myExperimentalNonProdDb.create();
     //3.
@@ -176,7 +173,7 @@ To break it down:
 
 The cherry on top is that all of our unit tests will pass in each of these instances because all of our implementations respect the `IRepository` interface. They all produce the same return type, in this case a boolean `true`.
 
-These patterns allow us maximal freedom to experiment and explore while limiting the scope of required change to our codebase when we need new or different business outcomes. 
+These patterns allow us maximum freedom to experiment while limiting the scope of required change to our codebase when we need new or different business outcomes. 
 
 The implementation for this interface could even be provided _by_ the consumer or be the result of a remote call to an API endpoint. So long as the interface is respected it doesn't matter where the implementation comes from or how it's designed. 
 
@@ -200,11 +197,11 @@ Rather, this documentation should be used as a frame of reference to inform desi
 
 ### Libraries
 
-Libraires are purpose-specific modules from internal or external sources that support or advance business objectives. To return to the bakery business example, QuickBooks doesn't make sense as a service because it is an implementation detail of _how_ we cmpleted billing-related tasks. We could change to a different billing vendor or create our own billing library.
+Libraries are purpose-specific modules from internal or external sources that support or advance business objectives. To return to the bakery business example, QuickBooks doesn't make sense as a service because it is an implementation detail of _how_ we complete billing-related tasks. We could change to a different billing vendor or create our own billing library.
 
 This is an example of a volatile dependency--a dependency on a third-party vendor API we do not control or a dependency that provides use-case specific functionality that is substitutable.
 
-Email is another candidate for a library. We're literally _not_ in the business of sending email. So we choose SendGrid to meet our outbound email marketing and contact list management needs. 
+Email is another candidate for a library. We're literally _not_ in the business of sending email. So we choose SendGrid to meet our outbound email marketing and email contact list management needs. 
 
 Because of the volatility of this library it would be a good idea to wrap the needed email functionality in a static contract--an interface.
 
@@ -212,25 +209,27 @@ Note our interface methods and method signatures should serve _our_ needs. If th
 
 >If our interfaces mirror the SendGrid API methods one to one, we don't have an interface, we have a _façade_.
 
-With our library interface in place we're free to experiment with SendGrid or switch to MailGun or our own homebrewed email marketing solution.
+With our library interface in place, we're free to experiment with SendGrid or switch to MailGun or our own home brewed email marketing solution.
 
-Using dependency injection we can provide our library of choice to the mail interface. All of our unit tests continue to pass and our codebase remains stable in the face of change. Interface authors can comparison shop on implementations and consumers only need to worry about calling method (e.g. `sendEmail` or `getContactsList`.)
+Using dependency injection we can provide our library of choice to the mail interface. All of our unit tests continue to pass and our codebase remains stable in the face of change. Interface authors can comparison shop on implementations and consumers only need to worry about calling methods (e.g. `sendEmail` or `getContactsList`.)
 
 
 ## Factory Functions, ES6 Classes and Inheritance
 
-When it comes to creating objects, we prefer Factory Functions to shiny new ES6 classes. This is because Factory Functions can provide private methods via closures. We can opt out of the new syntax for designating private methods which, in our opinion, make for code that is harder to read and steer developers toward class-oriented development practices that often result in brittle codebases (e.g. Inheritance, see [Fragile Base Class Problem](https://en.wikipedia.org/wiki/Fragile_base_class).)
+When it comes to creating objects, we prefer Factory Functions to shiny new ES6 classes. This is because Factory Functions can provide private methods via closures. 
+
+We can opt out of the new syntax for designating private methods which, in our opinion, make for code that is harder to read and steer developers toward class-oriented development practices that often result in brittle codebases (e.g. Inheritance, see [Fragile Base Class Problem](https://en.wikipedia.org/wiki/Fragile_base_class).)
 
 Factory Functions combined with composition (as opposed to class inheritance) provides flexibility and stability of object design with arguably cleaner code.
 
 
 ## Data Transfer Objects (DTOs)
 
-Data-Transfer Objects hae a specific meaning in Object-Oriented programming but Parcely Engineering uses them a somewhat differently. 
+Data-Transfer Objects hae a specific meaning in Object-Oriented programming but Parcely Engineering uses them somewhat differently. 
 
 We use DTOs to move immutable data across our application, especially between the business logic and the data access layer where our persistence solution lives.
 
-The DTO contains *all* the data required by our application entities; it also validates the data against a JSON Schema document. 
+The DTO can contain the data required by our application entities; it also validates the data against a JSON Schema document. 
 
 We try to use objects to move data around the application instead of language primitives like strings, numbers, arrays and plain objects because these items are mutable and thus subject to unintended changes that may break our application.
 
@@ -242,7 +241,7 @@ We can of course use TypeScript or a strongly typed programming language to enfo
 
 An object whose fields are all of the correct type is still mutable and vulnerable to breakage.
 
-Futher, using JSON Schema allows us to do more robust validation on dat,a beyond type enforcement, as that data moves through our application.
+Futher, using JSON Schema allows us to do more robust validation on data, beyond type enforcement, as that data moves through our application.
 
 Here's an example of how we've used DTOs:
 
@@ -280,13 +279,13 @@ Here's an example of how we've used DTOs:
 
 ```
 
-We're pulling `ajv` to validate a JSON schema that describes what are records need to look like before we commit them to our datastore.
+We're pulling `ajv` to validate a JSON schema that describes what our records need to look like before we commit them to our datastore.
 
-This object doesn't do much and that's really the point. It exists to gather the consumer-supplied arguments required for creating a new `User` entity into an immutable object. As we pass this DTO along, we have a guarantee that it's data can't be tampered with. 
+This object doesn't do much and that's really the point. It exists to gather the consumer-supplied arguments required for creating a new `User` record into an immutable object. As we pass this DTO along, we have a guarantee that its data can't be tampered with. 
 
-The data is validated before we exit this function. If we provide invalid data we can't instantiate the object and throw an error. If our JSON schema is configured correctly it should be impossible to create this DTO in an invalid state.
+The data is validated before we exit this function. If we provide invalid data we can't instantiate the DTO and we throw an error. If our JSON schema is configured correctly it should be _impossible_ to create this DTO in an invalid state.
 
-> If we wanted to be maximally rigorous we could do an `Object.freeze` (in JavaScript) to make certain the result of the `value` method cannot be altered either.
+> If we wanted maximum rigor we could do an `Object.freeze` (in JavaScript) to make certain the result of the `value` method cannot be altered either.
 
 Let's see a quick example of extract data from the DTO:
 
@@ -315,7 +314,7 @@ async function addUser(userDTO) {
 
 ```
 
-A naive example but the point should be clear enough. The `value` method is really only called in the implementation details of consumer objects, in this case the `userRepo`. 
+A naive example but the point is clear enough. The `value` method is really only called in the implementation details of consumer objects, in this case the `userRepo`. 
 
 We pass our data from our business logic to the data access layer, here implemented as a MongoDB collection.
 
@@ -324,6 +323,7 @@ We pass our data from our business logic to the data access layer, here implemen
 
 The major insights about Parcely object design to take away can be summarized as: 
 1) Object API contracts are first-class citizens, not afterthoughts
-2) Interfaces are invaluable because consumers know what they can depend upon and they are excellent examples of documentation as code. They should be used to wrap volatile dependencies _always_.
-3) We should always strive to make modules a composable as possible. This allows us maximum freedom of choice of implementation both now and in the future. 
+2) Interfaces are invaluable because consumers know what they can depend upon and they are excellent examples of documentation as code. Interfaces should be used to wrap volatile dependencies and and libraries _always_.
+3) We should always strive to make modules as composable as possible. This allows us maximum freedom of choice of implementation both now and in the future. 
 4) Where and when it's suitable objects should be immutable
+5) _Why_ a design decision is made is at least as important as _what_ design decision is made. Justify all the things.
