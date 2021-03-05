@@ -1,143 +1,477 @@
 openapi: 3.0.0
 info:
-  description: API contract for Parcely real-time logistics platform
-  version: 0.0.1
+  description: This is an API contract written in OPENAPI format for Parcely
+  version: 1.0.0
   title: Parcely
+  contact:
+    name: Platorm Engineering Team
+    email: platform-eng@parcely.us
+servers:
+  - url: 'https://localhost:3000/api'
+    description: Development server
+tags:
+  - name: crates
+  - name: users
 paths:
-  /crate/{uuid}:
+  '/crates/{id}':
     post:
-      description: Endpoint for updating multiple data points for a Parcely crate
+      operationId: push-crate-telemetry-data
+      description: Endpoint for pushing telemetry data for a Parcely crate
       tags:
-        - Crate
-      parameters: 
-        - name: uuid
+        - crates
+      parameters:
+        - name: id
           in: path
           required: true
           description: UUID for the Parcely crate using version 4 UUID standards
           schema:
             type: string
             example: cce2a91d-af27-42d8-9bc9-0c01e57b55dd
+        - schema:
+            type: string
+          in: header
+          name: authorization
+          description: Authorization credential for this endpoint
+          required: true
       requestBody:
         required: true
-        description: Request body required to update a Parcely crate
-        content: 
-          'application/json':
+        description: ''
+        content:
+          application/json:
             schema:
-              required:
-              - location
-              - location.latitude
-              - location.longitude
-              - temperature
-              - moisture
-              - liquidExposure
-              - metadata
-              - metadata.batteryLevel
               type: object
-              properties:
-                location:
-                  type: object
-                  properties:
-                    latitude:
-                      type: string
-                      example: 40.7128 N
-                      description: The latitude of the Parcely crate
-                    longitude:
-                      type: string
-                      example: 74.0060 W
-                      description: The longitude of the Parcely crate
-                temperature:
-                  type: string
-                  description: Tempature (in degrees Fahrenheit) of the Parcely crate
-                  example: "59"
-                moisture:
-                  type: string
-                  description: The moisture level inside the Parcely crate (from 0-100)
-                  example: "75"
-                liquidExposure:
-                  type: boolean
-                  example: false
-                  description: Determines if the inside of the Parcely crate has been exposed to any liquids
-                metadata:
-                  type: object
-                  properties:
-                    batteryLevel:
-                      type: integer
-                      example: 58
-                    errors:
-                      type: string
-                      example: "1099"
-                      description: A predetermiend error code that the Parcely crate will send to help determine if the create is still in working order
       responses:
         '201':
-          description: Successful response for updating datapoints for a Parcely crate
-        '401':
-          description: Forbidden
+          description: ''
         '400':
           description: Bad Request
+        '401':
+          description: Forbidden
         '404':
           description: Not Found
         '500':
           description: Internal Server Error
-  /packages:
+      summary: push-crate-telemetry-data
     get:
-      description: Endpoint for fetching data about a Parcely crate(s)
-      tags:
-        - Crate
-      parameters: 
-        - name: userUUID
-          in: query
-          description: UUID for the user making the request (This will eventually be a path parameter, but does not make sense for now, since we do not have a notion of users (if it is currently set to be a path parameter, OpenAPI requires it to be true))
-          schema:
-            type: string
-            example: cce2a91d-af27-42d8-9bc9-0c01e57b55dd
-        - name: crateUUID
-          in: query
-          description: UUID for the Parcely crate
-          schema:
-            type: string
-            example: cce2a91d-af27-42d8-9bc9-0c01e57b55dd
+      summary: get-crate-by-id
+      operationId: get-crate-by-id
       responses:
         '200':
-          description: Successful response for fetch datapoints about a Parcely crate
-          content:
-            'application/json': 
-              schema:
-                type: array
-                items: 
-                  type: object
-                  properties:
-                    uuid:
-                      type: string
-                      example: cce2a91d-af27-42d8-9bc9-0c01e57b55dd
-                      description: UUID for the Parcely crate using version 4 UUID standards
-                    location:
-                      type: object
-                      properties:
-                        latitude:
-                          type: string
-                          example: 40.7128 N
-                          description: The latitude of the Parcely crate
-                        longitude:
-                          type: string
-                          example: 74.0060 W
-                          description: The longitude of the Parcely crate
-                    temperature:
-                      type: string
-                      description: The tempature (in degress Fahrenheit) of the Parcely crate
-                      example: "59"
-                    moisture:
-                      type: string
-                      description: The moisture level inside the Parcely crate (from 0-100)
-                      example: "75"
-                    liquidExposure:
-                      type: boolean
-                      example: false
-                      description: Determines if the inside of the Parcely crate has been exposed to any type of liquids
+          description: OK
         '401':
+          description: Unauthorized
+        '403':
           description: Forbidden
-        '400':
-          description: Bad Request
         '404':
           description: Not Found
         '500':
           description: Internal Server Error
+      description: Fetch a specified crate by UUID.
+      tags:
+        - crates
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: authorization
+          required: true
+          description: Authorization credential for this endpoint
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+        description: UUID of the crate.
+    put:
+      summary: update-crate-by-id
+      operationId: update-crate-by-id
+      responses:
+        '200':
+          description: OK
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      description: Update metadata of a specified crate by UUID
+      tags:
+        - crates
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: authorization
+          description: Authorization credential for this endpoint
+          required: true
+  /crates:
+    get:
+      operationId: get-crates
+      description: Endpoint for fetching data about Parcely crates
+      tags:
+        - crates
+      parameters: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Forbidden
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+    parameters: []
+  /users:
+    get:
+      summary: get-users
+      tags:
+        - users
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: get-users
+      description: Fetch all platform users
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: authorization
+          description: Authorization credential for this endpoint
+          required: true
+    post:
+      summary: create-user
+      operationId: create-user
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+      description: Create a new platform user
+      parameters: []
+      tags:
+        - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+components:
+  schemas:
+    crate:
+      description: The Crate schema
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 1
+        size:
+          type: string
+          minLength: 1
+        tripId:
+          type: string
+          minLength: 1
+        merchantId:
+          type: string
+          minLength: 1
+        lastPing:
+          type: string
+          minLength: 1
+        telemetry:
+          type: object
+          properties:
+            temp:
+              type: object
+              properties:
+                degreesFahrenheit:
+                  type: string
+                  minLength: 1
+              required:
+                - degreesFahrenheit
+            location:
+              type: object
+              properties:
+                coords:
+                  type: object
+                  properties:
+                    lat:
+                      type: string
+                      minLength: 1
+                    long:
+                      type: string
+                      minLength: 1
+                  required:
+                    - lat
+                    - long
+                zip:
+                  type: string
+                  minLength: 1
+              required:
+                - coords
+                - zip
+            sensors:
+              type: object
+              properties:
+                moisture:
+                  type: object
+                  properties:
+                    thresholdExceeded:
+                      type: boolean
+                  required:
+                    - thresholdExceeded
+                thermometer:
+                  type: object
+                  properties:
+                    thresholdExceeded:
+                      type: boolean
+                  required:
+                    - thresholdExceeded
+                photometer:
+                  type: object
+                  properties:
+                    thresholdExceeded:
+                      type: boolean
+                  required:
+                    - thresholdExceeded
+              required:
+                - moisture
+                - thermometer
+                - photometer
+          required:
+            - temp
+            - location
+            - sensors
+      required:
+        - id
+        - size
+        - tripId
+        - merchantId
+        - lastPing
+        - telemetry
+      x-examples:
+        example-1:
+          id: 2055c145-7d3e-446c-a7ad-ae6aaf886335
+          size: L
+          tripId: 172b101d-3d24-4172-8e9d-2c34beb9c07f
+          merchantId: e3634bd2-7cb4-45b7-a442-f38ee4ad008b
+          lastPing: '2021-02-24T19:04:33.436344'
+          telemetry:
+            temp:
+              degreesFahrenheit: '68'
+            location:
+              coords:
+                lat: 40.7128 N
+                long: 74.0060 W
+              zip: 40508-0000
+            sensors:
+              moisture:
+                thresholdExceeded: true
+              thermometer:
+                thresholdExceeded: false
+              photometer:
+                thresholdExceeded: false
+      title: ''
+    user:
+      description: The User schema
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 1
+        firstName:
+          type: string
+          minLength: 1
+        lastName:
+          type: string
+          minLength: 1
+        phoneNumber:
+          type: string
+          minLength: 1
+        emailAddress:
+          type: string
+          minLength: 1
+        password:
+          type: string
+          minLength: 1
+        createdDate:
+          type: string
+          minLength: 1
+        lastModified:
+          type: string
+          minLength: 1
+      required:
+        - id
+        - firstName
+        - lastName
+        - phoneNumber
+        - emailAddress
+        - password
+        - createdDate
+        - lastModified
+      x-examples:
+        example-1:
+          id: fee7b553-f3d1-4a6f-82ae-7e37e1ed697c
+          firstName: Nick
+          lastName: Fury
+          phoneNumber: '2125552424'
+          emailAddress: nfury@shield.gov
+          password: superSecretPassword
+          createdDate: '2021-02-24T17:45:36.230152'
+          lastModified: '2021-01-24T17:45:36.230152'
+    trip:
+      description: The Trip schema
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 1
+        departureTimestamp:
+          type: string
+          minLength: 1
+        departureZip:
+          type: string
+          minLength: 1
+        arrivalTimestamp: {}
+        arrivalZip:
+          type: string
+          minLength: 1
+        trackingNumber:
+          type: string
+          minLength: 1
+        tripLengthMiles:
+          type: string
+          minLength: 1
+        waypoints:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - timestamp
+              - zip
+            properties:
+              timestamp:
+                type: string
+                minLength: 1
+              zip:
+                type: string
+                minLength: 1
+              telemetry:
+                type: object
+                properties:
+                  temp:
+                    type: object
+                    properties:
+                      degreesFahrenheit:
+                        type: string
+                        minLength: 1
+                    required:
+                      - degreesFahrenheit
+                  location:
+                    type: object
+                    properties:
+                      coords:
+                        type: object
+                        properties:
+                          lat:
+                            type: string
+                            minLength: 1
+                          long:
+                            type: string
+                            minLength: 1
+                        required:
+                          - lat
+                          - long
+                      zip:
+                        type: string
+                        minLength: 1
+                    required:
+                      - coords
+                      - zip
+                  sensors:
+                    type: object
+                    properties:
+                      moisture:
+                        type: object
+                        properties:
+                          thresholdExceeded:
+                            type: boolean
+                        required:
+                          - thresholdExceeded
+                      thermometer:
+                        type: object
+                        properties:
+                          thresholdExceeded:
+                            type: boolean
+                        required:
+                          - thresholdExceeded
+                      photometer:
+                        type: object
+                        properties:
+                          thresholdExceeded:
+                            type: boolean
+                        required:
+                          - thresholdExceeded
+                    required:
+                      - moisture
+                      - thermometer
+                      - photometer
+                required:
+                  - temp
+                  - location
+                  - sensors
+      required:
+        - id
+        - departureTimestamp
+        - departureZip
+        - arrivalZip
+        - trackingNumber
+        - tripLengthMiles
+        - waypoints
+      x-examples:
+        example-1:
+          id: d54cc57f-c32c-454a-a295-6481f126eb8b
+          departureTimestamp: '2018-06-13T10:11:13+05:30'
+          departureZip: 11249-1005
+          arrivalTimestamp: null
+          arrivalZip: 40511-2345
+          trackingNumber: 1Z54F78A0450293517
+          tripLengthMiles: '706.4'
+          waypoints:
+            - timestamp: '2018-06-13T12:11:13+05:30'
+              zip: 40508-0000
+              telemetry:
+                temp:
+                  degreesFahrenheit: '68'
+                location:
+                  coords:
+                    lat: 40.7128 N
+                    long: 74.0060 W
+                  zip: 40508-0000
+                sensors:
+                  moisture:
+                    thresholdExceeded: true
+                  thermometer:
+                    thresholdExceeded: false
+                  photometer:
+                    thresholdExceeded: false
+      title: ''
