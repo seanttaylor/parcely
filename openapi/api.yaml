@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  description: Contract for the logistics API
+  description: API contract for the logistics platform
   version: 0.0.1
   title: Parcely
   contact:
@@ -68,6 +68,54 @@ paths:
           name: authorization
           description: Authorization credential for this endpoint
           required: true
+    post:
+      summary: createNewCrate
+      operationId: createNewCrate
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server Error
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: authorization
+          description: Authorization credential for this endpoint
+          required: true
+      description: Create a new crate
+      tags:
+        - crates
+    delete:
+      summary: deleteCrate
+      operationId: deleteCrate
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: authorization
+          description: Authorization credential for this endpoint
+          required: true
+      tags:
+        - crates
+      description: Delete an existing crate
   /crates:
     get:
       operationId: getCrates
@@ -238,6 +286,232 @@ paths:
           name: authorization
           description: Authorization credential for this endpoint
           required: true
+  /status:
+    get:
+      summary: getSystemStatus
+      tags: []
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Server Error
+        '503':
+          description: Service Unavailable
+      operationId: getSystemStatus
+      description: Verify system status (i.e. is it up?)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                commitHash:
+                  type: string
+                  minLength: 1
+                status:
+                  type: string
+                  minLength: 1
+              required:
+                - commitHash
+                - status
+            examples:
+              example-1:
+                value:
+                  commitHash: 585fb57f540a62db9a6cb29bc6d67a0a0def7bb8
+                  status: OK
+        description: Status object returned from system including last commit hash from Git.
+  '/users/{userId}/password':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    post:
+      summary: resetPassword
+      operationId: resetPassword
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      description: Triggers a password reset email
+      tags:
+        - users
+  '/users/{userId}/name':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+    put:
+      summary: editName
+      operationId: editUserName
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      description: Update the first and/or last name of a platform user
+      tags:
+        - users
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: authorization
+          description: Authorization credential for this endpoint
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  minLength: 1
+                lastName:
+                  type: string
+                  minLength: 1
+            examples:
+              example-1:
+                value:
+                  firstName: Tony
+                  lastName: Stark
+  '/users/{userId}/phone':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    put:
+      summary: editPhoneNumber
+      operationId: editPhoneNumber
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      description: Update phone number of platform user
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: authorization
+          description: Authorization credential for this endpoint
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                phoneNumber:
+                  type: string
+                  minLength: 1
+              required:
+                - phoneNumber
+            examples:
+              example-1:
+                value:
+                  phoneNumber: '2125552424'
+      tags:
+        - users
+  '/users/{userId}/email':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    put:
+      summary: editEmail
+      operationId: editEmail
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      tags:
+        - users
+      description: Update email address of platform user
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: authorization
+          description: Authorization credential for this endpoint
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                emailAddress:
+                  type: string
+                  minLength: 1
+              required:
+                - emailAddress
+            examples:
+              example-1:
+                value:
+                  emailAddress: tstark@avengers.io
+  '/users/{userId}/shipments':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    get:
+      summary: getShipmentHistory
+      tags:
+        - users
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: getShipmentHistory
+      description: Fetch a list of all crate shipments for a specified platform user
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: authorization
+          description: Authorization credential for this endpoint
+          required: true
+        - schema:
+            type: string
+          in: query
+          name: status
+          description: Filter param for shipments (e.g. 'intransit')
 components:
   schemas:
     crate:
@@ -560,3 +834,4 @@ components:
       schema:
         type: string
       description: The uuid for a trip
+  securitySchemes: {}
