@@ -1,0 +1,65 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/user-roles.json",
+    "type": "object",
+    "title": "The user role schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "id": "05d4ac5d-0acc-4820-877c-2f398e091ada",
+            "role": "user",
+            "createdDate": "2020-12-24T18:52:30.508Z",
+            "lastModified": null
+        }
+    ],
+    "required": [
+        "id",
+        "role",
+        "createdDate",
+        "lastModified"
+    ],
+    "properties": {
+        "id": {
+            "$id": "#/properties/id",
+            "type": "string",
+            "title": "The id schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "05d4ac5d-0acc-4820-877c-2f398e091ada"
+            ]
+        },
+        "role": {
+            "$id": "#/properties/role",
+            "type": "string",
+            "title": "The role schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "user",
+            "examples": [
+                "user"
+            ]
+        },
+        "createdDate": {
+            "$id": "#/properties/createdDate",
+            "type": "string",
+            "title": "The createdDate schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "2020-12-24T18:52:30.508Z"
+            ]
+        },
+        "lastModified": {
+            "$id": "#/properties/lastModified",
+            "type": ["string", "null"],
+            "title": "The lastModified schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": null,
+            "examples": [
+                null
+            ]
+        }
+    },
+    "additionalProperties": false
+}
