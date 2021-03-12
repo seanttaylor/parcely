@@ -2,9 +2,9 @@
 
 const Ajv = require("ajv");
 const ajv = new Ajv();
-const userSchema = require("../../database/connectors/json/schemas/users.json");
-const userRoleSchema = require("../../database/connectors/json/schemas/user-roles.json");
-const userCredentialsSchema = require("../../database/connectors/json/schemas/user-credentials.json");
+const userSchema = require("../../../schemas/user.json");
+const userRoleSchema = require("../../../schemas/user-role.json");
+const userCredentialsSchema = require("../../../schemas/user-credentials.json");
 const userSchemaValidation = ajv.compile(userSchema);
 const userRoleSchemaValidation = ajv.compile(userRoleSchema);
 const userCredentialsSchemaValidation = ajv.compile(userCredentialsSchema);
@@ -13,16 +13,13 @@ const userCredentialsSchemaValidation = ajv.compile(userCredentialsSchema);
 /**
  * @typedef {Object} UserDTO
  * @property {String} id 
- * @property {String} handle
  * @property {String} emailAddress
  * @property {String} phoneNumber
  * @property {String} firstName
  * @property {String} lastName
  * @property {Boolean} isVerified
- * @property {Integer} followerCount
  * @property {String} createdDate  
  * @property {String|null} lastModified
- * @property {String|null} motto
  */
 
  /**

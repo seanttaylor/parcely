@@ -8,9 +8,9 @@ const dataTemplate = require("../template");
 function InMemoryDatabaseConnector({console}) {
     const data = Object.assign({}, dataTemplate);
     this._schemaValidators = {
-        "user_roles": require("../json/schemas/user-roles.json"),
-        "user_credentials": require("../json/schemas/user-credentials.json"),
-        "users": require("../json/schemas/users.json"),
+        "user_roles": require("../../../../schemas/user-role.json"),
+        "user_credentials": require("../../../../schemas/user-credentials.json"),
+        "users": require("../../../../schemas/user.json"),
     };
 
 
