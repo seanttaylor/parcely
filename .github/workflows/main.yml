@@ -35,3 +35,5 @@ jobs:
 
       - name: "[STEP] Run Integration Tests"
         run: npm test
+        env:
+          JWT_SECRET: superSecret
