@@ -2,10 +2,7 @@ name: Run Unit & Integration Tests
 
 on:
   push:
-    branches:
-      - master
-    tags:
-      - "v*.*.*.*"
+  
   pull_request:
     branches:
       - master
@@ -37,3 +34,5 @@ jobs:
         run: npm test
         env:
           JWT_SECRET: superSecret
+          PLATFORM_OUTBOUND_EMAIL_USERNAME: jayde.anderson@ethereal.email
+          PLATFORM_OUTBOUND_EMAIL_PASSWORD: N4kJ5KKtTcTSH4AsUT
