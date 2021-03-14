@@ -14,6 +14,7 @@
             "createdDate": "2021-02-24T19:04:33.436344",
             "lastModified": "2021-01-24T17:45:36.230152",
             "lastPing": "2021-02-24T19:04:33.436344",
+            "status": "inTransit",
             "telemetry": {
                 "temp": {
                     "degreesFahrenheit": "68"
@@ -46,7 +47,8 @@
         "merchantId",
         "lastPing",
         "telemetry",
-        "createdDate"
+        "createdDate",
+        "status"
     ],
     "properties": {
         "id": {
@@ -57,6 +59,20 @@
             "default": "",
             "examples": [
                 "2055c145-7d3e-446c-a7ad-ae6aaf886335"
+            ]
+        },
+        "status": {
+            "$id": "#/properties/status",
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": ["inTransit", "pendingReturn", "delivered", "awaitingShipment", "awaitingDeployment"]
+            },
+            "title": "The status schema",
+            "description": "The status of a specified crate.",
+            "default": "",
+            "examples": [
+                "inTransit"
             ]
         },
         "size": {
@@ -107,7 +123,7 @@
             "$id": "#/properties/createdDate",
             "type": "string",
             "title": "The createdDate schema",
-            "description": "The date a specified User entity was created.",
+            "description": "The datetime a Crate entity was created.",
             "default": "",
             "examples": [
                 "2021-02-24T17:45:36.230152"
@@ -117,7 +133,7 @@
             "$id": "#/properties/lastModified",
             "type": ["string", "null"],
             "title": "The lastModified schema",
-            "description": "The date a specified User entity was last modified.",
+            "description": "The datetime a Crate entity was last modified.",
             "default": "",
             "examples": [
                 "2021-01-24T17:45:36.230152"

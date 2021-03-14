@@ -88,5 +88,45 @@ module.exports = {
                 }
             }
         }
+    },
+    "crate_trips": {
+        "d54cc57f-c32c-454a-a295-6481f126eb8b": {
+            "id": "d54cc57f-c32c-454a-a295-6481f126eb8b",
+            "departureTimestamp": "2018-06-13T10:11:13+05:30",
+            "departureZip": "11249-1005",
+            "arrivalTimestamp": null,
+            "arrivalZip": "40511-2345",
+            "trackingNumber": "1Z54F78A0450293517",
+            "tripLengthMiles": "706.4",
+            "waypoints": [
+                {
+                    "timestamp": "2018-06-13T12:11:13+05:30",
+                    "telemetry": {
+                        "temp": {
+                            "degreesFahrenheit": "68"
+                        },
+                        "location": {
+                            "coords": {
+                                "lat": "40.7128 N",
+                                "long": "74.0060 W"
+                            },
+                            "zip": "40508-0000"
+                        },
+                        "sensors": {
+                            "moisture": {
+                                "thresholdExceeded": true
+                            },
+                            "thermometer": {
+                                "thresholdExceeded": false
+                            },
+                            "photometer": {
+                                "thresholdExceeded": false
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+
     }
 }

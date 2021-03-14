@@ -3,12 +3,37 @@
 const Ajv = require("ajv");
 const ajv = new Ajv();
 const crateSchema = require("../../../schemas/crate.json");
+const crateTripSchema = require("../../../schemas/trip.json");
+const crateTripSchemaValidation = ajv.compile(crateTripSchema);
 const crateSchemaValidation = ajv.compile(crateSchema);
-
+const defaultTelemetry = {
+    temp: {
+        degreesFahrenheit: null
+    },
+    location: {
+        coords: {
+            lat: null,
+            long: null
+        },
+        zip: null
+    },
+    sensors: {
+        moisture: {
+            thresholdExceeded: false
+        },
+        thermometer: {
+            thresholdExceeded: false
+        },
+        photometer: {
+            thresholdExceeded: false
+        }
+    }
+};
 
 /**
  * @typedef {Object} CrateDTO
  * @property {String} id 
+ * @property {String} status
  * @property {String} size
  * @property {String} merchantId
  * @property {String} lastPing
@@ -19,6 +44,7 @@ const crateSchemaValidation = ajv.compile(crateSchema);
 
  /**
   * @param {String} id - uuid for a crate
+  * @param {String} status - status of crate
   * @param {String} size - size of crate
   * @param {String} tripId - uuid for a unique crate trip
   * @param {String} merchantId - uuid for a merchant associated with a specified crate
@@ -29,32 +55,11 @@ const crateSchemaValidation = ajv.compile(crateSchema);
   * @returns {CrateDTO}
   */
 
-function CrateDTO({id, size, tripId=null, merchantId=null, lastPing=null, telemetry, createdDate=new Date().toISOString(), lastModified=null }) {
-    const defaultTelemetry = {
-        temp: {
-            degreesFahrenheit: null
-        },
-        location: {
-            coords: {
-                lat: null,
-                long: null
-            },
-            zip: null
-        },
-        sensors: {
-            moisture: {
-                thresholdExceeded: false
-            },
-            thermometer: {
-                thresholdExceeded: false
-            },
-            photometer: {
-                thresholdExceeded: false
-            }
-        }
-    };
+function CrateDTO({id, size, status=["awaitingDeployment"], tripId=null, merchantId=null, lastPing=null, telemetry, createdDate=new Date().toISOString(), lastModified=null }) {
+    
     const crateData = {
-      id,  
+      id,
+      status,  
       size, 
       tripId, 
       merchantId,
@@ -75,6 +80,60 @@ function CrateDTO({id, size, tripId=null, merchantId=null, lastPing=null, teleme
 }
 
 
+/**
+ * @typedef {Object} CrateTripDTO
+ * @property {String} id 
+ * @property {String} departureTimestamp
+ * @property {String} arrivalTimestamp
+ * @property {String} departureZip
+ * @property {String} arrivalZip
+ * @property {String} trackingNumber
+ * @property {String} createdDate
+ * @property {String} tripLengthMiles
+ */
+
+
+/**
+ * @param {String} id - uuid for a crate
+ * @param {String} departureTimestamp - datetime of crate departure (i.e. when the crate trip is initialized)
+ * @param {String} arrivalTimestamp - datetime of crate arrival (i.e. when crate trip is concluded)
+ * @param {String} departureZip - departue zip code
+ * @param {String} arrivalZip - arrival zip code
+ * @param {String} trackingNumber - Shipping carrier associated with this crate for this trip
+ * @param {String} waypoints - list of each point in the trip where the crate pushed telemetry data to the logistics API
+ * @param {String} createdDate - datetime a crate trip is created
+ * @param {String|null} lastModified - datetime crate trip data was last modified
+ * * @param {String} tripLengthMiles - estimated length of the trip in miles
+ * @returns {CrateTripDTO}
+ */
+
+function CrateTripDTO({id, departureTimestamp, arrivalTimestamp, trackingNumber, departureZip, arrivalZip, waypoints=[], createdDate=new Date().toISOString(), lastModified=null, tripLengthMiles=null}) {
+    
+    const crateTripData = {
+      id,
+      departureTimestamp, 
+      arrivalTimestamp, 
+      trackingNumber, 
+      departureZip, 
+      arrivalZip,
+      waypoints, 
+      createdDate, 
+      lastModified,
+      tripLengthMiles
+    };
+  
+
+  if(!crateTripSchemaValidation(crateTripData)) {
+    throw new Error(`CrateTripDTOError/InvalidCrateTripDTO => ${JSON.stringify(crateTripSchemaValidation.errors, null, 2)}`);
+  }
+
+  this.value = function() {
+    return crateTripData;
+  }
+
+}
+
 module.exports = {
-    CrateDTO
+    CrateDTO,
+    CrateTripDTO
 };

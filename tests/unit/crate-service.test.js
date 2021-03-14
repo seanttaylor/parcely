@@ -1,5 +1,8 @@
 const { mockImpl } = require("../../src/lib/utils/mocks");
 const uuid = require("uuid");
+const Ajv = require("ajv");
+const ajv = new Ajv();
+const crateSchema = require("../../src/schemas/crate.json");
 const CrateService = require("../../src/services/crate");
 const CrateRepository = require("../../src/lib/repository/crate");
 const DatabaseConnector = require("../../src/lib/database/connectors/memory");
@@ -46,14 +49,13 @@ test("Should return a specified Crate instance", async() => {
 });
 
 
-test("Should delete user", async() => {
-    //FUNCTIONALITY NOT IMPLEMENTED YET
-    const result = await testCrateService.deleteCrate("fakeUserId");
+test("Should delete crate", async() => {
+    const result = await testCrateService.deleteCrate("crateId");
     expect(result == undefined).toBe(true);
 });
 
 
-test("Should return user id on save", async() => {
+test("Should return crate id on save", async() => {
     const testCrateData = {
         size: ["L"]
     };
@@ -63,14 +65,55 @@ test("Should return user id on save", async() => {
 });
 
 
-test("Should mark crate for pending return", async() => {
+test("Should set crate status to pendingReturn", async() => {
     const testCrate = await testCrateService.createCrate({
       size: ["S"]
     });
 
     await testCrate.save();
-    expect(typeof(testCrate.toJSON()) === "object").toBe(true);
+    testCrateService.markCrateReturned(testCrate);
+    const [crateStatus] = testCrate._data.status;
+    
+    expect(crateStatus === "pendingReturn").toBe(true);
 });
+
+
+test("Should get current crate telemetry data", async() => {
+    const testCrate = await testCrateService.createCrate({
+      size: ["S"]
+    });
+    
+    await testCrate.save();
+    const telemetry = await testCrateService.getCurrentCrateTelemetry(testCrate);
+  
+    expect(typeof(testCrate) === "object").toBe(true);
+});
+
+
+test("Should get a list of crate trips for a specified crate", async() => {
+    const testCrate = await testCrateService.createCrate({
+      size: ["S"]
+    });
+    
+    await testCrate.save();
+    const crateTripList = await testCrateService.getCrateTrips(testCrate);
+  
+    expect(Array.isArray(crateTripList)).toBe(true);
+});
+
+test("Should return a specified trip for a specified crate", async() => {
+    const testCrateTripId = "d54cc57f-c32c-454a-a295-6481f126eb8b";
+    const testCrate = await testCrateService.createCrate({
+      size: ["S"]
+    });
+    
+    await testCrate.save();
+    const crateTrip = await testCrateService.getCrateTripById(testCrateTripId);
+  
+    expect(crateTrip.id === testCrateTripId).toBe(true);
+});
+
+
 
 test("Should return JSON object representation", async() => {
     const testCrate = await testCrateService.createCrate({

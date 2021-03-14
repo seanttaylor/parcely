@@ -26,8 +26,8 @@ function CrateRepository(databaseConnector) {
     }
 
     this.getCrateById = async function(id) {
-        const result = await databaseConnector.findOne({id, collection: "crates"});
-        return result;
+        const [record] = await databaseConnector.findOne({id, collection: "crates"});
+        return record;
     }
 
 
@@ -37,37 +37,32 @@ function CrateRepository(databaseConnector) {
     }
 
     
-    this.getCrateByTripId = async function(tripId) {
+    this.getCrateTripById = async function(tripId) {
         const [record] = await databaseConnector.findOne({
             id: tripId,
-            collection: "crates"
+            collection: "crate_trips"
         });
 
-        return { lastModified: record.lastModified };
+        return record;
     }
 
 
     this.getCrateTripsByCrateId = async function(id) {
-        const [result] = await databaseConnector.findAll({
-            id: currentUserId, 
-            collection: "crate_trips"
-        });
-        
+        const result = await databaseConnector.findAll("crate_trips");
         return result.filter(t => t.id === id);
     }
 
-    
-    this.getCurrentCrateTelemetryById = async function(id) {
-
-    }
 
     this.getCratesByUser = async function(id) {
 
     }
 
 
-    this.markCrateReturned = async function(id) {
-
+    this.markCrateReturned = async function(crateDTO) {
+        const [result] = await databaseConnector.updateOne({
+            doc: crateDTO, 
+            collection: "crates"
+        });
     }
 
 

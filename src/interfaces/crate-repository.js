@@ -8,7 +8,6 @@
 * @property {Function} getAllCrates - finds all crates in the data store
 * @property {Function} getCrateById - 
 * @property {Function} getCrateTripsByCrateId - 
-* @property {Function} getCurrentCrateTelemetryById - 
 * @property {Function} getCratesByUser -
 * @property {Function} markCrateReturned -
 * @property {Function} delete - deletes a crate in the data store by its uuid
@@ -50,11 +49,6 @@ function ICrateRepository(myImpl) {
     @returns {Array} - a list of CrateTrip instances
     */
     this.getCrateTripsByCrateId = myImpl.getCrateTripsByCrateId || required;    
-
-    /**
-    @returns {Object} - a summary of crate telemetry data
-    */
-    this.getCurrentCrateTelemetryById = myImpl.getCurrentCrateTelemetryById || required;
 
     /**
     @returns {Array} - a list of crates associated with a specified user
