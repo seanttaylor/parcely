@@ -54,5 +54,39 @@ module.exports = {
             "createdDate": "2020-09-26T23:08:27.645Z",
             "lastModified": null
         }
+    },
+    "crates": {
+        "2055c145-7d3e-446c-a7ad-ae6aaf886335": {
+            "id": "2055c145-7d3e-446c-a7ad-ae6aaf886335",
+            "size": ["L"],
+            "tripId": "172b101d-3d24-4172-8e9d-2c34beb9c07f",
+            "merchantId": "e3634bd2-7cb4-45b7-a442-f38ee4ad008b",
+            "createdDate": "2021-02-24T19:04:33.436344",
+            "lastModified": "2021-01-24T17:45:36.230152",
+            "lastPing": "2021-02-24T19:04:33.436344",
+            "telemetry": {
+                "temp": {
+                    "degreesFahrenheit": null
+                },
+                "location": {
+                    "coords": {
+                        "lat": null,
+                        "long": null
+                    },
+                    "zip": null
+                },
+                "sensors": {
+                    "moisture": {
+                        "thresholdExceeded": false
+                    },
+                    "thermometer": {
+                        "thresholdExceeded": false
+                    },
+                    "photometer": {
+                        "thresholdExceeded": false
+                    }
+                }
+            }
+        }
     }
 }

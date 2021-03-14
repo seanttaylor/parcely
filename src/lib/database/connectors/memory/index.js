@@ -11,6 +11,7 @@ function InMemoryDatabaseConnector({console}) {
         "user_roles": require("../../../../schemas/user-role.json"),
         "user_credentials": require("../../../../schemas/user-credentials.json"),
         "users": require("../../../../schemas/user.json"),
+        "crates": require("../../../../schemas/crate.json")
     };
 
 
@@ -28,7 +29,7 @@ function InMemoryDatabaseConnector({console}) {
         }
 
         if (!Object.keys(this._schemaValidators).includes(collection)) {
-            throw new Error(`JSONDatabaseConnectorError.AddError: collection (${collection}) does not exist`);
+            throw new Error(`InMemoryDatabaseConnectorError.AddError: collection (${collection}) does not exist`);
         }
 
         try {
@@ -43,7 +44,7 @@ function InMemoryDatabaseConnector({console}) {
             return [record];
             
         } catch(e) {
-            console.error(`JSONDatabaseConnectorError: ${e.message}`);
+            console.error(`InMemoryDatabaseConnectorError: ${e.message}`);
         }
     }
 
@@ -63,15 +64,15 @@ function InMemoryDatabaseConnector({console}) {
         }
 
         if (!id) {
-            throw new Error(`JSONDatabaseConnectorError.UpdateError: record id CANNOT be falsy`);
+            throw new Error(`InMemoryDatabaseConnectorError.UpdateError: record id CANNOT be falsy`);
         }
 
         if (!Object.keys(this._schemaValidators).includes(collection)) {
-            throw new Error(`JSONDatabaseConnectorError.UpdateError: collection (${collection}) does not exist`);
+            throw new Error(`InMemoryDatabaseConnectorError.UpdateError: collection (${collection}) does not exist`);
         }
 
         if (!data[collection][id]) {
-            console.info(`JSONDatabaseConnector.UpdateError: Could NOT find ${collection}.${id}`);
+            console.info(`InMemoryDatabaseConnector.UpdateError: Could NOT find ${collection}.${id}`);
             return [];
         }
 
@@ -89,7 +90,7 @@ function InMemoryDatabaseConnector({console}) {
             return [record];
 
         } catch(e) {
-            console.error("JSONDatabaseConnectorError:", e);
+            console.error("InMemoryDatabaseConnectorError:", e);
         }
     }
 
@@ -110,11 +111,11 @@ function InMemoryDatabaseConnector({console}) {
         }
 
         if (!id) {
-            throw new Error("JSONDatabaseConnectorError.PutError: Record id CANNOT be falsy");
+            throw new Error("InMemoryDatabaseConnectorError.PutError: Record id CANNOT be falsy");
         }
 
         if (!Object.keys(this._schemaValidators).includes(collection)) {
-            throw new Error(`JSONDatabaseConnectorError.PutError: Collection (${collection}) does NOT exist`)
+            throw new Error(`InMemoryDatabaseConnectorError.PutError: Collection (${collection}) does NOT exist`)
         }
 
         try {
@@ -128,7 +129,7 @@ function InMemoryDatabaseConnector({console}) {
             data[collection][id] = record;
             return [record];
         } catch(e) {
-            console.error(`JSONDatabaseConnectorError: ${e.message}`);
+            console.error(`InMemoryDatabaseConnectorError: ${e.message}`);
         }
     }
 
@@ -173,17 +174,17 @@ function InMemoryDatabaseConnector({console}) {
 
     this.findOne = async function({id, collection}) {
         if (!Object.keys(this._schemaValidators).includes(collection)) {
-            throw new Error(`JSONDatabaseConnectorError.FindOneError: Collection (${collection}) does not exist`);
+            throw new Error(`InMemoryDatabaseConnectorError.FindOneError: Collection (${collection}) does not exist`);
         }
 
         if (!id) {
-            throw new Error(`JSONDatabaseConnectorError.FindOneError: record id CANNOT be falsy`);
+            throw new Error(`InMemoryDatabaseConnectorError.FindOneError: record id CANNOT be falsy`);
         }
 
         try {
             
             if (!data[collection][id]) {
-                console.info(`JSONDatabaseConnector.UpdateError: Could NOT find ${collection}.${id}`);
+                console.info(`InMemoryDatabaseConnector.UpdateError: Could NOT find ${collection}.${id}`);
                 return [];
             }
             

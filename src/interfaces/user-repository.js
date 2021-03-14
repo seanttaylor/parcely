@@ -49,7 +49,6 @@ function IUserRepository(myImpl) {
     this.delete = myImpl.delete || required;
 
     const {
-        editMotto,
         editName,
         findAll,
         findOne,
