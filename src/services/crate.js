@@ -39,9 +39,52 @@ function Crate(repo, crateDTO) {
     */
     this.save = async function() {
         const crateDTO = new CrateDTO(this._data);
-        const crate = await this._repo.create({crateDTO});
+        const crate = await this._repo.create(crateDTO);
         
         return crate.id;
+    }
+
+    /**
+    Associates the crate with a recipient user in the data store.
+    @param {String} userId - a uuid for the recipient user
+    */
+    this.setRecipient = async function(userId) {
+        const crateDTO = new CrateDTO(Object.assign(this._data, userId));
+        const crate = await this._repo.setCrateRecipient(crateDTO);
+        this._data.userId = userId;
+    }
+
+
+    /**
+    Remove designated recipient of the crate in the data store.
+    this.removeRecipient = async function() {
+        
+    }*/
+
+
+    /**
+    Initializes a new trip for the current crate
+    @param {Object} originAddress - the postal address a crate originates from
+    @param {Object} destinationAddress - the postal address a crate ships to
+    @param {String} trackingNumber - shipping carrier tracking number associated with this crate for this trip
+    */
+    this.startTrip = async function({originAddress, destinationAddress, trackingNumber}) {
+        const crateTripDTO = new CrateTripDTO(Object.assign(this._data, {
+            originAddress, 
+            destinationAddress, 
+            trackingNumber,
+            arrivalZip: destinationAddress.zip,
+            departureZip: originAddress.zip,
+            departureTimestamp: new Date().toISOString()
+        }));
+
+        const crateTrip = new CrateTrip(this._repo, crateTripDTO);
+        await crateTrip.save();
+        await this._repo.startCrateTrip(this.id);
+        
+        this._data.status = "inTransit";
+        this.currentTrip = crateTrip;
+        return crateTrip.id;
     }
 }
 
@@ -84,8 +127,7 @@ function CrateTrip(repo, crateTripDTO) {
     */
     this.save = async function() {
         const crateTripDTO = new CrateTripDTO(this._data);
-        const crateTrip = await this._repo.create({crateTripDTO});
-        
+        const crateTrip = await this._repo.create(crateTripDTO);
         return crateTrip.id;
     }
 }
@@ -121,9 +163,11 @@ function CrateService(repo) {
         return crates.map((c) => new Crate(repo, new CrateDTO(c)));
     }
 
-
-    this.getCratesByUser = async function() {
-        const crateList = await this._repo.getCratesByUser();
+    /**
+     * @param {User} user - an instance of a User
+    */
+    this.getCratesByUser = async function(user) {
+        const crateList = await this._repo.getCratesByUserId(user.id);
         return crateList.map((c) => new Crate(repo, new CrateDTO(c)));
     }
 

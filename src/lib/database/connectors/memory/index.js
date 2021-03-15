@@ -51,7 +51,6 @@ function InMemoryDatabaseConnector({console}) {
 
     /**
      * Update a document in the database by id 
-     * @params {String} id - id of the document in the database
      * @params {Object} doc - an instance of an entity DTO containing data to store
      * @params {String} collection - collection to update 
      * @returns {Object}

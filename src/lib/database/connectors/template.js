@@ -61,6 +61,7 @@ module.exports = {
             "size": ["L"],
             "tripId": "172b101d-3d24-4172-8e9d-2c34beb9c07f",
             "merchantId": "e3634bd2-7cb4-45b7-a442-f38ee4ad008b",
+            "userId": "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09",
             "createdDate": "2021-02-24T19:04:33.436344",
             "lastModified": "2021-01-24T17:45:36.230152",
             "lastPing": "2021-02-24T19:04:33.436344",
@@ -97,6 +98,19 @@ module.exports = {
             "arrivalTimestamp": null,
             "arrivalZip": "40511-2345",
             "trackingNumber": "1Z54F78A0450293517",
+            "originAddress": {
+                "street": "1 Shire Road",
+                "city": "Hobbiton",
+                "state": "CA",
+                "zip": "90000"
+            },
+            "destinationAddress": {
+                "street": "1159 Drury Lane",
+                "apartmentNumber": "7",
+                "city": "StoryBrooke",
+                "state": "NY",
+                "zip": "11111"
+            },
             "tripLengthMiles": "706.4",
             "waypoints": [
                 {

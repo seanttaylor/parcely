@@ -6,11 +6,11 @@
 * @property {Function} create - creates a new crate in the data store
 * @property {Function} getCrateById - finds a crate in the data store by uuid
 * @property {Function} getAllCrates - finds all crates in the data store
-* @property {Function} getCrateById - 
-* @property {Function} getCrateTripsByCrateId - 
-* @property {Function} getCratesByUser -
-* @property {Function} markCrateReturned -
+* @property {Function} getCrateTripsByCrateId - finds a list of all unique trips of a specified crate
+* @property {Function} getCratesByUserId - finds all crates associated with a specified user
+* @property {Function} markCrateReturned -  set a crate's status to indicate a pending return
 * @property {Function} delete - deletes a crate in the data store by its uuid
+* @property {Function} setCrateRecipient - associates a crate with a recipient user in the data store
 */
 
 /**
@@ -51,12 +51,13 @@ function ICrateRepository(myImpl) {
     this.getCrateTripsByCrateId = myImpl.getCrateTripsByCrateId || required;    
 
     /**
+    @param {User} user - an instance of User
     @returns {Array} - a list of crates associated with a specified user
     */
-    this.getCratesByUser = myImpl.getCratesByUser || required;
+    this.getCratesByUserId = myImpl.getCratesByUserId || required;
 
     /**
-    * Set a crate's status to indicate a pending return
+    @param {Crate} crate - an instance of Crate
     */
     this.markCrateReturned = myImpl.markCrateReturned || required;
 
@@ -64,6 +65,11 @@ function ICrateRepository(myImpl) {
     @param {String} id - uuid of the crate
     */
     this.deleteCrate = myImpl.deleteCrate || required;
+
+    /**
+    @param {String} id - uuid of the user
+    */
+    this.setCrateRecipient = myImpl.setCrateRecipient || required;
 
 }
 

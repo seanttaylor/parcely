@@ -15,7 +15,7 @@ function CrateRepository(databaseConnector) {
     /**
      * @param {CrateDTO} crateDTO - an instance of CrateDTO
      */
-    this.create = async function({crateDTO}) {
+    this.create = async function(crateDTO) {
         const [record] = await databaseConnector.add({
             doc: crateDTO, 
             collection: "crates"
@@ -47,14 +47,23 @@ function CrateRepository(databaseConnector) {
     }
 
 
-    this.getCrateTripsByCrateId = async function(id) {
-        const result = await databaseConnector.findAll("crate_trips");
-        return result.filter(t => t.id === id);
+    this.setCrateRecipient = async function(crateDTO) {
+        const result = await databaseConnector.updateOne({
+            doc: crateDTO,
+            collection: "crates"
+        });
     }
 
 
-    this.getCratesByUser = async function(id) {
+    this.getCrateTripsByCrateId = async function(id) {
+        const crateTrips = await databaseConnector.findAll("crate_trips");
+        return crateTrips.filter(trip => trip.crateId === id);
+    }
 
+
+    this.getCratesByUserId = async function(id) {
+        const crates = await databaseConnector.findAll("crates");
+        return crates.filter(crate => crate.userId === id);
     }
 
 

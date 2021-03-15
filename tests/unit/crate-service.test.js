@@ -90,6 +90,46 @@ test("Should get current crate telemetry data", async() => {
 });
 
 
+test("Should associate a specified user with a crate", async() => {
+    const thorUserId = "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09";
+    const testCrate = await testCrateService.createCrate({
+      size: ["S"]
+    });
+    
+    await testCrate.save();
+    await testCrate.setRecipient(thorUserId);
+  
+    expect(testCrate._data.userId === thorUserId).toBe(true);
+});
+
+
+test("Should get a list of crates associated with a specified user", async() => {
+    const thorUserId = "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09";
+    const testCrate = await testCrateService.createCrate({
+      size: ["S"]
+    });
+    
+    await testCrate.save();
+    await testCrate.setRecipient(thorUserId);
+  
+    const crateList = await testCrateService.getCratesByUser({ id: thorUserId });
+
+    expect(Array.isArray(crateList)).toBe(true);
+    expect(crateList[0]._data.userId === thorUserId).toBe(true);
+});
+
+
+test("Should return new CrateTrip instance", async() => {
+    const testCrateData = {
+        size: ["M"]
+    };
+    const testCrate = await testCrateService.createCrate(testCrateData);
+    expect(Object.keys(testCrate).includes("id")).toBe(true);
+    expect(Object.keys(testCrate).includes("_repo")).toBe(true);
+    expect(Object.keys(testCrate).includes("_data")).toBe(true);    
+});
+
+
 test("Should get a list of crate trips for a specified crate", async() => {
     const testCrate = await testCrateService.createCrate({
       size: ["S"]
@@ -100,6 +140,7 @@ test("Should get a list of crate trips for a specified crate", async() => {
   
     expect(Array.isArray(crateTripList)).toBe(true);
 });
+
 
 test("Should return a specified trip for a specified crate", async() => {
     const testCrateTripId = "d54cc57f-c32c-454a-a295-6481f126eb8b";
@@ -113,6 +154,36 @@ test("Should return a specified trip for a specified crate", async() => {
     expect(crateTrip.id === testCrateTripId).toBe(true);
 });
 
+
+test("Should create a new trip for an existing crate", async() => {
+    const testCrateTripId = "d54cc57f-c32c-454a-a295-6481f126eb8b";
+    const originAddress = {
+        street: "1159 Drury Lane",
+        apartmentNumber: "7",
+        city: "StoryBrooke",
+        state: "NY",
+        zip: "11111"
+    };
+    const destinationAddress = {
+        street: "1 Shire Road",
+        city: "Hobbiton",
+        state: "CA",
+        zip: "90000"
+    };
+    const testCrate = await testCrateService.createCrate({
+      size: ["S"]
+    });
+    
+    await testCrate.save();
+    await testCrate.startTrip({
+        originAddress, 
+        destinationAddress, 
+        trackingNumber: "1A54F78A0450293517"
+    });
+    const [crateTrip] = await testCrateService.getCrateTrips(testCrate);
+    
+    expect(crateTrip.id === testCrateTripId).toBe(true);
+});
 
 
 test("Should return JSON object representation", async() => {
