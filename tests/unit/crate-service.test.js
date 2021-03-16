@@ -179,15 +179,17 @@ test("Should create a new trip for an existing crate", async() => {
       size: ["S"]
     });
     
-    await testCrate.save();
+    const testCrateId = await testCrate.save();
     const testCrateTripId = await testCrate.startTrip({
         originAddress, 
         destinationAddress, 
         trackingNumber: "1A54F78A0450293517"
     });
     const [crateTrip] = await testCrateService.getCrateTrips(testCrate);
+    const [crateDbRecord] = await testCrateService.getCrateById(testCrateId);
     
     expect(crateTrip.id === testCrateTripId).toBe(true);
+    expect(crateDbRecord._data.status[0] === "inTransit");
     expect(testCrate._data.status[0] === "inTransit");
 });
 
