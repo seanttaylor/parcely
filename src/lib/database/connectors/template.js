@@ -54,5 +54,94 @@ module.exports = {
             "createdDate": "2020-09-26T23:08:27.645Z",
             "lastModified": null
         }
+    },
+    "crates": {
+        "2055c145-7d3e-446c-a7ad-ae6aaf886335": {
+            "id": "2055c145-7d3e-446c-a7ad-ae6aaf886335",
+            "size": ["L"],
+            "tripId": "172b101d-3d24-4172-8e9d-2c34beb9c07f",
+            "merchantId": "e3634bd2-7cb4-45b7-a442-f38ee4ad008b",
+            "userId": "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09",
+            "createdDate": "2021-02-24T19:04:33.436344",
+            "lastModified": "2021-01-24T17:45:36.230152",
+            "lastPing": "2021-02-24T19:04:33.436344",
+            "telemetry": {
+                "temp": {
+                    "degreesFahrenheit": null
+                },
+                "location": {
+                    "coords": {
+                        "lat": null,
+                        "long": null
+                    },
+                    "zip": null
+                },
+                "sensors": {
+                    "moisture": {
+                        "thresholdExceeded": false
+                    },
+                    "thermometer": {
+                        "thresholdExceeded": false
+                    },
+                    "photometer": {
+                        "thresholdExceeded": false
+                    }
+                }
+            }
+        }
+    },
+    "crate_trips": {
+        "d54cc57f-c32c-454a-a295-6481f126eb8b": {
+            "id": "d54cc57f-c32c-454a-a295-6481f126eb8b",
+            "crateId": "2055c145-7d3e-446c-a7ad-ae6aaf886335",
+            "departureTimestamp": "2018-06-13T10:11:13+05:30",
+            "departureZip": "11249-1005",
+            "arrivalTimestamp": null,
+            "arrivalZip": "40511-2345",
+            "trackingNumber": "1Z54F78A0450293517",
+            "originAddress": {
+                "street": "1 Shire Road",
+                "city": "Hobbiton",
+                "state": "CA",
+                "zip": "90000"
+            },
+            "destinationAddress": {
+                "street": "1159 Drury Lane",
+                "apartmentNumber": "7",
+                "city": "StoryBrooke",
+                "state": "NY",
+                "zip": "11111"
+            },
+            "tripLengthMiles": "706.4",
+            "waypoints": [
+                {
+                    "timestamp": "2018-06-13T12:11:13+05:30",
+                    "telemetry": {
+                        "temp": {
+                            "degreesFahrenheit": "68"
+                        },
+                        "location": {
+                            "coords": {
+                                "lat": "40.7128 N",
+                                "long": "74.0060 W"
+                            },
+                            "zip": "40508-0000"
+                        },
+                        "sensors": {
+                            "moisture": {
+                                "thresholdExceeded": true
+                            },
+                            "thermometer": {
+                                "thresholdExceeded": false
+                            },
+                            "photometer": {
+                                "thresholdExceeded": false
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+
     }
 }

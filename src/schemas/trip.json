@@ -8,12 +8,15 @@
     "examples": [
         {
             "id": "d54cc57f-c32c-454a-a295-6481f126eb8b",
+            "crateId": "0c2b0c0c-068c-49df-93c0-4ed02575cff7",
             "departureTimestamp": "2018-06-13T10:11:13+05:30",
             "departureZip": "11249-1005",
             "arrivalTimestamp": null,
             "arrivalZip": "40511-2345",
             "trackingNumber": "1Z54F78A0450293517",
             "tripLengthMiles": "706.4",
+            "createdDate": "2021-02-24T17:45:36.230152",
+            "lastModified": "2021-02-24T17:45:36.230152",
             "waypoints": [
                 {
                     "timestamp": "2018-06-13T12:11:13+05:30",
@@ -47,13 +50,14 @@
     ],
     "required": [
         "id",
+        "crateId",
         "departureTimestamp",
         "departureZip",
-        "arrivalTimestamp",
         "arrivalZip",
         "trackingNumber",
-        "tripLengthMiles",
-        "waypoints"
+        "originAddress",
+        "destinationAddress",
+        "createdDate"
     ],
     "properties": {
         "id": {
@@ -65,6 +69,36 @@
             ],
             "title": "The id schema",
             "type": "string"
+        },
+        "crateId": {
+            "$id": "#/properties/crateId",
+            "default": "",
+            "description": "Crate associated with this trip",
+            "examples": [
+                "d54cc57f-c32c-454a-a295-6481f126eb8b"
+            ],
+            "title": "The crateId schema",
+            "type": "string"
+        },
+        "createdDate": {
+            "$id": "#/properties/createdDate",
+            "type": "string",
+            "title": "The createdDate schema",
+            "description": "The datetime the CrateTrip entity was created.",
+            "default": "",
+            "examples": [
+                "2021-02-24T17:45:36.230152"
+            ]
+        },
+        "lastModified": {
+            "$id": "#/properties/lastModified",
+            "type": ["string", "null"],
+            "title": "The lastModified schema",
+            "description": "The datetime the trip data was last modified",
+            "default": "",
+            "examples": [
+                "2021-01-24T17:45:36.230152"
+            ]
         },
         "departureTimestamp": {
             "$id": "#/properties/departureTimestamp",
@@ -124,7 +158,13 @@
                 "706.4"
             ],
             "title": "The tripLengthMiles schema",
-            "type": "string"
+            "type": ["string", "null"]
+        },
+        "originAddress": {
+            "$ref": "#/definitions/address"
+        },
+        "destinationAddress": {
+            "$ref": "#/definitions/address" 
         },
         "waypoints": {
             "$id": "#/properties/waypoints",
@@ -201,10 +241,7 @@
                                 }
                             }
                         ],
-                        "required": [
-                            "timestamp",
-                            "telemetry"
-                        ],
+                        "required": ["timestamp", "telemetry"],
                         "properties": {
                             "timestamp": {
                                 "$id": "#/properties/waypoints/items/anyOf/0/properties/timestamp",
@@ -473,6 +510,70 @@
                     }
                 ]
             }
+        }
+    },
+    "definitions": {
+        "address": {
+            "type": "object",
+            "required": [
+                "street",
+                "city",
+                "state",
+                "zip"
+            ],
+            "properties": {
+                "street": {
+                    "$id": "#/properties/street",
+                    "type": "string",
+                    "title": "The street schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "1159 Drury Lane"
+                    ]
+                },
+                "apartmentNumber": {
+                    "$id": "#/properties/apartmentNumber",
+                    "type": "string",
+                    "title": "The apartmentNumber schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "7"
+                    ]
+                },
+                "city": {
+                    "$id": "#/properties/city",
+                    "type": "string",
+                    "title": "The city schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "StoryBrooke"
+                    ]
+                },
+                "state": {
+                    "$id": "#/properties/state",
+                    "type": "string",
+                    "title": "The state schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "NY"
+                    ]
+                },
+                "zip": {
+                    "$id": "#/properties/zip",
+                    "type": "string",
+                    "title": "The zip schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "11111"
+                    ]
+                }
+            },
+            "additionalProperties": false
         }
     },
     "additionalProperties": false

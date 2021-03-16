@@ -30,7 +30,7 @@ const userCredentialsSchemaValidation = ajv.compile(userCredentialsSchema);
   * @param {String} lastName - user last name
   * @param {String} createdDate - date a user was created
   * @param {Boolean} isVerified - indicates whether a user's account has been verified
-  * @param {String|null} lastModified - data post was last modified
+  * @param {String|null} lastModified - date user was last modified
   * @returns {UserDTO}
   */
 

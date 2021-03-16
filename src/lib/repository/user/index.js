@@ -1,17 +1,17 @@
 /* istanbul ignore file */
 
-/*Implements IUserRepository interface for connecting to a JSON file database.
+/*Implements IUserRepository interface for connecting to a datastore.
 See interfaces/user-repository for method documentation*/
 
-const { UserDTO } = require("../../../lib/repository/user/dto");
+const { UserDTO } = require("./dto");
 
 
 /**
- * @implements {IUserRepostory}
+ * @implements {IUserRepository}
  * @param {Object} databaseConnector - object with methods for connecting to a database 
  */
 
-function UserJSONRepository(databaseConnector) {
+function UserRepository(databaseConnector) {
     /**
      * @param {UserDTO} userDTO - an instance of UserDTO
      * @param {UserRoleDTO} userRoleDTO - an instance of UserRoleDTO
@@ -94,14 +94,6 @@ function UserJSONRepository(databaseConnector) {
     }
 
 
-  
-
-
- 
-
-
-
-
     this.getUserRole = async function(currentUserId) {
         const [result] = await databaseConnector.findOne({
             id: currentUserId, 
@@ -115,23 +107,8 @@ function UserJSONRepository(databaseConnector) {
     this.deleteUser = function(id) {
         return
     }
-
-
-    function onReadUser(record) {
-        return {
-            id: record.id,
-            handle: record.handle,
-            emailAddress: record.email_address,
-            motto: record.motto,
-            isVerified: record.is_verified,
-            firstName: record.first_name,
-            lastName: record.last_name,
-            followerCount: record.follower_count,
-            createdDate: record.created_date
-        }
-    }
 }
 
-/*UserJSONRepository*/
+/*UserRepository*/
 
-module.exports = UserJSONRepository;
+module.exports = UserRepository;

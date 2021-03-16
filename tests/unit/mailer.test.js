@@ -1,9 +1,9 @@
 const IMailer= require("../../src/interfaces/mailer");
-const MailService = require("../../src/lib/mailer");
-const console = require("../../src/lib/utils/mocks/console");
 const events = require("events");
 const eventEmitter = new events.EventEmitter();
-const testMailService = new IMailer(new MailService({console, eventEmitter}));
+const MockMailImpl = require("../../src/lib/utils/mocks/mailer");
+const myMockMailService = new MockMailImpl({eventEmitter});
+const testMailService = new IMailer(myMockMailService);
 const EmailTemplate = require("../../src/lib/mailer/email-templates");
 
 /**Tests**/
@@ -15,7 +15,7 @@ test("Should print message metadata to the console when an email is sent", async
         subject: "Test Email",
         html: "<h1>A Test Email</h1>"
     })
-    expect(console.calledMethods.log).toBe(true);
+    expect(myMockMailService.calledMethods.send).toBe(true);
 });
 
 test("Should throw an error when interface methods are NOT overridden with an implementation", async() => {
@@ -33,9 +33,22 @@ test("Should throw an error when interface methods are NOT overridden with an im
     }
 });
 
-test("Should use a specified template filename to render email if a named templated is not provided", async() => {
+test("Should use a specified template file to render email if a named templated is not provided", async() => {
     const myTemplate = await EmailTemplate.of({
         filePath: "./src/lib/mailer/email-templates/welcome-email.ejs", 
+        data: {
+            data: {
+                firstName: "Tony"
+            }
+        }
+    });
+
+    expect(typeof(myTemplate) === "string").toBe(true);
+});
+
+test("Should use a named template file to render email if a template file path is not provided", async() => {
+    const myTemplate = await EmailTemplate.of({
+        templateName: "welcomeEmail", 
         data: {
             data: {
                 firstName: "Tony"
@@ -54,5 +67,5 @@ test("Should send a welcome email on the userService.newUserCreated event", asyn
     };
     eventEmitter.emit("userService.newUserCreated", mockUserObject);
 
-    expect(console.calledMethods.log).toBe(true);
+    expect(myMockMailService.calledMethods.send).toBe(true);
 });

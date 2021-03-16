@@ -8,10 +8,14 @@
     "examples": [
         {
             "id": "2055c145-7d3e-446c-a7ad-ae6aaf886335",
-            "size": "L",
+            "size": ["L"],
             "tripId": "172b101d-3d24-4172-8e9d-2c34beb9c07f",
+            "userId": "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09",
             "merchantId": "e3634bd2-7cb4-45b7-a442-f38ee4ad008b",
+            "createdDate": "2021-02-24T19:04:33.436344",
+            "lastModified": "2021-01-24T17:45:36.230152",
             "lastPing": "2021-02-24T19:04:33.436344",
+            "status": "inTransit",
             "telemetry": {
                 "temp": {
                     "degreesFahrenheit": "68"
@@ -43,7 +47,9 @@
         "tripId",
         "merchantId",
         "lastPing",
-        "telemetry"
+        "telemetry",
+        "createdDate",
+        "status"
     ],
     "properties": {
         "id": {
@@ -56,9 +62,27 @@
                 "2055c145-7d3e-446c-a7ad-ae6aaf886335"
             ]
         },
+        "status": {
+            "$id": "#/properties/status",
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": ["inTransit", "pendingReturn", "delivered", "awaitingShipment", "awaitingDeployment"]
+            },
+            "title": "The status schema",
+            "description": "The status of a specified crate.",
+            "default": "",
+            "examples": [
+                "inTransit"
+            ]
+        },
         "size": {
             "$id": "#/properties/size",
-            "type": "string",
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": ["S", "M", "L"]
+            },
             "title": "The size schema",
             "description": "The size specification of a crate.",
             "default": "",
@@ -68,7 +92,7 @@
         },
         "tripId": {
             "$id": "#/properties/tripId",
-            "type": "string",
+            "type": ["string", "null"],
             "title": "The tripId schema",
             "description": "The uuid of the crate's current trip.",
             "default": "",
@@ -78,7 +102,7 @@
         },
         "merchantId": {
             "$id": "#/properties/merchantId",
-            "type": "string",
+            "type": ["string", "null"],
             "title": "The merchantId schema",
             "description": "The uuid of the merchant currently associated with the crate.",
             "default": "",
@@ -86,14 +110,44 @@
                 "e3634bd2-7cb4-45b7-a442-f38ee4ad008b"
             ]
         },
+        "userId": {
+            "$id": "#/properties/userId",
+            "type": ["string", "null"],
+            "title": "The userId schema",
+            "description": "The uuid of the user associated with this crate.",
+            "default": "",
+            "examples": [
+                "fee7b553-f3d1-4a6f-82ae-7e37e1ed697c"
+            ]
+        },
         "lastPing": {
             "$id": "#/properties/lastPing",
-            "type": "string",
+            "type": ["string", "null"],
             "title": "The lastPing schema",
             "description": "The date/timestamp of the last telemetry data published to the logistics platform.",
             "default": "",
             "examples": [
                 "2021-02-24T19:04:33.436344"
+            ]
+        },
+         "createdDate": {
+            "$id": "#/properties/createdDate",
+            "type": "string",
+            "title": "The createdDate schema",
+            "description": "The datetime a Crate entity was created.",
+            "default": "",
+            "examples": [
+                "2021-02-24T17:45:36.230152"
+            ]
+        },
+        "lastModified": {
+            "$id": "#/properties/lastModified",
+            "type": ["string", "null"],
+            "title": "The lastModified schema",
+            "description": "The datetime a Crate entity was last modified.",
+            "default": "",
+            "examples": [
+                "2021-01-24T17:45:36.230152"
             ]
         },
         "telemetry": {
@@ -150,7 +204,7 @@
                     "properties": {
                         "degreesFahrenheit": {
                             "$id": "#/properties/telemetry/properties/temp/properties/degreesFahrenheit",
-                            "type": "string",
+                            "type": ["string", "null"],
                             "title": "The degreesFahrenheit schema",
                             "description": "An approximation of the crate current temperature in degrees Fahrenheit.",
                             "default": "",
@@ -200,7 +254,7 @@
                             "properties": {
                                 "lat": {
                                     "$id": "#/properties/telemetry/properties/location/properties/coords/properties/lat",
-                                    "type": "string",
+                                    "type": ["string", "null"],
                                     "title": "The lat schema",
                                     "description": "The current lattitude of the crate.",
                                     "default": "",
@@ -210,7 +264,7 @@
                                 },
                                 "long": {
                                     "$id": "#/properties/telemetry/properties/location/properties/coords/properties/long",
-                                    "type": "string",
+                                    "type": ["string", "null"],
                                     "title": "The long schema",
                                     "description": "The current longitude of the crate.",
                                     "default": "",
@@ -223,7 +277,7 @@
                         },
                         "zip": {
                             "$id": "#/properties/telemetry/properties/location/properties/zip",
-                            "type": "string",
+                            "type": ["string", "null"],
                             "title": "The zip schema",
                             "description": "The current zip code of the crate.",
                             "default": "",
@@ -276,7 +330,7 @@
                             "properties": {
                                 "thresholdExceeded": {
                                     "$id": "#/properties/telemetry/properties/sensors/properties/moisture/properties/thresholdExceeded",
-                                    "type": "boolean",
+                                    "type": ["boolean", "null"],
                                     "title": "The thresholdExceeded schema",
                                     "description": "Indicates a value that exceeds the platform threshold for this sensor.",
                                     "default": false,
@@ -304,7 +358,7 @@
                             "properties": {
                                 "thresholdExceeded": {
                                     "$id": "#/properties/telemetry/properties/sensors/properties/thermometer/properties/thresholdExceeded",
-                                    "type": "boolean",
+                                    "type": ["boolean", "null"],
                                     "title": "The thresholdExceeded schema",
                                     "description": "Indicates a value that exceeds the platform threshold for this sensor.",
                                     "default": false,
@@ -332,7 +386,7 @@
                             "properties": {
                                 "thresholdExceeded": {
                                     "$id": "#/properties/telemetry/properties/sensors/properties/photometer/properties/thresholdExceeded",
-                                    "type": "boolean",
+                                    "type": ["boolean", "null"],
                                     "title": "The thresholdExceeded schema",
                                     "description": "Indicates a value that exceeds the platform threshold for this sensor.",
                                     "default": false,
