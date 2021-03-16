@@ -93,6 +93,7 @@ module.exports = {
     "crate_trips": {
         "d54cc57f-c32c-454a-a295-6481f126eb8b": {
             "id": "d54cc57f-c32c-454a-a295-6481f126eb8b",
+            "crateId": "2055c145-7d3e-446c-a7ad-ae6aaf886335",
             "departureTimestamp": "2018-06-13T10:11:13+05:30",
             "departureZip": "11249-1005",
             "arrivalTimestamp": null,

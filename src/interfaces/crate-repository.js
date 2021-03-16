@@ -11,6 +11,7 @@
 * @property {Function} markCrateReturned -  set a crate's status to indicate a pending return
 * @property {Function} delete - deletes a crate in the data store by its uuid
 * @property {Function} setCrateRecipient - associates a crate with a recipient user in the data store
+* @property {Function} startCrateTrip - initializes a new trip for the current crate
 */
 
 /**
@@ -67,9 +68,12 @@ function ICrateRepository(myImpl) {
     this.deleteCrate = myImpl.deleteCrate || required;
 
     /**
-    @param {String} id - uuid of the user
+    @param {Object} user - an instance of User
     */
     this.setCrateRecipient = myImpl.setCrateRecipient || required;
+
+    
+    this.startCrateTrip = myImpl.startCrateTrip || required;
 
 }
 

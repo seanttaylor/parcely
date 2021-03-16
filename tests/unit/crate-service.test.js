@@ -5,11 +5,17 @@ const ajv = new Ajv();
 const crateSchema = require("../../src/schemas/crate.json");
 const CrateService = require("../../src/services/crate");
 const CrateRepository = require("../../src/lib/repository/crate");
+const CrateTripRepository = require("../../src/lib/repository/crate-trip");
 const DatabaseConnector = require("../../src/lib/database/connectors/memory");
 const testDbConnector = new DatabaseConnector({console: mockImpl.console});
 const ICrateRepository = require("../../src/interfaces/crate-repository");
+const ICrateTripRepository = require("../../src/interfaces/trip-repository");
 const testCrateRepo = new ICrateRepository(new CrateRepository(testDbConnector));
-const testCrateService = new CrateService(testCrateRepo);
+const testCrateTripRepo = new ICrateTripRepository(new CrateTripRepository(testDbConnector));
+const testCrateService = new CrateService({
+    crateRepo: testCrateRepo,
+    crateTripRepo: testCrateTripRepo
+});
 
 /**Tests**/
 afterAll(()=> {
@@ -150,13 +156,12 @@ test("Should return a specified trip for a specified crate", async() => {
     
     await testCrate.save();
     const crateTrip = await testCrateService.getCrateTripById(testCrateTripId);
-  
+    
     expect(crateTrip.id === testCrateTripId).toBe(true);
 });
 
 
 test("Should create a new trip for an existing crate", async() => {
-    const testCrateTripId = "d54cc57f-c32c-454a-a295-6481f126eb8b";
     const originAddress = {
         street: "1159 Drury Lane",
         apartmentNumber: "7",
@@ -175,7 +180,7 @@ test("Should create a new trip for an existing crate", async() => {
     });
     
     await testCrate.save();
-    await testCrate.startTrip({
+    const testCrateTripId = await testCrate.startTrip({
         originAddress, 
         destinationAddress, 
         trackingNumber: "1A54F78A0450293517"
@@ -183,10 +188,11 @@ test("Should create a new trip for an existing crate", async() => {
     const [crateTrip] = await testCrateService.getCrateTrips(testCrate);
     
     expect(crateTrip.id === testCrateTripId).toBe(true);
+    expect(testCrate._data.status[0] === "inTransit");
 });
 
 
-test("Should return JSON object representation", async() => {
+test("Should return JSON object representation of a Crate", async() => {
     const testCrate = await testCrateService.createCrate({
       size: ["S"]
     });
@@ -195,6 +201,31 @@ test("Should return JSON object representation", async() => {
     expect(typeof(testCrate.toJSON()) === "object").toBe(true);
 });
 
-
-/*Negative Tests*/
-
+test("Should return JSON object representation of a CrateTrip", async() => {
+    const originAddress = {
+        street: "1159 Drury Lane",
+        apartmentNumber: "7",
+        city: "StoryBrooke",
+        state: "NY",
+        zip: "11111"
+    };
+    const destinationAddress = {
+        street: "1 Shire Road",
+        city: "Hobbiton",
+        state: "CA",
+        zip: "90000"
+    };
+    const testCrate = await testCrateService.createCrate({
+      size: ["S"]
+    });
+    
+    await testCrate.save();
+    const testCrateTripId = await testCrate.startTrip({
+        originAddress, 
+        destinationAddress, 
+        trackingNumber: "1A54F78A0450293517"
+    });
+    const [crateTrip] = await testCrateService.getCrateTrips(testCrate);
+    
+    expect(typeof(crateTrip.toJSON()) === "object").toBe(true);
+});

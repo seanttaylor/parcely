@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
-/*Implements IUserRepository interface for connecting to a datastore.
-See interfaces/user-repository for method documentation*/
+/*Implements ICrateRepository interface for connecting to a datastore.
+See interfaces/crate-repository for method documentation*/
 
 const { CrateDTO } = require("./dto");
 
@@ -20,7 +20,7 @@ function CrateRepository(databaseConnector) {
             doc: crateDTO, 
             collection: "crates"
         });
-
+        
         return { id: record.id, createdDate: record.createdDate };
 
     }
@@ -53,6 +53,24 @@ function CrateRepository(databaseConnector) {
             collection: "crates"
         });
     }
+
+    /*this.removeCrateRecipient = async function(crateDTO) {
+        const result = await databaseConnector.updateOne({
+            doc: crateDTO,
+            collection: "crates"
+        });
+    }*/
+
+    /**
+     * @param {CrateDTO} crateDTO - an instance of a CrateDTO
+     */
+    this.startCrateTrip = async function(crateDTO) {
+        const result = await databaseConnector.updateOne({
+            doc: crateDTO,
+            collection: "crates"
+        });
+    }
+
 
 
     this.getCrateTripsByCrateId = async function(id) {

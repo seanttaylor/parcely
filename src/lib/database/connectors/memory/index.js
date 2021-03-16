@@ -41,7 +41,7 @@ function InMemoryDatabaseConnector({console}) {
                 throw new Error(`ValidationError.SchemaError: ${collection} ${JSON.stringify(validate.errors, null, 2)}`); 
             }
 
-            data[collection][record.id] = record;             
+            data[collection][record.id] = record; 
             return [record];
             
         } catch(e) {

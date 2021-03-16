@@ -1,5 +1,6 @@
 const uuid = require("uuid");
-const {CrateDTO, CrateTripDTO} = require("../lib/repository/crate/dto");
+const {CrateDTO} = require("../lib/repository/crate/dto");
+const {CrateTripDTO} = require("../lib/repository/crate-trip/dto");
 
 /**
 * @typedef {Object} Crate
@@ -39,7 +40,7 @@ function Crate(repo, crateDTO) {
     */
     this.save = async function() {
         const crateDTO = new CrateDTO(this._data);
-        const crate = await this._repo.create(crateDTO);
+        const crate = await this._repo.crate.create(crateDTO);
         
         return crate.id;
     }
@@ -50,7 +51,7 @@ function Crate(repo, crateDTO) {
     */
     this.setRecipient = async function(userId) {
         const crateDTO = new CrateDTO(Object.assign(this._data, userId));
-        const crate = await this._repo.setCrateRecipient(crateDTO);
+        const crate = await this._repo.crate.setCrateRecipient(crateDTO);
         this._data.userId = userId;
     }
 
@@ -69,20 +70,27 @@ function Crate(repo, crateDTO) {
     @param {String} trackingNumber - shipping carrier tracking number associated with this crate for this trip
     */
     this.startTrip = async function({originAddress, destinationAddress, trackingNumber}) {
-        const crateTripDTO = new CrateTripDTO(Object.assign(this._data, {
+        const id = uuid.v4();
+        const crateTripDTO = new CrateTripDTO({
+            id,
             originAddress, 
             destinationAddress, 
             trackingNumber,
+            crateId: this._data.id,
             arrivalZip: destinationAddress.zip,
             departureZip: originAddress.zip,
             departureTimestamp: new Date().toISOString()
-        }));
+        });
 
-        const crateTrip = new CrateTrip(this._repo, crateTripDTO);
+        const crateTrip = new CrateTrip(this._repo.crateTrip, crateTripDTO);
+        crateTrip._data.crateId = this._data.id;
+
         await crateTrip.save();
-        await this._repo.startCrateTrip(this.id);
+        await this._repo.crate.startCrateTrip(new CrateDTO(Object.assign(this._data, {
+            status: ["inTransit"]
+        })));
         
-        this._data.status = "inTransit";
+        this._data.status = ["inTransit"];
         this.currentTrip = crateTrip;
         return crateTrip.id;
     }
@@ -139,50 +147,54 @@ function CrateTrip(repo, crateTripDTO) {
 
 /**
  * 
- * @param {Object} repo - the repo associated with this service
+ * @param {Object} repo - the repos associated with this service
  */
 
-function CrateService(repo) {
-    this._repo = repo;
+function CrateService({crateRepo, crateTripRepo}) {
+    this._repo = {
+        crate: crateRepo,
+        crateTrip: crateTripRepo
+     }
 
     this.createCrate = async function(doc) {
         const id = uuid.v4();
         const data = Object.assign({id}, doc);
-        return new Crate(repo, new CrateDTO(data));
+        return new Crate(this._repo, new CrateDTO(data));
     }
 
 
     this.getCrateById = async function(id) {
-        const crate = await this._repo.getCrateById(id);
-        return [new Crate(repo, new CrateDTO(crate))];
+        const crate = await this._repo.crate.getCrateById(id);
+        return [new Crate(this._repo.crate, new CrateDTO(crate))];
     }
 
     
     this.getAllCrates = async function() {
-        const crates = await this._repo.getAllCrates();
-        return crates.map((c) => new Crate(repo, new CrateDTO(c)));
+        const crates = await this._repo.crate.getAllCrates();
+        return crates.map((c) => new Crate(this._repo.crate, new CrateDTO(c)));
     }
 
     /**
      * @param {User} user - an instance of a User
     */
     this.getCratesByUser = async function(user) {
-        const crateList = await this._repo.getCratesByUserId(user.id);
-        return crateList.map((c) => new Crate(repo, new CrateDTO(c)));
+        const crateList = await this._repo.crate.getCratesByUserId(user.id);
+        return crateList.map((c) => new Crate(this._repo.crate, new CrateDTO(c)));
     }
 
 
     this.getCrateTripById = async function(tripId) {
-        const tripData = await this._repo.getCrateTripById(tripId);
-        return new CrateTrip(this._repo, new CrateTripDTO(tripData));
+        const tripData = await this._repo.crateTrip.getCrateTripById(tripId);
+        return new CrateTrip(this._repo.crateTrip, new CrateTripDTO(tripData));
     }
 
     /**
      * @param {Crate} crate - an instance of a Crate
     */
     this.getCrateTrips = async function(crate) {
-        const crateTripList = await this._repo.getCrateTripsByCrateId(crate.id);
-        return crateTripList.map((t) => new CrateTrip(this._repo, new CrateTripDTO(t)));
+        const crateTripList = await this._repo.crateTrip.getCrateTripsByCrateId(crate.id);
+
+        return crateTripList.map((t) => new CrateTrip(this._repo.crateTrip, new CrateTripDTO(t)));
     }
 
 
@@ -190,13 +202,13 @@ function CrateService(repo) {
      * @param {Crate} crate - an instance of a Crate
     */
     this.getCurrentCrateTelemetry = async function(crate) {
-        const {telemetry} = await this._repo.getCrateById(crate.id);
+        const {telemetry} = await this._repo.crate.getCrateById(crate.id);
         return telemetry;
     }
 
 
     this.deleteCrate = async function(id) {
-        await this._repo.deleteCrate(id);
+        await this._repo.crate.deleteCrate(id);
     }
 
     /**
@@ -207,7 +219,7 @@ function CrateService(repo) {
             status: ["pendingReturn"]
         }));
 
-        await this._repo.markCrateReturned(crateDTO);
+        await this._repo.crate.markCrateReturned(crateDTO);
     }
 
 }
