@@ -247,8 +247,14 @@ test("Should push telemetry data to platform", async() => {
     const updatedTestCrate = await testCrateService.getCrateById(testCrate.id);
    
     expect(updatedTestCrate._data.telemetry.temp.degreesFahrenheit === fakeTelemetryData.temp.degreesFahrenheit).toBe(true);
-    
+
     expect(testCrate._data.telemetry.temp.degreesFahrenheit === fakeTelemetryData.temp.degreesFahrenheit).toBe(true);
+
+    expect(testCrate._data.telemetry.location.coords.lat === fakeTelemetryData.location.coords.lat).toBe(true);
+
+    expect(testCrate._data.telemetry.location.coords.long === fakeTelemetryData.location.coords.long).toBe(true);
+
+    expect(testCrate._data.telemetry.location.zip === fakeTelemetryData.location.zip).toBe(true);
 });
 
 
@@ -260,6 +266,7 @@ test("Should return JSON object representation of a Crate", async() => {
     await testCrate.save();
     expect(typeof(testCrate.toJSON()) === "object").toBe(true);
 });
+
 
 test("Should return JSON object representation of a CrateTrip", async() => {
     const originAddress = {

@@ -60,7 +60,10 @@ function Crate(repo, crateDTO) {
     @param {Object} telemetry - data from the sensors
     */
     this.pushTelemetry = async function(telemetry) {
-        const crateDTO = new CrateDTO(Object.assign(this._data, {telemetry}));
+        const crateDTO = new CrateDTO(Object.assign(this._data, {
+            telemetry,
+            lastPing: new Date().toISOString()
+        }));
         const crate = await this._repo.crate.updateCrateTelemetry(crateDTO);
         this._data.telemetry = telemetry;
     }
