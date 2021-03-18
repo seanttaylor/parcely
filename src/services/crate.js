@@ -55,6 +55,20 @@ function Crate(repo, crateDTO) {
         this._data.userId = userId;
     }
 
+    /**
+    Pushes telemetry data from the physical crate sensors to the data store
+    @param {Object} telemetry - data from the sensors
+    */
+    this.pushTelemetry = async function(telemetry) {
+        const crateDTO = new CrateDTO(Object.assign(this._data, {
+            telemetry,
+            lastPing: new Date().toISOString()
+        }));
+        const crate = await this._repo.crate.updateCrateTelemetry(crateDTO);
+        this._data.telemetry = telemetry;
+    }
+
+
 
     /**
     Remove designated recipient of the crate in the data store.
@@ -165,7 +179,7 @@ function CrateService({crateRepo, crateTripRepo}) {
 
     this.getCrateById = async function(id) {
         const crate = await this._repo.crate.getCrateById(id);
-        return [new Crate(this._repo.crate, new CrateDTO(crate))];
+        return new Crate(this._repo.crate, new CrateDTO(crate));
     }
 
     
