@@ -12,6 +12,7 @@
 * @property {Function} delete - deletes a crate in the data store by its uuid
 * @property {Function} setCrateRecipient - associates a crate with a recipient user in the data store
 * @property {Function} startCrateTrip - initializes a new trip for the current crate
+* @property {Function} updateCrateTelemetry - updates crate telemetry with latest sensor data
 */
 
 /**
@@ -58,7 +59,7 @@ function ICrateRepository(myImpl) {
     this.getCratesByUserId = myImpl.getCratesByUserId || required;
 
     /**
-    @param {Crate} crate - an instance of Crate
+    @param {CrateDTO} crate - an instance of CrateDTO
     */
     this.markCrateReturned = myImpl.markCrateReturned || required;
 
@@ -72,7 +73,11 @@ function ICrateRepository(myImpl) {
     */
     this.setCrateRecipient = myImpl.setCrateRecipient || required;
 
-    
+    /**
+    @param {CrateDTO} crate - an instance of CrateDTO
+    */
+    this.updateCrateTelemetry = myImpl.updateCrateTelemetry || required;
+
     this.startCrateTrip = myImpl.startCrateTrip || required;
 
 }

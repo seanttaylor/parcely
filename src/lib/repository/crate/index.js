@@ -72,7 +72,6 @@ function CrateRepository(databaseConnector) {
     }
 
 
-
     this.getCrateTripsByCrateId = async function(id) {
         const crateTrips = await databaseConnector.findAll("crate_trips");
         return crateTrips.filter(trip => trip.crateId === id);
@@ -86,6 +85,22 @@ function CrateRepository(databaseConnector) {
 
 
     this.markCrateReturned = async function(crateDTO) {
+        const [result] = await databaseConnector.updateOne({
+            doc: crateDTO, 
+            collection: "crates"
+        });
+    }
+
+
+    this.markCrateReturned = async function(crateDTO) {
+        const [result] = await databaseConnector.updateOne({
+            doc: crateDTO, 
+            collection: "crates"
+        });
+    }
+
+
+    this.updateCrateTelemetry = async function(crateDTO) {
         const [result] = await databaseConnector.updateOne({
             doc: crateDTO, 
             collection: "crates"
