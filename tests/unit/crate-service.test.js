@@ -310,6 +310,13 @@ test("Pushing crate telemetry should add a waypoint to the associated CrateTrip"
 
     await testCrate.pushTelemetry(fakeTelemetryData);
     expect(testCrate.currentTrip.waypoints.length === 1).toBe(true);
+
+    const updatedTestCrate = await testCrateService.getCrateById(testCrateId);
+    expect(updatedTestCrate._data.telemetry.location.zip ===  fakeTelemetryData.location.zip).toBe(true);
+
+    const updatedTestCrateTrip  = await testCrateService.getCrateTripById(testCrateTripId);
+    expect(updatedTestCrateTrip.waypoints[0].telemetry.location.zip === fakeTelemetryData.location.zip).toBe(true);
+
 });
 
 
