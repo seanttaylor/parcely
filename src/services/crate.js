@@ -72,6 +72,15 @@ function Crate(repo, crateDTO) {
     }
 
 
+    /**
+    Returns the most recent crate telemetry data
+    @param {Object} telemetry - data from the sensors
+    */
+    this.getCurrentTelemetry = async function() {
+        const {telemetry} = await this._repo.crate.getCrateById(this.id);
+        return telemetry;
+    }
+
 
     /**
     Remove designated recipient of the crate in the data store.
@@ -231,15 +240,6 @@ function CrateService({crateRepo, crateTripRepo}) {
         const crateTripList = await this._repo.crateTrip.getCrateTripsByCrateId(crate.id);
 
         return crateTripList.map((t) => new CrateTrip(this._repo.crateTrip, new CrateTripDTO(t)));
-    }
-
-
-    /**
-     * @param {Crate} crate - an instance of a Crate
-    */
-    this.getCurrentCrateTelemetry = async function(crate) {
-        const {telemetry} = await this._repo.crate.getCrateById(crate.id);
-        return telemetry;
     }
 
 

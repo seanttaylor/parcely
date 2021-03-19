@@ -91,9 +91,9 @@ test("Should get current crate telemetry data", async() => {
     });
     
     await testCrate.save();
-    const telemetry = await testCrateService.getCurrentCrateTelemetry(testCrate);
+    const telemetry = await testCrate.getCurrentTelemetry();
   
-    expect(typeof(testCrate) === "object").toBe(true);
+    expect(typeof(telemetry) === "object").toBe(true);
 });
 
 
