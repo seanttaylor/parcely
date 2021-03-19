@@ -257,6 +257,68 @@ test("Should push telemetry data to platform", async() => {
     expect(testCrate._data.telemetry.location.zip === fakeTelemetryData.location.zip).toBe(true);
 });
 
+test("Pushing crate telemetry should add a waypoint to the associated CrateTrip", async() => {
+    const originAddress = {
+        street: "1159 Drury Lane",
+        apartmentNumber: "7",
+        city: "StoryBrooke",
+        state: "NY",
+        zip: "11111"
+    };
+
+    const destinationAddress = {
+        street: "1 Shire Road",
+        city: "Hobbiton",
+        state: "CA",
+        zip: "90000"
+    };
+
+    const fakeTelemetryData = {
+        "temp": {
+            "degreesFahrenheit": String(faker.random.float())
+        },
+        "location": {
+            "coords": {
+                "lat": faker.address.latitude(),
+                "long": faker.address.longitude()
+            },
+            "zip": faker.address.zipCode()
+        },
+        "sensors": {
+            "moisture": {
+                "thresholdExceeded": false
+            },
+            "thermometer": {
+                "thresholdExceeded": false
+            },
+            "photometer": {
+                "thresholdExceeded": false
+            }
+        }
+    };
+
+    const testCrate = await testCrateService.createCrate({
+      size: ["S"]
+    });
+    
+    const testCrateId = await testCrate.save();
+    const testCrateTripId = await testCrate.startTrip({
+        originAddress, 
+        destinationAddress, 
+        trackingNumber: "1A54F78A0450293517"
+    });
+
+    await testCrate.pushTelemetry(fakeTelemetryData);
+    expect(testCrate.currentTrip.waypoints.length === 1).toBe(true);
+
+    const updatedTestCrate = await testCrateService.getCrateById(testCrateId);
+    expect(updatedTestCrate._data.telemetry.location.zip ===  fakeTelemetryData.location.zip).toBe(true);
+
+    const updatedTestCrateTrip  = await testCrateService.getCrateTripById(testCrateTripId);
+    expect(updatedTestCrateTrip.waypoints[0].telemetry.location.zip === fakeTelemetryData.location.zip).toBe(true);
+
+});
+
 
 test("Should return JSON object representation of a Crate", async() => {
     const testCrate = await testCrateService.createCrate({

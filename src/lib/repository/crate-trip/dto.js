@@ -4,6 +4,8 @@ const Ajv = require("ajv");
 const ajv = new Ajv();
 const crateTripSchema = require("../../../schemas/trip.json");
 const crateTripSchemaValidation = ajv.compile(crateTripSchema);
+const crateTelemetrySchema = crateTripSchema.properties.waypoints;
+const crateTelemetrySchemaValidation = ajv.compile(crateTelemetrySchema);
 
 
 /**
@@ -16,9 +18,10 @@ const crateTripSchemaValidation = ajv.compile(crateTripSchema);
  * @property {String} arrivalZip
  * @property {String} trackingNumber
  * @property {String} createdDate
+ * @property {Array}  waypoints
  * @property {String} tripLengthMiles
- * @property {Object} originAddress - the postal address a crate originates from
- * @property {Object} destinationAddress - the postal address a crate ships to
+ * @property {Object} originAddress
+ * @property {Object} destinationAddress
  */
 
 /**
@@ -29,7 +32,7 @@ const crateTripSchemaValidation = ajv.compile(crateTripSchema);
  * @param {String} departureZip - departue zip code
  * @param {String} arrivalZip - arrival zip code
  * @param {String} trackingNumber - Shipping carrier tracking number associated with this crate for this trip
- * @param {String} waypoints - list of each point in the trip where the crate pushed telemetry data to the logistics API
+ * @param {Array} waypoints - list of each point in the trip where the crate pushed telemetry data to the logistics API
  * @param {String|null} lastModified - datetime crate trip data was last modified
  * @param {String} tripLengthMiles - estimated length of the trip in miles
  * @param {Object} originAddress - the postal address a crate originates from
@@ -67,6 +70,38 @@ function CrateTripDTO({id, crateId, departureTimestamp, arrivalTimestamp=null, t
 
 }
 
+
+/**
+ * @typedef {Object} CrateTelemetryDTO
+ * @property {String} timestamp 
+ * @property {Object} telemetry 
+ */
+
+/**
+ * @param {String} timestamp - date/time telemetry datea
+ * @param {Object} telemetry - telemetry data from Crate sensors
+ * @returns {CrateTelemetry}
+ */
+
+function CrateTelemetryDTO({timestamp, telemetry}) {
+    
+    const crateTelemetryData = [{
+        timestamp,
+        telemetry
+    }];
+        
+   
+  if(!crateTelemetrySchemaValidation(crateTelemetryData)) {
+    throw new Error(`CrateTelemetryDTOError/InvalidCrateTelemetryDTO => ${JSON.stringify(crateTelemetrySchemaValidation.errors, null, 2)}`);
+  }
+
+  this.value = function() {
+    return crateTelemetryData;
+  }
+
+}
+
 module.exports = {
-    CrateTripDTO
+    CrateTripDTO,
+    CrateTelemetryDTO
 };

@@ -1,6 +1,6 @@
 const uuid = require("uuid");
 const {CrateDTO} = require("../lib/repository/crate/dto");
-const {CrateTripDTO} = require("../lib/repository/crate-trip/dto");
+const {CrateTripDTO, CrateTelemetryDTO} = require("../lib/repository/crate-trip/dto");
 
 /**
 * @typedef {Object} Crate
@@ -60,11 +60,14 @@ function Crate(repo, crateDTO) {
     @param {Object} telemetry - data from the sensors
     */
     this.pushTelemetry = async function(telemetry) {
+        const timestamp = new Date().toISOString();
         const crateDTO = new CrateDTO(Object.assign(this._data, {
             telemetry,
-            lastPing: new Date().toISOString()
+            lastPing: timestamp
         }));
-        const crate = await this._repo.crate.updateCrateTelemetry(crateDTO);
+        
+        await this._repo.crate.updateCrateTelemetry(crateDTO);
+        await this.currentTrip.addWaypoint({timestamp, telemetry});
         this._data.telemetry = telemetry;
     }
 
@@ -85,6 +88,7 @@ function Crate(repo, crateDTO) {
     */
     this.startTrip = async function({originAddress, destinationAddress, trackingNumber}) {
         const id = uuid.v4();
+        const status = ["inTransit"];
         const crateTripDTO = new CrateTripDTO({
             id,
             originAddress, 
@@ -101,10 +105,11 @@ function Crate(repo, crateDTO) {
 
         await crateTrip.save();
         await this._repo.crate.startCrateTrip(new CrateDTO(Object.assign(this._data, {
-            status: ["inTransit"]
+            status
         })));
         
-        this._data.status = ["inTransit"];
+        this._data.status = status;
+        this._data.tripId = id;
         this.currentTrip = crateTrip;
         return crateTrip.id;
     }
@@ -130,6 +135,7 @@ function CrateTrip(repo, crateTripDTO) {
     this._data = dtoData;
     this._repo = repo;
     this.id = dtoData.id;
+    this.waypoints = dtoData.waypoints;
     
     this.toJSON = function() {
         return {
@@ -151,6 +157,22 @@ function CrateTrip(repo, crateTripDTO) {
         const crateTripDTO = new CrateTripDTO(this._data);
         const crateTrip = await this._repo.create(crateTripDTO);
         return crateTrip.id;
+    }
+
+
+    /**
+    Adds a new waypoint to an existing trip
+    @param {String} timestamp
+    @param {Object} telemetry 
+    */
+    this.addWaypoint = async function({timestamp, telemetry}) {
+        const crateTelemetryDTO = new CrateTelemetryDTO({timestamp, telemetry});
+        const [crateTelemetry] = crateTelemetryDTO.value();
+        this._data.waypoints.push(crateTelemetry);
+        const crateTripDTO = new CrateTripDTO(Object.assign({}, this._data));
+       
+        await this._repo.addTripWaypoint(crateTripDTO);
+        this.waypoints = this._data.waypoints;
     }
 }
 
