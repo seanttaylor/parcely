@@ -431,3 +431,67 @@ test("Should throw an error when crateTrip is initialized without a recipientId 
         expect(e.message).toMatch("CrateError.CannotStartTrip.missingRecipientId");
     }
 });
+
+
+test("Trip waypoints should be read-only", async() => {
+    const testCrate = await testCrateService.createCrate({
+      size: ["S"],
+      merchantId: faker.random.uuid(),
+      recipientId: faker.random.uuid()
+    });
+    const originAddress = {
+        street: faker.address.streetName(),
+        apartmentNumber: "7",
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode()
+    };
+    const destinationAddress = {
+        street: faker.address.streetName(),
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode()
+    };
+    const fakeTelemetryData = {
+        "temp": {
+            "degreesFahrenheit": String(faker.random.float())
+        },
+        "location": {
+            "coords": {
+                "lat": faker.address.latitude(),
+                "long": faker.address.longitude()
+            },
+            "zip": faker.address.zipCode()
+        },
+        "sensors": {
+            "moisture": {
+                "thresholdExceeded": false
+            },
+            "thermometer": {
+                "thresholdExceeded": false
+            },
+            "photometer": {
+                "thresholdExceeded": false
+            }
+        }
+    };
+    
+    await testCrate.save();
+    const testCrateTripId = await testCrate.startTrip({
+        originAddress, 
+        destinationAddress, 
+        trackingNumber: faker.random.uuid()
+    });
+    
+    await testCrate.pushTelemetry(fakeTelemetryData);
+   
+    testCrate["currentTrip"]["waypoints"][0]["timestamp"] = "now";
+    expect(testCrate["currentTrip"]["waypoints"][0]["timestamp"] !== "now").toBe(true);
+
+    try {
+        testCrate.currentTrip.waypoints.push({});
+    } catch(e) {
+        expect(e.message).toMatch("Cannot add property");
+    }
+    
+});
