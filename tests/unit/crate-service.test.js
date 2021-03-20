@@ -100,7 +100,8 @@ test("Should get current crate telemetry data", async() => {
 test("Should associate a specified user with a crate", async() => {
     const thorUserId = "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09";
     const testCrate = await testCrateService.createCrate({
-      size: ["S"]
+      size: ["S"],
+      merchantId: faker.random.uuid()
     });
     
     await testCrate.save();
@@ -163,28 +164,29 @@ test("Should return a specified trip for a specified crate", async() => {
 
 
 test("Should create a new trip for an existing crate", async() => {
-    const originAddress = {
-        street: "1159 Drury Lane",
+     const originAddress = {
+        street: faker.address.streetName(),
         apartmentNumber: "7",
-        city: "StoryBrooke",
-        state: "NY",
-        zip: "11111"
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode()
     };
     const destinationAddress = {
-        street: "1 Shire Road",
-        city: "Hobbiton",
-        state: "CA",
-        zip: "90000"
+        street: faker.address.streetName(),
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode()
     };
     const testCrate = await testCrateService.createCrate({
-      size: ["S"]
+      size: ["S"],
+      merchantId: faker.random.uuid()
     });
     
     const testCrateId = await testCrate.save();
     const testCrateTripId = await testCrate.startTrip({
         originAddress, 
         destinationAddress, 
-        trackingNumber: "1A54F78A0450293517"
+        trackingNumber: faker.random.uuid()
     });
     const [crateTrip] = await testCrateService.getCrateTrips(testCrate);
     const crateDbRecord = await testCrateService.getCrateById(testCrateId);
@@ -197,7 +199,8 @@ test("Should create a new trip for an existing crate", async() => {
 
 test("Should push telemetry data to platform", async() => {
     const testCrate = await testCrateService.createCrate({
-      size: ["S"]
+      size: ["S"],
+      merchantId: faker.random.uuid()
     });
     const originAddress = {
         street: faker.address.streetName(),
@@ -240,7 +243,7 @@ test("Should push telemetry data to platform", async() => {
     const testCrateTripId = await testCrate.startTrip({
         originAddress, 
         destinationAddress, 
-        trackingNumber: "1A54F78A0450293517"
+        trackingNumber: faker.random.uuid()
     });
     
     await testCrate.pushTelemetry(fakeTelemetryData);
@@ -259,18 +262,17 @@ test("Should push telemetry data to platform", async() => {
 
 test("Pushing crate telemetry should add a waypoint to the associated CrateTrip", async() => {
     const originAddress = {
-        street: "1159 Drury Lane",
+        street: faker.address.streetName(),
         apartmentNumber: "7",
-        city: "StoryBrooke",
-        state: "NY",
-        zip: "11111"
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode()
     };
-
     const destinationAddress = {
-        street: "1 Shire Road",
-        city: "Hobbiton",
-        state: "CA",
-        zip: "90000"
+        street: faker.address.streetName(),
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode()
     };
 
     const fakeTelemetryData = {
@@ -298,14 +300,15 @@ test("Pushing crate telemetry should add a waypoint to the associated CrateTrip"
     };
 
     const testCrate = await testCrateService.createCrate({
-      size: ["S"]
+      size: ["S"],
+      merchantId: faker.random.uuid()
     });
     
     const testCrateId = await testCrate.save();
     const testCrateTripId = await testCrate.startTrip({
         originAddress, 
         destinationAddress, 
-        trackingNumber: "1A54F78A0450293517"
+        trackingNumber: faker.random.uuid()
     });
 
     await testCrate.pushTelemetry(fakeTelemetryData);
@@ -331,30 +334,63 @@ test("Should return JSON object representation of a Crate", async() => {
 
 
 test("Should return JSON object representation of a CrateTrip", async() => {
-    const originAddress = {
-        street: "1159 Drury Lane",
+      const originAddress = {
+        street: faker.address.streetName(),
         apartmentNumber: "7",
-        city: "StoryBrooke",
-        state: "NY",
-        zip: "11111"
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode()
     };
     const destinationAddress = {
-        street: "1 Shire Road",
-        city: "Hobbiton",
-        state: "CA",
-        zip: "90000"
+        street: faker.address.streetName(),
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode()
     };
     const testCrate = await testCrateService.createCrate({
-      size: ["S"]
+      size: ["S"],
+      merchantId: faker.random.uuid()
     });
     
     await testCrate.save();
     const testCrateTripId = await testCrate.startTrip({
         originAddress, 
         destinationAddress, 
-        trackingNumber: "1A54F78A0450293517"
+        trackingNumber: faker.random.uuid()
     });
     const [crateTrip] = await testCrateService.getCrateTrips(testCrate);
     
     expect(typeof(crateTrip.toJSON()) === "object").toBe(true);
+});
+
+/* Negative Tests */
+
+test("Should throw an error when crateTrip is initialized without a merchantId assigned to the associated crate", async() => {
+    const originAddress = {
+        street: faker.address.streetName(),
+        apartmentNumber: "7",
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode()
+    };
+    const destinationAddress = {
+        street: faker.address.streetName(),
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode()
+    };
+    const testCrate = await testCrateService.createCrate({
+      size: ["S"]
+    });
+    await testCrate.save();
+
+    try {
+        await testCrate.startTrip({
+            originAddress,
+            destinationAddress,
+            trackingNumber: faker.random.uuid()       
+        });   
+    } catch(e) {
+        expect(e.message).toMatch("CrateError.CannotStartTrip");
+    }
 });

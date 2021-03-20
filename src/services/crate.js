@@ -96,6 +96,9 @@ function Crate(repo, crateDTO) {
     @param {String} trackingNumber - shipping carrier tracking number associated with this crate for this trip
     */
     this.startTrip = async function({originAddress, destinationAddress, trackingNumber}) {
+        if (!this._data.merchantId) {
+            throw new Error("CrateError.CannotStartTrip => Cannot start crate trip without merchantId assigned to associated crate");
+        }
         const id = uuid.v4();
         const status = ["inTransit"];
         const crateTripDTO = new CrateTripDTO({
