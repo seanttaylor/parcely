@@ -107,7 +107,7 @@ test("Should associate a specified user with a crate", async() => {
     await testCrate.save();
     await testCrate.setRecipient(thorUserId);
   
-    expect(testCrate._data.userId === thorUserId).toBe(true);
+    expect(testCrate._data.recipientId === thorUserId).toBe(true);
 });
 
 
@@ -120,10 +120,12 @@ test("Should get a list of crates associated with a specified user", async() => 
     await testCrate.save();
     await testCrate.setRecipient(thorUserId);
   
-    const crateList = await testCrateService.getCratesByUser({ id: thorUserId });
+    const crateList = await testCrateService.getCratesByRecipient({ 
+        id: thorUserId 
+    });
 
     expect(Array.isArray(crateList)).toBe(true);
-    expect(crateList[0]._data.userId === thorUserId).toBe(true);
+    expect(crateList[0]._data.recipientId === thorUserId).toBe(true);
 });
 
 
@@ -179,7 +181,8 @@ test("Should create a new trip for an existing crate", async() => {
     };
     const testCrate = await testCrateService.createCrate({
       size: ["S"],
-      merchantId: faker.random.uuid()
+      merchantId: faker.random.uuid(),
+      recipientId: faker.random.uuid()
     });
     
     const testCrateId = await testCrate.save();
@@ -200,7 +203,8 @@ test("Should create a new trip for an existing crate", async() => {
 test("Should push telemetry data to platform", async() => {
     const testCrate = await testCrateService.createCrate({
       size: ["S"],
-      merchantId: faker.random.uuid()
+      merchantId: faker.random.uuid(),
+      recipientId: faker.random.uuid()
     });
     const originAddress = {
         street: faker.address.streetName(),
@@ -301,7 +305,8 @@ test("Pushing crate telemetry should add a waypoint to the associated CrateTrip"
 
     const testCrate = await testCrateService.createCrate({
       size: ["S"],
-      merchantId: faker.random.uuid()
+      merchantId: faker.random.uuid(),
+      recipientId: faker.random.uuid()
     });
     
     const testCrateId = await testCrate.save();
@@ -349,7 +354,8 @@ test("Should return JSON object representation of a CrateTrip", async() => {
     };
     const testCrate = await testCrateService.createCrate({
       size: ["S"],
-      merchantId: faker.random.uuid()
+      merchantId: faker.random.uuid(),
+      recipientId: faker.random.uuid()
     });
     
     await testCrate.save();
@@ -391,6 +397,37 @@ test("Should throw an error when crateTrip is initialized without a merchantId a
             trackingNumber: faker.random.uuid()       
         });   
     } catch(e) {
-        expect(e.message).toMatch("CrateError.CannotStartTrip");
+        expect(e.message).toMatch("CrateError.CannotStartTrip.missingMerchantId");
+    }
+});
+
+test("Should throw an error when crateTrip is initialized without a recipientId assigned to the associated crate", async() => {
+    const originAddress = {
+        street: faker.address.streetName(),
+        apartmentNumber: "7",
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode()
+    };
+    const destinationAddress = {
+        street: faker.address.streetName(),
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode()
+    };
+    const testCrate = await testCrateService.createCrate({
+      size: ["S"],
+      merchantId: faker.random.uuid()
+    });
+    await testCrate.save();
+
+    try {
+        await testCrate.startTrip({
+            originAddress,
+            destinationAddress,
+            trackingNumber: faker.random.uuid()       
+        });   
+    } catch(e) {
+        expect(e.message).toMatch("CrateError.CannotStartTrip.missingRecipientId");
     }
 });

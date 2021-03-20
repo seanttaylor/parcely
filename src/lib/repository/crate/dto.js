@@ -33,6 +33,7 @@ const defaultTelemetry = {
  * @property {String} id 
  * @property {String} status
  * @property {String} size
+ * @property {String} recipientId
  * @property {String} merchantId
  * @property {String} lastPing
  * @property {String} telemetry
@@ -45,6 +46,7 @@ const defaultTelemetry = {
   * @param {String} status - status of crate
   * @param {String} size - size of crate
   * @param {String} tripId - uuid for a unique crate trip
+  * @param {String} recipientId - uuid for a recipient associated with a specified crate
   * @param {String} merchantId - uuid for a merchant associated with a specified crate
   * @param {String} lastPing - last ping received from a specified crate
   * @param {Object} telemetry - summary of telemetry data 
@@ -53,7 +55,7 @@ const defaultTelemetry = {
   * @returns {CrateDTO}
   */
 
-function CrateDTO({id, size, status=["awaitingDeployment"], tripId=null, merchantId=null, userId=null, lastPing=null, telemetry, createdDate=new Date().toISOString(), lastModified=null }) {
+function CrateDTO({id, size, status=["awaitingDeployment"], tripId=null, merchantId=null, recipientId=null, lastPing=null, telemetry, createdDate=new Date().toISOString(), lastModified=null }) {
     
     const crateData = {
       id,
@@ -61,7 +63,7 @@ function CrateDTO({id, size, status=["awaitingDeployment"], tripId=null, merchan
       size, 
       tripId, 
       merchantId,
-      userId,
+      recipientId,
       lastPing,
       telemetry: telemetry || defaultTelemetry,
       createdDate, 

@@ -47,12 +47,12 @@ function Crate(repo, crateDTO) {
 
     /**
     Associates the crate with a recipient user in the data store.
-    @param {String} userId - a uuid for the recipient user
+    @param {String} recipientId - a uuid for the recipient user
     */
-    this.setRecipient = async function(userId) {
-        const crateDTO = new CrateDTO(Object.assign(this._data, userId));
+    this.setRecipient = async function(recipientId) {
+        const crateDTO = new CrateDTO(Object.assign(this._data, recipientId));
         const crate = await this._repo.crate.setCrateRecipient(crateDTO);
-        this._data.userId = userId;
+        this._data.recipientId = recipientId;
     }
 
     /**
@@ -97,8 +97,13 @@ function Crate(repo, crateDTO) {
     */
     this.startTrip = async function({originAddress, destinationAddress, trackingNumber}) {
         if (!this._data.merchantId) {
-            throw new Error("CrateError.CannotStartTrip => Cannot start crate trip without merchantId assigned to associated crate");
+            throw new Error("CrateError.CannotStartTrip.missingMerchantId => Cannot start crate trip without merchantId assigned to associated crate");
         }
+
+        if (!this._data.recipientId) {
+            throw new Error("CrateError.CannotStartTrip.missingRecipientId => Cannot start crate trip without recipientId assigned to associated crate")
+        }
+
         const id = uuid.v4();
         const status = ["inTransit"];
         const crateTripDTO = new CrateTripDTO({
@@ -225,8 +230,8 @@ function CrateService({crateRepo, crateTripRepo}) {
     /**
      * @param {User} user - an instance of a User
     */
-    this.getCratesByUser = async function(user) {
-        const crateList = await this._repo.crate.getCratesByUserId(user.id);
+    this.getCratesByRecipient = async function(user) {
+        const crateList = await this._repo.crate.getCratesByRecipientId(user.id);
         return crateList.map((c) => new Crate(this._repo.crate, new CrateDTO(c)));
     }
 
