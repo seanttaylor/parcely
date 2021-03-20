@@ -78,9 +78,9 @@ function CrateRepository(databaseConnector) {
     }
 
 
-    this.getCratesByUserId = async function(id) {
+    this.getCratesByRecipientId = async function(id) {
         const crates = await databaseConnector.findAll("crates");
-        return crates.filter(crate => crate.userId === id);
+        return crates.filter(crate => crate.recipientId === id);
     }
 
 
