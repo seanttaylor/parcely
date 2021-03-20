@@ -193,7 +193,7 @@ function CrateTrip(repo, crateTripDTO) {
         const crateTripDTO = new CrateTripDTO(Object.assign({}, this._data));
        
         await this._repo.addTripWaypoint(crateTripDTO);
-        this.waypoints = this._data.waypoints;
+        this.waypoints = coreUtils.deepFreeze(this._data.waypoints);
     }
 }
 

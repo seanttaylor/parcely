@@ -433,7 +433,7 @@ test("Should throw an error when crateTrip is initialized without a recipientId 
 });
 
 
-test("Should throw an error on attempts to edit trip waypoints", async() => {
+test("Trip waypoints should be read-only", async() => {
     const testCrate = await testCrateService.createCrate({
       size: ["S"],
       merchantId: faker.random.uuid(),
@@ -487,4 +487,11 @@ test("Should throw an error on attempts to edit trip waypoints", async() => {
    
     testCrate["currentTrip"]["waypoints"][0]["timestamp"] = "now";
     expect(testCrate["currentTrip"]["waypoints"][0]["timestamp"] !== "now").toBe(true);
+
+    try {
+        testCrate.currentTrip.waypoints.push({});
+    } catch(e) {
+        expect(e.message).toMatch("Cannot add property");
+    }
+    
 });
