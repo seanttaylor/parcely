@@ -1,4 +1,5 @@
 const uuid = require("uuid");
+const coreUtils = require("../lib/utils");
 const {CrateDTO} = require("../lib/repository/crate/dto");
 const {CrateTripDTO, CrateTelemetryDTO} = require("../lib/repository/crate-trip/dto");
 
@@ -186,6 +187,9 @@ function CrateTrip(repo, crateTripDTO) {
         const crateTelemetryDTO = new CrateTelemetryDTO({timestamp, telemetry});
         const [crateTelemetry] = crateTelemetryDTO.value();
         this._data.waypoints.push(crateTelemetry);
+        // freeze all telemetry objects in the waypoints list
+        this._data.waypoints = this._data.waypoints.map(coreUtils.deepFreeze);
+
         const crateTripDTO = new CrateTripDTO(Object.assign({}, this._data));
        
         await this._repo.addTripWaypoint(crateTripDTO);
