@@ -369,7 +369,65 @@ test("Should return JSON object representation of a CrateTrip", async() => {
     expect(typeof(crateTrip.toJSON()) === "object").toBe(true);
 });
 
+
 /* Negative Tests */
+
+test("Should NOT be able to add waypoints to a completed CrateTrip", async() => {
+      const originAddress = {
+        street: faker.address.streetName(),
+        apartmentNumber: "7",
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode()
+    };
+    const destinationAddress = {
+        street: faker.address.streetName(),
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode()
+    };
+    const fakeTelemetryData = {
+        "temp": {
+            "degreesFahrenheit": String(faker.random.float())
+        },
+        "location": {
+            "coords": {
+                "lat": faker.address.latitude(),
+                "long": faker.address.longitude()
+            },
+            "zip": faker.address.zipCode()
+        },
+        "sensors": {
+            "moisture": {
+                "thresholdExceeded": false
+            },
+            "thermometer": {
+                "thresholdExceeded": false
+            },
+            "photometer": {
+                "thresholdExceeded": false
+            }
+        }
+    };
+    const testCrate = await testCrateService.createCrate({
+      size: ["S"],
+      merchantId: faker.random.uuid(),
+      recipientId: faker.random.uuid()
+    });
+    
+    await testCrate.save();
+    const testCrateTripId = await testCrate.startTrip({
+        originAddress, 
+        destinationAddress, 
+        trackingNumber: faker.random.uuid()
+    });
+    await testCrate.pushTelemetry(fakeTelemetryData);
+    await testCrate.completeTrip();
+    await testCrate.pushTelemetry(fakeTelemetryData);
+
+    expect(testCrate.currentTrip.waypoints.length === 1).toBe(true);
+});
+
 
 test("Should throw an error when crateTrip is initialized without a merchantId assigned to the associated crate", async() => {
     const originAddress = {

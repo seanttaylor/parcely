@@ -58,6 +58,18 @@ function CrateTripRepository(databaseConnector) {
         });
     } 
 
+
+
+    /**
+     * @param {CrateTripDTO} crateTripDTO - an instance of CrateTelemetryDTO
+     */
+    this.completeCrateTrip = async function(crateTripDTO) {
+        await databaseConnector.updateOne({
+            doc: crateTripDTO,
+            collection: "crate_trips"
+        });
+    } 
+
 }
 
 /*CrateTripRepository*/

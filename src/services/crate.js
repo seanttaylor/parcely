@@ -65,6 +65,12 @@ function Crate(repo, crateDTO) {
     @param {Object} telemetry - data from the sensors
     */
     this.pushTelemetry = async function(telemetry) {
+        const [currentTripStatus] = this.currentTrip._data.status;
+
+        if (currentTripStatus === "complete") {
+            return;
+        } 
+
         const timestamp = new Date().toISOString();
         const crateDTO = new CrateDTO(Object.assign(this._data, {
             telemetry,
@@ -135,6 +141,25 @@ function Crate(repo, crateDTO) {
         this.currentTrip = crateTrip;
         return crateTrip.id;
     }
+
+
+    /**
+    Completes an existing trip for the current crate; crate trip data becomes read-only
+    */
+    this.completeTrip = async function() {
+        const status = ["complete"];
+        const arrivalTimestamp = new Date().toISOString();
+        const crateTripDTO = new CrateTripDTO(
+            Object.assign({}, this.currentTrip._data, {
+                status,
+                crateId: this._data.id,
+                arrivalTimestamp
+            })
+        );
+
+        await this._repo.crateTrip.completeCrateTrip(crateTripDTO);
+        this.currentTrip._data.status = status;
+    }
 }
 
 
@@ -197,7 +222,8 @@ function CrateTrip(repo, crateTripDTO) {
         const crateTripDTO = new CrateTripDTO(Object.assign({}, this._data));
        
         await this._repo.addTripWaypoint(crateTripDTO);
-        this.waypoints = coreUtils.deepFreeze(this._data.waypoints);
+        // copy the internal waypoints list to an public read-only property
+        this.waypoints = coreUtils.deepFreeze([...this._data.waypoints]);
     }
 }
 

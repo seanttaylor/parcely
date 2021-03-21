@@ -22,10 +22,11 @@ const crateTelemetrySchemaValidation = ajv.compile(crateTelemetrySchema);
  * @property {String} tripLengthMiles
  * @property {Object} originAddress
  * @property {Object} destinationAddress
+ * @property {Array} status
  */
 
 /**
- * @param {String} id - uuid for a id
+ * @param {String} id - uuid for a trip
  * @param {String} crateId - uuid for a crateId
  * @param {String} departureTimestamp - datetime of crate departure (i.e. when the crate trip is initialized)
  * @param {String} arrivalTimestamp - datetime of crate arrival (i.e. when crate trip is concluded)
@@ -38,11 +39,12 @@ const crateTelemetrySchemaValidation = ajv.compile(crateTelemetrySchema);
  * @param {Object} originAddress - the postal address a crate originates from
  * @param {Object} destinationAddress - the postal address a crate ships to
  * @param {String} createdDate - datetime a crate trip is created
+ * @param {Array} status - current status of the crate trip
  * @returns {CrateTripDTO}
  */
 
-function CrateTripDTO({id, crateId, departureTimestamp, arrivalTimestamp=null, trackingNumber, departureZip, arrivalZip, waypoints=[], createdDate=new Date().toISOString(), lastModified=null, tripLengthMiles=null, originAddress, destinationAddress}) {
-    
+function CrateTripDTO({id, crateId, departureTimestamp, arrivalTimestamp=null, trackingNumber, departureZip, arrivalZip, waypoints=[], createdDate=new Date().toISOString(), lastModified=null, tripLengthMiles=null, status=["inProgress"], originAddress, destinationAddress}) {
+
     const crateTripData = {
       id,
       crateId,
@@ -56,7 +58,8 @@ function CrateTripDTO({id, crateId, departureTimestamp, arrivalTimestamp=null, t
       lastModified,
       tripLengthMiles,
       originAddress, 
-      destinationAddress
+      destinationAddress,
+      status
     };
   
 
