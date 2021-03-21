@@ -433,7 +433,7 @@ test("Should throw an error when crateTrip is initialized without a recipientId 
 });
 
 
-test("Trip waypoints should be read-only", async() => {
+test("Crate trip waypoints should be read-only", async() => {
     const testCrate = await testCrateService.createCrate({
       size: ["S"],
       merchantId: faker.random.uuid(),
@@ -492,6 +492,27 @@ test("Trip waypoints should be read-only", async() => {
         testCrate.currentTrip.waypoints.push({});
     } catch(e) {
         expect(e.message).toMatch("Cannot add property");
+    }
+    
+});
+
+
+test("Crates can ONLY be associated with one recipient per crate trip", async() => {
+    const firstUserId = faker.random.uuid();
+    const secondUserId = faker.random.uuid();
+    const testCrate = await testCrateService.createCrate({
+      size: ["S"],
+      merchantId: faker.random.uuid()
+    });
+    
+    await testCrate.save();
+    await testCrate.setRecipient(firstUserId);
+    
+    try {
+        await testCrate.setRecipient(secondUserId);
+    } catch(e) {
+        expect(e.message).toMatch("CrateError.CannotSetRecipient");
+        expect(testCrate._data.recipientId === firstUserId).toBe(true);
     }
     
 });

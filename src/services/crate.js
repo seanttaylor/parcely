@@ -51,6 +51,10 @@ function Crate(repo, crateDTO) {
     @param {String} recipientId - a uuid for the recipient user
     */
     this.setRecipient = async function(recipientId) {
+        if (this._data.recipientId) {
+            throw new Error("CrateError.CannotSetRecipient => Recipient has already been assigned for this crate");
+        }
+
         const crateDTO = new CrateDTO(Object.assign(this._data, recipientId));
         const crate = await this._repo.crate.setCrateRecipient(crateDTO);
         this._data.recipientId = recipientId;
