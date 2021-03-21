@@ -497,7 +497,7 @@ test("Crate trip waypoints should be read-only", async() => {
 });
 
 
-test("Crates can ONLY be associated with one recipient per crate trip", async() => {
+test("Crates can ONLY be associated with one recipient", async() => {
     const firstUserId = faker.random.uuid();
     const secondUserId = faker.random.uuid();
     const testCrate = await testCrateService.createCrate({
