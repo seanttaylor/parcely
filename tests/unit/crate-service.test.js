@@ -425,8 +425,19 @@ test("Should NOT be able to add waypoints to a completed CrateTrip", async() => 
     await testCrate.completeTrip();
     await testCrate.pushTelemetry(fakeTelemetryData);
 
+    const testCrateTrip = await testCrateService.getCrateTripById(testCrateTripId);
+
+    await testCrateTrip.addWaypoint({
+        timestamp: new Date().toISOString(),
+        telemetry: fakeTelemetryData
+    });
+
+    expect(testCrateTrip.waypoints.length === 1).toBe(true);
     expect(testCrate.currentTrip.waypoints.length === 1).toBe(true);
 });
+
+
+
 
 
 test("Should throw an error when crateTrip is initialized without a merchantId assigned to the associated crate", async() => {

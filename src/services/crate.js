@@ -213,6 +213,12 @@ function CrateTrip(repo, crateTripDTO) {
     @param {Object} telemetry 
     */
     this.addWaypoint = async function({timestamp, telemetry}) {
+        const [currentTripStatus] = this._data.status;
+
+        if (currentTripStatus === "complete") {
+            return; 
+        }
+
         const crateTelemetryDTO = new CrateTelemetryDTO({timestamp, telemetry});
         const [crateTelemetry] = crateTelemetryDTO.value();
         this._data.waypoints.push(crateTelemetry);
