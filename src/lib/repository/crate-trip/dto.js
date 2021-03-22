@@ -88,13 +88,13 @@ function CrateTripDTO({id, crateId, departureTimestamp, arrivalTimestamp=null, t
 
 function CrateTelemetryDTO({timestamp, telemetry}) {
     
-    const crateTelemetryData = [{
+    const crateTelemetryData = {
         timestamp,
         telemetry
-    }];
+    };
         
    
-  if(!crateTelemetrySchemaValidation(crateTelemetryData)) {
+  if(!crateTelemetrySchemaValidation([crateTelemetryData])) {
     throw new Error(`CrateTelemetryDTOError/InvalidCrateTelemetryDTO => ${JSON.stringify(crateTelemetrySchemaValidation.errors, null, 2)}`);
   }
 
