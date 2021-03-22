@@ -220,13 +220,13 @@ function CrateTrip(repo, crateTripDTO) {
         }
 
         const crateTelemetryDTO = new CrateTelemetryDTO({timestamp, telemetry});
-        const [crateTelemetry] = crateTelemetryDTO.value();
+        const crateTelemetry = crateTelemetryDTO.value();
         this._data.waypoints.push(crateTelemetry);
         // freeze all telemetry objects in the waypoints list
         this._data.waypoints = this._data.waypoints.map(coreUtils.deepFreeze);
 
         const crateTripDTO = new CrateTripDTO(Object.assign({}, this._data));
-       
+        
         await this._repo.addTripWaypoint(crateTripDTO);
         // copy the internal waypoints list to an public read-only property
         this.waypoints = coreUtils.deepFreeze([...this._data.waypoints]);
@@ -257,8 +257,17 @@ function CrateService({crateRepo, crateTripRepo}) {
 
 
     this.getCrateById = async function(id) {
-        const crate = await this._repo.crate.getCrateById(id);
-        return new Crate(this._repo.crate, new CrateDTO(crate));
+        const crateData = await this._repo.crate.getCrateById(id);
+        const crate = new Crate(this._repo.crate, new CrateDTO(crateData));
+        const {tripId} = crate._data;
+
+        if (tripId) {
+            const crateTripData = await this._repo.crateTrip.getCrateTripById(tripId);
+            const crateTrip = new CrateTrip(this._repo.crateTrip, new CrateTripDTO(crateTripData));
+            crate.currentTrip = crateTrip;
+        } 
+       
+        return crate;
     }
 
     
