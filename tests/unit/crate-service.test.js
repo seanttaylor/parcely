@@ -200,7 +200,7 @@ test("Should create a new trip for an existing crate", async() => {
 });
 
 
-test("Should push telemetry data to platform", async() => {
+test("Should be able to push telemetry data the software-defined crate", async() => {
     const testCrate = await testCrateService.createCrate({
       size: ["S"],
       merchantId: faker.random.uuid(),
@@ -328,7 +328,7 @@ test("Pushing crate telemetry should add a waypoint to the associated CrateTrip"
 });
 
 
-test("Current trip data should be available on Crates retrieved from the database", async() => {
+test("Current trip data should be available on single Crate entities retrieved from the database", async() => {
     const originAddress = {
         street: faker.address.streetName(),
         apartmentNumber: "7",
@@ -385,6 +385,72 @@ test("Current trip data should be available on Crates retrieved from the databas
 
     const returnedTestCrate = await testCrateService.getCrateById(testCrateId);
     expect(returnedTestCrate.currentTrip.waypoints.length === 1).toBe(true);
+});
+
+
+test("Completing an existing crate trip should remove the attached recipient and trip ids", async() => {
+    const originAddress = {
+        street: faker.address.streetName(),
+        apartmentNumber: "7",
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode()
+    };
+    const destinationAddress = {
+        street: faker.address.streetName(),
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode()
+    };
+
+    const fakeTelemetryData = {
+        "temp": {
+            "degreesFahrenheit": String(faker.random.float())
+        },
+        "location": {
+            "coords": {
+                "lat": faker.address.latitude(),
+                "long": faker.address.longitude()
+            },
+            "zip": faker.address.zipCode()
+        },
+        "sensors": {
+            "moisture": {
+                "thresholdExceeded": false
+            },
+            "thermometer": {
+                "thresholdExceeded": false
+            },
+            "photometer": {
+                "thresholdExceeded": false
+            }
+        }
+    };
+
+    const testCrate = await testCrateService.createCrate({
+      size: ["S"],
+      merchantId: faker.random.uuid(),
+      recipientId: faker.random.uuid()
+    });
+    
+    const testCrateId = await testCrate.save();
+    const testCrateTripId = await testCrate.startTrip({
+        originAddress, 
+        destinationAddress, 
+        trackingNumber: faker.random.uuid()
+    });
+
+    await testCrate.pushTelemetry(fakeTelemetryData);
+    expect(testCrate.currentTrip.waypoints.length === 1).toBe(true);
+
+    await testCrate.completeTrip();
+    expect(testCrate._data.recipientId === null).toBe(true);
+    expect(testCrate._data.tripId === null).toBe(true);
+
+    const returnedCrate = await testCrateService.getCrateById(testCrateId);   
+    expect(returnedCrate._data.recipientId === null).toBe(true);
+    expect(returnedCrate._data.tripId === null).toBe(true);
+
 });
 
 

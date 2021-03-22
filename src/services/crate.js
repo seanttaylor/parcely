@@ -149,6 +149,10 @@ function Crate(repo, crateDTO) {
     this.completeTrip = async function() {
         const status = ["complete"];
         const arrivalTimestamp = new Date().toISOString();
+        const crateDTO = new CrateDTO(Object.assign({}, this._data, {
+            tripId: null,
+            recipientId: null
+        }));
         const crateTripDTO = new CrateTripDTO(
             Object.assign({}, this.currentTrip._data, {
                 status,
@@ -157,8 +161,11 @@ function Crate(repo, crateDTO) {
             })
         );
 
+        await this._repo.crate.setCrateRecipient(crateDTO);
         await this._repo.crateTrip.completeCrateTrip(crateTripDTO);
         this.currentTrip._data.status = status;
+        this._data.recipientId = null;
+        this._data.tripId = null;
     }
 }
 
