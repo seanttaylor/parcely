@@ -57,7 +57,8 @@
         "trackingNumber",
         "originAddress",
         "destinationAddress",
-        "createdDate"
+        "createdDate",
+        "status"
     ],
     "properties": {
         "id": {
@@ -510,6 +511,20 @@
                     }
                 ]
             }
+        },
+        "status": {
+            "$id": "#/properties/status",
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": ["inProgress", "complete", "cancelled"]
+            },
+            "title": "The status schema",
+            "description": "The status of a specified crate trip.",
+            "default": "",
+            "examples": [
+                "inProgess"
+            ]
         }
     },
     "definitions": {
