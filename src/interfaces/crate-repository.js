@@ -10,7 +10,7 @@
 * @property {Function} getCratesByRecipientId - finds all crates associated with a specified recipient
 * @property {Function} markCrateReturned -  set a crate's status to indicate a pending return
 * @property {Function} delete - deletes a crate in the data store by its uuid
-* @property {Function} setCrateRecipient - associates a crate with a recipient user in the data store
+* @property {Function} setCrateRecipient - associates a crate with a specified recipient user in the data store
 * @property {Function} startCrateTrip - initializes a new trip for the current crate
 * @property {Function} updateCrateTelemetry - updates crate telemetry with latest sensor data
 */
@@ -26,14 +26,14 @@ function ICrateRepository(myImpl) {
     }
 
     /**
-    @param {Object} doc - dictionary representing a valid entry
+    @param {Object} doc - object representing a valid entry
     @returns {String} - a uuid for the new user
     */
     this.create = myImpl.create || required;
 
     /**
     @param {String} id - uuid of the user
-    @returns {Object} - the requested user
+    @returns {User} - the requested User instance
     */
     this.getCrateById = myImpl.getCrateById || required;
 

@@ -23,7 +23,7 @@ afterAll(()=> {
     //testSqlDbConnector.end();
 });
 
-test("Should return new Crate instance", async() => {
+test("Should be able to create a new Crate instance", async() => {
     const testCrateData = {
         size: ["M"]
     };
@@ -34,7 +34,7 @@ test("Should return new Crate instance", async() => {
 });
 
 
-test("Should return list of Crate instances", async() => {
+test("Should be able to get a list of existing Crate instances", async() => {
     const result = await testCrateService.getAllCrates();
 
     expect(Array.isArray(result)).toBe(true);
@@ -43,7 +43,7 @@ test("Should return list of Crate instances", async() => {
     expect(Object.keys(result[0]).includes("_data")).toBe(true);
 });
 
-test("Should return a specified Crate instance", async() => {
+test("Should be able to get a specified Crate instance", async() => {
     const testCrateData = {
       size: ["S"]
     };
@@ -56,13 +56,13 @@ test("Should return a specified Crate instance", async() => {
 });
 
 
-test("Should delete crate", async() => {
+test("Should be able to delete crate", async() => {
     const result = await testCrateService.deleteCrate("crateId");
     expect(result == undefined).toBe(true);
 });
 
 
-test("Should return crate id on save", async() => {
+test("Should get the uuid of a Crate instance when it is saved", async() => {
     const testCrateData = {
         size: ["L"]
     };
@@ -72,7 +72,7 @@ test("Should return crate id on save", async() => {
 });
 
 
-test("Should set crate status to pendingReturn", async() => {
+test("Should be able to set crate status to pendingReturn", async() => {
     const testCrate = await testCrateService.createCrate({
       size: ["S"]
     });
@@ -85,7 +85,7 @@ test("Should set crate status to pendingReturn", async() => {
 });
 
 
-test("Should get current crate telemetry data", async() => {
+test("Should be able to get current crate telemetry data", async() => {
     const testCrate = await testCrateService.createCrate({
       size: ["S"]
     });
@@ -97,7 +97,7 @@ test("Should get current crate telemetry data", async() => {
 });
 
 
-test("Should associate a specified user with a crate", async() => {
+test("Should be able to associate a specified user with a specified crate", async() => {
     const thorUserId = "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09";
     const testCrate = await testCrateService.createCrate({
       size: ["S"],
@@ -111,7 +111,7 @@ test("Should associate a specified user with a crate", async() => {
 });
 
 
-test("Should get a list of crates associated with a specified user", async() => {
+test("Should be able to get a list of crates associated with a specified user", async() => {
     const thorUserId = "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09";
     const testCrate = await testCrateService.createCrate({
       size: ["S"]
@@ -129,7 +129,7 @@ test("Should get a list of crates associated with a specified user", async() => 
 });
 
 
-test("Should return new CrateTrip instance", async() => {
+test("Should be able to create a new CrateTrip instance", async() => {
     const testCrateData = {
         size: ["M"]
     };
@@ -140,7 +140,7 @@ test("Should return new CrateTrip instance", async() => {
 });
 
 
-test("Should get a list of crate trips for a specified crate", async() => {
+test("Should be able to get a list of crate trips for a specified crate", async() => {
     const testCrate = await testCrateService.createCrate({
       size: ["S"]
     });
@@ -152,7 +152,7 @@ test("Should get a list of crate trips for a specified crate", async() => {
 });
 
 
-test("Should return a specified trip for a specified crate", async() => {
+test("Should be able to get a specified trip for a specified crate", async() => {
     const testCrateTripId = "d54cc57f-c32c-454a-a295-6481f126eb8b";
     const testCrate = await testCrateService.createCrate({
       size: ["S"]
@@ -165,7 +165,7 @@ test("Should return a specified trip for a specified crate", async() => {
 });
 
 
-test("Should create a new trip for an existing crate", async() => {
+test("Should be able to create a new trip for an existing crate", async() => {
      const originAddress = {
         street: faker.address.streetName(),
         apartmentNumber: "7",
@@ -499,7 +499,7 @@ test("Should return JSON object representation of a CrateTrip", async() => {
 
 /* Negative Tests */
 
-test("Should NOT be able to add waypoints to a completed CrateTrip", async() => {
+test("Should NOT be able to add waypoints to a CrateTrip with a 'completed' status", async() => {
       const originAddress = {
         street: faker.address.streetName(),
         apartmentNumber: "7",
@@ -562,9 +562,6 @@ test("Should NOT be able to add waypoints to a completed CrateTrip", async() => 
     expect(testCrateTrip.waypoints.length === 1).toBe(true);
     expect(testCrate.currentTrip.waypoints.length === 1).toBe(true);
 });
-
-
-
 
 
 test("Should throw an error when crateTrip is initialized without a merchantId assigned to the associated crate", async() => {
@@ -693,7 +690,7 @@ test("Crate trip waypoints should be read-only", async() => {
 });
 
 
-test("Crates can ONLY be associated with one recipient", async() => {
+test("Should ONLY be able to associate (1) recipient with (1) crate on a single trip.", async() => {
     const firstUserId = faker.random.uuid();
     const secondUserId = faker.random.uuid();
     const testCrate = await testCrateService.createCrate({

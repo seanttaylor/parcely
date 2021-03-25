@@ -31,7 +31,9 @@ function CrateTripRepository(databaseConnector) {
         return result;
     }
 
-    
+    /**
+     * @param {String} tripId - uuid for a trip
+     */
     this.getCrateTripById = async function(tripId) {
         const [record] = await databaseConnector.findOne({
             id: tripId,
@@ -41,14 +43,15 @@ function CrateTripRepository(databaseConnector) {
         return record;
     }
 
-
+    /**
+     * @param {String} id - uuid for a crate
+     */
     this.getCrateTripsByCrateId = async function(id) {
         const crateTrips = await databaseConnector.findAll("crate_trips");
         return crateTrips.filter(trip => trip.crateId === id);
     }
 
     /**
-     * @param {String} id - a uuid for a CrateTrip
      * @param {CrateTripDTO} crateTripDTO - an instance of CrateTelemetryDTO
      */
     this.addTripWaypoint = async function(crateTripDTO) {

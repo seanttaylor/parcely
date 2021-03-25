@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-/*Implements IUserRepository interface for connecting to a datastore.
+/*Implements IUserRepository interface for connecting to a datastore
 See interfaces/user-repository for method documentation*/
 
 const { UserDTO } = require("./dto");
@@ -41,19 +41,25 @@ function UserRepository(databaseConnector) {
         });
     }
 
-
-    this.getUserPassword = async function(userEmailAddress) {
-        const [result] = await databaseConnector.findOne({id: userEmailAddress, collection: "user_credentials"});
+    /**
+     * @param {String} emailAddress - user email address 
+     */
+    this.getUserPassword = async function(emailAddress) {
+        const [result] = await databaseConnector.findOne({id: emailAddress, collection: "user_credentials"});
         return result.password;
     }
 
-
+    /**
+     * @param {String} id - uuid for a user
+     */
     this.findOneById = async function(id) {
         const result = await databaseConnector.findOne({id, collection: "users"});
         return result;
     }
 
-
+    /**
+     * @param {String} emailAddress - user email address 
+     */
     this.findOneByEmail = async function(emailAddress) {
         //Remember: the result of a failed Array.find is `undefined`
         const result = await databaseConnector.findAll("users");
