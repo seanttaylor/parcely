@@ -15,7 +15,6 @@ const passwordAndHashMatch = promisify(bcrypt.compare);
 */
 
 /**
- * 
  * @param {Object} repo - the repo associated with this user
  * @param {UserDTO} userDTO - an instance of the UserDTO
  */
@@ -46,7 +45,7 @@ function User(repo, userDTO) {
 
 
     /**
-    Saves a new user to the data store.
+    Saves a new user to the data store
     @returns {String} - a uuid for the new user
     */
     this.save = async function() {
@@ -58,9 +57,9 @@ function User(repo, userDTO) {
     }
 
     /**
-    Edit first_name and/or last_name on an existing user in the data store.
-    @param {String} first_name - updated first name
-    @param {String} last_name - updated last name
+    Edit first_name and/or last_name on an existing user in the data store
+    @param {String} firstName - updated first name
+    @param {String} lastName - updated last name
     */
     this.editName = async function(doc) {
         const firstName =  doc.firstName || this._data.firstName;

@@ -21,14 +21,14 @@ function IUserRepository(myImpl) {
     }
 
     /**
-    @param {Object} doc - dictionary representing a valid entry
+    @param {Object} doc - object representing a valid entry
     @returns {String} - a uuid for the new user
     */
     this.create = myImpl.create || required;
 
     /**
     @param {String} id - uuid of the user
-    @returns {Object} - the requested user
+    @returns {User} - the requested User instance
     */
     this.findOneById = myImpl.findOneById || required;
 

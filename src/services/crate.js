@@ -36,7 +36,7 @@ function Crate(repo, crateDTO) {
 
 
     /**
-    Saves a new crate to the data store.
+    Saves a new crate to the data store
     @returns {String} - a uuid for the new user
     */
     this.save = async function() {
@@ -47,7 +47,7 @@ function Crate(repo, crateDTO) {
     }
 
     /**
-    Associates the crate with a recipient user in the data store.
+    Associates the crate with a recipient user in the data store
     @param {String} recipientId - a uuid for the recipient user
     */
     this.setRecipient = async function(recipientId) {
@@ -91,13 +91,6 @@ function Crate(repo, crateDTO) {
         const {telemetry} = await this._repo.crate.getCrateById(this.id);
         return telemetry;
     }
-
-
-    /**
-    Remove designated recipient of the crate in the data store.
-    this.removeRecipient = async function() {
-        
-    }*/
 
 
     /**
@@ -204,7 +197,7 @@ function CrateTrip(repo, crateTripDTO) {
 
 
     /**
-    Saves a new CrateTrip to the data store.
+    Saves a new CrateTrip to the data store
     @returns {String} - a uuid for the new user
     */
     this.save = async function() {
@@ -216,8 +209,8 @@ function CrateTrip(repo, crateTripDTO) {
 
     /**
     Adds a new waypoint to an existing trip
-    @param {String} timestamp
-    @param {Object} telemetry 
+    @param {String} timestamp - date/time telemetry data was recorded
+    @param {Object} telemetry - sensor data collected from the hardware crate
     */
     this.addWaypoint = async function({timestamp, telemetry}) {
         const [currentTripStatus] = this._data.status;
@@ -255,14 +248,19 @@ function CrateService({crateRepo, crateTripRepo}) {
         crate: crateRepo,
         crateTrip: crateTripRepo
      }
-
+    
+    /**
+     * @param {Object} doc - object representing valid crate data
+     */
     this.createCrate = async function(doc) {
         const id = uuid.v4();
         const data = Object.assign({id}, doc);
         return new Crate(this._repo, new CrateDTO(data));
     }
 
-
+    /**
+     * @param {String} id - a uuid for a crate
+     */
     this.getCrateById = async function(id) {
         const crateData = await this._repo.crate.getCrateById(id);
         const crate = new Crate(this._repo.crate, new CrateDTO(crateData));
@@ -285,13 +283,15 @@ function CrateService({crateRepo, crateTripRepo}) {
 
     /**
      * @param {User} user - an instance of a User
-    */
+     */
     this.getCratesByRecipient = async function(user) {
         const crateList = await this._repo.crate.getCratesByRecipientId(user.id);
         return crateList.map((c) => new Crate(this._repo.crate, new CrateDTO(c)));
     }
 
-
+    /**
+     * @param {String} tripId - a uuid of a CrateTrip
+     */
     this.getCrateTripById = async function(tripId) {
         const tripData = await this._repo.crateTrip.getCrateTripById(tripId);
         return new CrateTrip(this._repo.crateTrip, new CrateTripDTO(tripData));
@@ -299,14 +299,16 @@ function CrateService({crateRepo, crateTripRepo}) {
 
     /**
      * @param {Crate} crate - an instance of a Crate
-    */
+     */
     this.getCrateTrips = async function(crate) {
         const crateTripList = await this._repo.crateTrip.getCrateTripsByCrateId(crate.id);
 
         return crateTripList.map((t) => new CrateTrip(this._repo.crateTrip, new CrateTripDTO(t)));
     }
 
-
+    /**
+     * @param {String} id - a uuid for a crate
+     */
     this.deleteCrate = async function(id) {
         await this._repo.crate.deleteCrate(id);
     }

@@ -20,7 +20,7 @@ function ICrateTripRepository(myImpl) {
     }
 
     /**
-    @param {Object} doc - dictionary representing a valid entry
+    @param {Object} doc - object representing a valid entry
     @returns {String} - a uuid for the new user
     */
     this.create = myImpl.create || required;

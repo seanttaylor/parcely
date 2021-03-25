@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 /**
-* An object having the ICache API; a set of methods for managing cache entries.
+* An object having the ICache API; a set of methods for managing cache entries
 * @typedef {Object} ICacheAPI
 * @property {Function} set - introduce a new entry into the cache
 * @property {Function} get - get an entry from the cache

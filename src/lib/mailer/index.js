@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 const EmailTemplate = require("../mailer/email-templates");
 
 /**
-* An configuration object for send emails via the Mailable interface.
+* An configuration object for send emails via the Mailable interface
 * @typedef {Object} EmailMessageConfiguration
 * @property {String} from - email addrress of the sender
 * @property {Array} to - email address of the primary recipient
@@ -33,7 +33,7 @@ const EmailTemplate = require("../mailer/email-templates");
 
 /**
  * @param {Object} console - the console object
- * @param {Object} eventEmitter - an instance of EventEmitter
+ * @param {EventEmitter} eventEmitter - an instance of EventEmitter
  */
 
 function MailService({console, eventEmitter}) {

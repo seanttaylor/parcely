@@ -135,9 +135,9 @@ function InMemoryDatabaseConnector({console}) {
 
 
     /**
-     * Remove a document from a collection BY ID ONLY.
-     * @params {String} id - Id of the document in the database.
-     * @params {String} collection - Collection to from from. 
+     * Remove a document from a collection BY ID ONLY
+     * @params {String} id - Id of the document in the database
+     * @params {String} collection - Collection to from from
      * @returns {Object}
      */
 
@@ -152,8 +152,8 @@ function InMemoryDatabaseConnector({console}) {
     }
 
     /**
-     * Find all documents in a collection.
-     * @params {String} collection - Collection to pull from. 
+     * Find all documents in a collection
+     * @params {String} collection - Collection to pull from 
      * @returns {Object}
      */
 
@@ -196,8 +196,8 @@ function InMemoryDatabaseConnector({console}) {
     }
 
     /**
-     * Drop a collection from the database.
-     * @params {String} collection - collection to drop. 
+     * Drop a collection from the database
+     * @params {String} collection - collection to drop 
      * @returns
      */
 
@@ -207,7 +207,7 @@ function InMemoryDatabaseConnector({console}) {
     }
     
     /**
-     * Closes an existing connection to the database.
+     * Closes an existing connection to the database
      * This implementation does nothing as there is no database server connection.
      * @returns
      */
