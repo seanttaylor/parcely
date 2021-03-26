@@ -1,15 +1,11 @@
 /* istanbul ignore file */
 const express = require("express");
 const router = new express.Router();
-/*
 const {
-    validateRequestBodyWith, 
+    //validateRequestBodyWith, 
     authorizeRequest, 
     validateJWT,
-    validateUserCanLike,
-    validateUserCanViewUnpublished
 } = require("../../lib/middleware");
-*/
 
 /**
  * @param {UserService} userService - an instance of the UserService
@@ -58,8 +54,8 @@ const {
     });
     */
 
-    /*
-    router.get("/:id", verifyUserExists, async(req, res, next) => {
+    
+    router.get("/:id", authorizeRequest({actionId: "readOwn:users"}), verifyUserExists, async function getUserById(req, res, next) {
         const userId = req.params.id;
 
         try {
@@ -67,21 +63,20 @@ const {
             res.set("content-type", "application/json");
             res.status(200);
             res.json({
-                data: userList.map(u => u.toJSON()),
-                entries: userList.length
+                entries: userList.map(u => u.toJSON()),
+                count: userList.length
             });
         }
         catch (e) {
             next(e);
         }
     });
-    */
 
 
     /*** POST ****/
 
-    /*
-    router.post("/token", async(req, res, next) => {
+    
+    router.post("/token", async function getUserAccessToken(req, res, next) {
         const password = req.body.password;
         const userEmailAddress = req.body.emailAddress;
         const [user] = await userService.findUserByEmail(userEmailAddress);
@@ -91,22 +86,17 @@ const {
             res.status(401);
             res.json({
                 data: [],
-                errors: ["Email address and/or password do not match"],
+                error: "Email address and/or password do not match",
                 entries: 0
             });
         }
         const accessToken = await authService.issueAuthCredential(user);
         res.status(200);
         res.json({
-            meta: {
-                accessToken
-            },
-            data: [],
-            errors: [],
-            entries: 0
+            accessToken,
+            userId: user.id
         });
     });
-    */
 
     router.post("/", async function createUser(req, res, next) {
         const {password, ...requestBody} = req.body;
@@ -171,11 +161,6 @@ const {
         }
     });
     */
-
-    
-
-    
-
 
     return router;
 }

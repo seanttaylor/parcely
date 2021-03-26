@@ -1,0 +1,30 @@
+{
+    "__comments": "Authorization configuration for use with npm package 'accesscontrol.' See https://www.npmjs.com/package/accesscontrol",
+    "grants": {
+        "admin": {
+            "crates": {
+                "create:any": ["*"],
+                "read:any": ["*"],
+                "update:any": ["*"],
+                "delete:any": ["*"]
+            },
+            "users": {
+                "create:any": ["*"],
+                "read:any": ["*"],
+                "update:any": ["*"],
+                "delete:any": ["*"]
+            }
+        },
+        "user": {
+            "crates": {
+                "read:own": ["*"]
+            },
+            "users": {
+                "create:own": ["*"],
+                "read:own": ["*"],
+                "update:own": ["*"],
+                "delete:own": ["*"]
+            }
+        }
+    }
+}
