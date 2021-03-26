@@ -21,13 +21,11 @@ function IUserRepository(myImpl) {
     }
 
     /**
-    @param {Object} doc - object representing a valid entry
     @returns {String} - a uuid for the new user
     */
     this.create = myImpl.create || required;
 
     /**
-    @param {String} id - uuid of the user
     @returns {User} - the requested User instance
     */
     this.findOneById = myImpl.findOneById || required;
@@ -38,25 +36,39 @@ function IUserRepository(myImpl) {
     this.findAll = myImpl.findAll || required;
 
     /**
-    @param {String} id - uuid of the usr
-    @param {Object} doc - object containing user first name and last name
+    @returns {Array} - a list of all records in the data store
+    */
+    this.findOneByEmail = myImpl.findOneByEmail || required;
+
+    /**
+    @returns 
     */
     this.editName = myImpl.editName || required;
 
     /**
-    @param {String} id - uuid of the user
+    @returns 
     */
-    this.delete = myImpl.delete || required;
+    this.editPhoneNumber = myImpl.editPhoneNumber || required;
 
-    const {
-        editName,
-        findAll,
-        findOne,
-        create,
-        ...optionalMethods
-    } = myImpl;
+    /**
+    @returns
+    */
+    this.deleteUser = myImpl.deleteUser || required;
 
-    Object.assign(this, optionalMethods);
+    /**
+    @returns
+    */
+    this.getUserRole = myImpl.getUserRole || required;
+
+    /**
+    @returns
+    */
+    this.createUserPassword = myImpl.createUserPassword || required;
+
+    /**
+    @returns
+    */
+    this.getUserPassword = myImpl.getUserPassword || required;
 
 }
 
