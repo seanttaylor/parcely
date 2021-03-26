@@ -18,7 +18,7 @@ afterAll(()=> {
     //testSqlDbConnector.end();
 });
 
-test("Should return new User instance", async() => {
+test("Should be able to create a new User instance", async() => {
     const testUserData = {
         motto: "Hulk smash!",
         emailAddress: randomEmailAddress(),
@@ -33,7 +33,7 @@ test("Should return new User instance", async() => {
 });
 
 
-test("Should return list of User instances", async() => {
+test("Should be able to get a list of User instances", async() => {
     const result = await testUserService.findAllUsers();
 
     expect(Array.isArray(result)).toBe(true);
@@ -43,7 +43,7 @@ test("Should return list of User instances", async() => {
 
 });
 
-test("Should return a specified User instance", async() => {
+test("Should be able to get a specified User instance", async() => {
     const testUserData = {
         motto: "Hulk smash!",
         emailAddress: randomEmailAddress(),
@@ -60,14 +60,14 @@ test("Should return a specified User instance", async() => {
 });
 
 
-test("Should delete user", async() => {
+test("Should be able to delete an existing user", async() => {
     //FUNCTIONALITY NOT IMPLEMENTED YET
     const result = await testUserService.deleteUser("fakeUserId");
     expect(result == undefined).toBe(true);
 });
 
 
-test("Should return user id on save", async() => {
+test("Should get a uuid of a User when an instance is saved", async() => {
     const testUserData = {
         motto: "Hulk smash!",
         emailAddress: randomEmailAddress(),
@@ -80,7 +80,7 @@ test("Should return user id on save", async() => {
     expect(uuid.validate(userId)).toBe(true);
 });
 
-test("Should update user first name", async() => {
+test("Should be able to update a user first name", async() => {
     const testFirstnameEdit = "Brucie";
     const testUser = await testUserService.createUser({
         motto: "Hulk smash!",
@@ -96,7 +96,7 @@ test("Should update user first name", async() => {
 });
 
 
-test("Should update user last name", async() => {
+test("Should be able to update a user last name", async() => {
     const testLastnameEdit = "Banner, M.D.";
     const testUser = await testUserService.createUser({
         motto: "Hulk smash!",
@@ -112,7 +112,7 @@ test("Should update user last name", async() => {
 });
 
 
-test("Should update user phone number", async() => {
+test("Should be able to update a user phone number", async() => {
     const testPhoneNumberEdit = randomPhoneNumber();
     const testUser = await testUserService.createUser({
         motto: "Hulk smash!",
@@ -128,7 +128,7 @@ test("Should update user phone number", async() => {
 });
 
 
-test("Should return false when a user does NOT exist", async() => {
+test("Should be able to determine if a User exists on the platform", async() => {
     const fakeUserId = new Date().toISOString();
     const result = await testUserService.userExists(fakeUserId);
 
@@ -136,7 +136,7 @@ test("Should return false when a user does NOT exist", async() => {
 });
 
 
-test("Should return a user role", async() => {
+test("Should be able get the user role associated with a specified", async() => {
     const [user] = await testUserService.findUserById("e98417a8-d912-44e0-8d37-abe712ca840f");
     const userRole = await testUserService.getUserRole(user);
 
@@ -144,7 +144,7 @@ test("Should return a user role", async() => {
 });
 
 
-test("Should create a new user password", async() => {
+test("Should be able to create a new user password", async() => {
     const testUserData = {
         motto: "Hulk smash!",
         emailAddress: randomEmailAddress(),
@@ -159,7 +159,7 @@ test("Should create a new user password", async() => {
     expect(mockImpl.repo._repo.calledMethods.createUserPasswordCalled).toBe(true);
 });
 
-test("Should return true when plain-text password and equivalent hash match", async() => {
+test("Should be able to determine a match between a provided password the hashed password of an existing User instance", async() => {
     const testUserData = {
         motto: "Hulk smash!",
         emailAddress: randomEmailAddress(),
@@ -175,7 +175,7 @@ test("Should return true when plain-text password and equivalent hash match", as
     expect(passwordMatches).toBe(true);
 });
 
-test("Should return a User instance with a matching email address", async() => {
+test("Should be able to get a specified User instance with an email", async() => {
     const testUserEmail = randomEmailAddress();
     const testUserData = {
         motto: "Hulk smash!",
@@ -213,7 +213,7 @@ test("Should return true when a User instance already exists", async() => {
     expect(result).toBe(true);
 });
 
-test("Should return JSON object representation", async() => {
+test("Should be able to get a JSON object representation of a User instance", async() => {
     const testUser = await testUserService.createUser({
         motto: "Let's do this!",
         emailAddress: randomEmailAddress(),
@@ -229,7 +229,7 @@ test("Should return JSON object representation", async() => {
 
 /*Negative Tests*/
 
-test("Should return FALSE when plain-text password and hash do NOT match", async() => {
+test("Should be able to detect a mismatch between a provided password and an existing User's hashed password ", async() => {
     const testUserData = {
         motto: "Hulk smash!",
         emailAddress: randomEmailAddress(),
@@ -239,7 +239,6 @@ test("Should return FALSE when plain-text password and hash do NOT match", async
     };
     const testUser = await testUserService.createUser(testUserData);
     const testUserId = await testUser.save();
-
     const testPasswordHash = await testUserService.createUserPassword({password: "xxxyyyzzz", user: testUser});
     const passwordMatches = await testUserService.isUserPasswordCorrect({password: "foobarbaz", user: testUser});
   
@@ -247,7 +246,7 @@ test("Should return FALSE when plain-text password and hash do NOT match", async
 });
 
 
-test("Should throw exception when attempting to create an invalid user", async() => {
+test("Should be able to detect attempts to create User instances with invalid data", async() => {
     try {
         await testUserService.createUser();
     }
@@ -298,11 +297,6 @@ test("Should throw an exception when last name is missing", async() => {
     }
 });
 
-
-
-
-
-
 test("Should throw exception when phone number is missing", async() => {
     try {
         await testUserService.createUser({
@@ -317,7 +311,7 @@ test("Should throw exception when phone number is missing", async() => {
     }
 });
 
-test("Should throw exception when creating a user with an email that already exists", async() => {
+test("Should not be able to create a new User instance with an email address that already exists on the platform", async() => {
     try {
         const testEmailAddress = randomEmailAddress();
         const testUserNo1 = await testUserService.createUser({

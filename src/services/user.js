@@ -32,13 +32,11 @@ function User(repo, userDTO) {
             createdDate: this._data.createdDate,
             lastModified: this._data.lastModified,
             data: {
-                userId: this._data.userId,
-                handle: this._data.handle,
+                userId: this._data.id,
                 firstName: this._data.firstName,
                 lastName: this._data.lastName,
-                followerCount: this._data.followerCount,
                 emailAddress: this._data.emailAddress,
-                motto: this._data.motto
+                isVerified: this._data.isVerified
             }
         };
     }
