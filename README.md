@@ -17,7 +17,7 @@ Unit and integration tests will run once the workspace initializes.
 #### Alternative
 
 1. Pull the Github repo to your local machine
-2. Ensure you do `export JWT_SECRET={someRandomSecret}`. If this environment variable is not set, running unit tests with `npm test` will cause the tests to break.
+2. Ensure all environment variables documented in the `./.env-template` file are set to valid values. If these environment variables is not set, running unit tests with `npm test` will cause the tests to fail.
 
 
 #### Why Gitpod

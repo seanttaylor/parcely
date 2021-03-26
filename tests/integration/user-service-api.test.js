@@ -78,6 +78,47 @@ describe("Authorization", function Authorization() {
             .send()
             .expect(200);
         });
+
+        test("Platform Users should be able to edit their own account data", async() => {
+            const res1 = await request.post(`/api/v1/users/token`)
+            .send({
+                emailAddress: "tstark@avengers.io",
+                password: "superSecretPassword"
+            })
+            .expect(200);
+
+            const starkAccessToken = res1.body.accessToken;
+
+            const res2 = await request.put(`/api/v1/users/${starkUserId}/name`)
+            .set("authorization", `Bearer ${starkAccessToken}`)
+            .send({
+                firstName: "Anthony"
+            })
+            .expect(200);
+            
+            expect(res2["body"]["entries"][0]["data"]["firstName"] === "Anthony").toBe(true);
+
+        });
+
+        test("Platform Users should NOT be able to edit other users' account  data", async() => {
+            const res1 = await request.post(`/api/v1/users/token`)
+            .send({
+                emailAddress: "thor@avengers.io",
+                password: "superSecretPassword"
+            })
+            .expect(200);
+
+            const thorAccessToken = res1.body.accessToken;
+
+            const res2 = await request.put(`/api/v1/users/${starkUserId}/name`)
+            .set("authorization", `Bearer ${thorAccessToken}`)
+            .send({
+                firstName: "PoopyHead"
+            })
+            .expect(401);
+
+        });
+        
     }); 
     /*
         describe("Admin Auth", function AdminAuth() {
