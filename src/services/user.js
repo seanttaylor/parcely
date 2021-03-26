@@ -55,7 +55,7 @@ function User(repo, userDTO) {
     }
 
     /**
-    Edit first_name and/or last_name on an existing user in the data store
+    Edit firstName and/or lastName on an existing user in the data store
     @param {String} firstName - updated first name
     @param {String} lastName - updated last name
     */

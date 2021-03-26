@@ -122,8 +122,8 @@ const {
 
     /*** PUT ***/
 
-    /*
-    router.put("/:id/name", validateJWT, validateRequestBodyWith({requiredFields: false, schema: "user"}), async(req, res, next) => {
+    
+    router.put("/:id/name", verifyUserExists, authorizeRequest({actionId: "updateOwn:users"}), async function editName(req, res, next) {
         const userId = req.params.id;
 
         try {
@@ -132,15 +132,16 @@ const {
             res.set("content-type", "application/json");
             res.status(200);
             res.json({
-                data: [user],
-                entries: 1
+                entries: [user],
+                error: null,
+                count: 1
             });
         }
         catch (e) {
             next(e);
         }
     });
-    */
+    
 
     /*
     router.put("/:id/phone", validateJWT, validateRequestBodyWith({requiredFields: false, schema: "user"}), async(req, res, next) => {
