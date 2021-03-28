@@ -118,6 +118,28 @@ describe("Authorization", function Authorization() {
             .expect(401);
 
         });
+
+        test("Platform Users should be able to find geolocation data for all crates associated with their own account", async() => {
+            const res1 = await request.post(`/api/v1/users/token`)
+            .send({
+                emailAddress: "thor@avengers.io",
+                password: "superSecretPassword"
+            })
+            .expect(200);
+
+            const thorAccessToken = res1.body.accessToken;
+
+            const res2 = await request.get(`/api/v1/users/${thorUserId}/crates`)
+            .set("authorization", `Bearer ${thorAccessToken}`)
+            .send()
+            .expect(200);
+
+            expect(Array.isArray(res2.body.entries)).toBe(true);
+            expect(res2.body.count === 1).toBe(true);
+            expect(res2["body"]["entries"][0]["data"]["recipientId"] === thorUserId).toBe(true);
+
+            expect(Object.keys(res2["body"]["entries"][0]["data"]).includes("telemetry")).toBe(true);
+        });
         
     }); 
     /*

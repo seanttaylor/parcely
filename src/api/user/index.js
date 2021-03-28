@@ -14,7 +14,7 @@ const {
  * @returns router - an instance of an Express router
  */
 
- function UserRouter({userService,  authService, eventEmitter}) {
+ function UserRouter({userService, crateService, authService, eventEmitter}) {
 
     async function verifyUserExists(req, res, next) {
         const userExists = await userService.userExists(req.params.id);
@@ -55,6 +55,25 @@ const {
     */
 
     
+    router.get("/:id/crates", authorizeRequest({actionId: "readOwn:crates"}), verifyUserExists, async function getCratesByRecipient(req, res, next) {
+        const id = req.params.id;
+
+        try {
+            const [user] = await userService.findUserById(id);
+            const crateList = await crateService.getCratesByRecipient(user);
+            res.set("content-type", "application/json");
+            res.status(200);
+            res.json({
+                entries: crateList.map(c => c.toJSON()),
+                count: crateList.length
+            });
+        }
+        catch(e) {
+            next(e);
+        }
+    });
+    
+    
     router.get("/:id", authorizeRequest({actionId: "readOwn:users"}), verifyUserExists, async function getUserById(req, res, next) {
         const userId = req.params.id;
 
@@ -85,9 +104,7 @@ const {
         if (!result) {
             res.status(401);
             res.json({
-                data: [],
-                error: "Email address and/or password do not match",
-                entries: 0
+                error: "Email address and/or password do not match"
             });
         }
         const accessToken = await authService.issueAuthCredential(user);

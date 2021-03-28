@@ -204,4 +204,4 @@ function UserValidator() {
 
 }
 
-module.exports = { UserService, UserValidator };
+module.exports = { UserService };
