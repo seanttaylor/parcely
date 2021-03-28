@@ -29,7 +29,13 @@ function Crate(repo, crateDTO) {
             createdDate: this._data.createdDate,
             lastModified: this._data.lastModified,
             data: {
-                //TODO: figure out what fields make sense here
+                id: this.id,
+                size: this._data.size, 
+                tripId: this._data.tripId,
+                merchantId: this._data.merchantId,
+                recipientId: this._data.recipientId,
+                telemetry: this._data.telemetry,
+                lastPing: this._data.lastPing
             }
         };
     }
@@ -326,4 +332,4 @@ function CrateService({crateRepo, crateTripRepo}) {
 
 }
 
-module.exports = CrateService;
+module.exports = { CrateService };

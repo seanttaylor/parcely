@@ -32,6 +32,17 @@ const cacheService = new ICache(new CacheService());
 /**AuthService**/
 const AuthService = require("./src/services/auth");
 const authService = new AuthService({cacheService, userService});
+
+/**CrateService**/
+const { CrateService } = require("./src/services/crate");
+const CrateRepository = require("./src/lib/repository/crate");
+const CrateTripRepository = require("./src/lib/repository/crate-trip");
+const ICrateTripRepository = require("./src/interfaces/trip-repository");
+const ICrateRepository = require("./src/interfaces/crate-repository");
+const crateRepo = new ICrateRepository(new CrateRepository(asiagoDatabaseConnector));
+const crateTripRepo = new ICrateTripRepository(new CrateTripRepository(asiagoDatabaseConnector));
+const crateService = new CrateService({crateRepo, crateTripRepo});
+
 /******************************************************************************/
 
 
@@ -56,8 +67,9 @@ app.use(express.static("dist"));
 
 /**********************************ROUTES**************************************/
 app.use("/api/v1/users", UserAPI({
-    userService, 
     authService,
+    crateService,
+    userService, 
     eventEmitter
 }));
 
