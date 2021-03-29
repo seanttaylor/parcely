@@ -9,12 +9,14 @@
         {
             "id": "d54cc57f-c32c-454a-a295-6481f126eb8b",
             "crateId": "0c2b0c0c-068c-49df-93c0-4ed02575cff7",
+            "recipientId": "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09",
             "departureTimestamp": "2018-06-13T10:11:13+05:30",
             "departureZip": "11249-1005",
             "arrivalTimestamp": null,
             "arrivalZip": "40511-2345",
             "trackingNumber": "1Z54F78A0450293517",
             "tripLengthMiles": "706.4",
+            "status": ["inProgress"],
             "createdDate": "2021-02-24T17:45:36.230152",
             "lastModified": "2021-02-24T17:45:36.230152",
             "waypoints": [
@@ -51,6 +53,7 @@
     "required": [
         "id",
         "crateId",
+        "recipientId",
         "departureTimestamp",
         "departureZip",
         "arrivalZip",
@@ -79,6 +82,16 @@
                 "d54cc57f-c32c-454a-a295-6481f126eb8b"
             ],
             "title": "The crateId schema",
+            "type": "string"
+        },
+        "recipientId": {
+            "$id": "#/properties/recipientId",
+            "default": "",
+            "description": "Recipient associated with this trip",
+            "examples": [
+                "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09"
+            ],
+            "title": "The recipientId schema",
             "type": "string"
         },
         "createdDate": {

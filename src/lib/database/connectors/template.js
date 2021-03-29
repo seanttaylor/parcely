@@ -4,25 +4,21 @@ module.exports = {
     "users": {
         "e98417a8-d912-44e0-8d37-abe712ca840f": {
             "id": "e98417a8-d912-44e0-8d37-abe712ca840f",
-            "handle": "@tstark",
             "emailAddress": "tstark@avengers.io",
             "phoneNumber": "12125552424",
             "firstName": "Tony",
             "lastName": "Stark",
             "createdDate": "2020-09-26T23:08:27.645Z",
-            "lastModified": null,
-            "followerCount": 1
+            "lastModified": null
         },
         "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09": {
             "id": "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09",
-            "handle": "@thor",
             "emailAddress": "thor@avengers.io",
             "phoneNumber": "12125552020",
             "firstName": "Thor",
             "lastName": "Odinson",
             "createdDate": "2020-09-26T23:08:27.645Z",
-            "lastModified": null,
-            "followerCount": 0
+            "lastModified": null
         }
     },
     "user_roles": {
@@ -94,6 +90,7 @@ module.exports = {
         "d54cc57f-c32c-454a-a295-6481f126eb8b": {
             "id": "d54cc57f-c32c-454a-a295-6481f126eb8b",
             "crateId": "2055c145-7d3e-446c-a7ad-ae6aaf886335",
+            "recipientId":  "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09", 
             "departureTimestamp": "2018-06-13T10:11:13+05:30",
             "departureZip": "11249-1005",
             "arrivalTimestamp": null,
@@ -113,6 +110,7 @@ module.exports = {
                 "zip": "11111"
             },
             "tripLengthMiles": "706.4",
+            "status": ["complete"],
             "waypoints": [
                 {
                     "timestamp": "2018-06-13T12:11:13+05:30",

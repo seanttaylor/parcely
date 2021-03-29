@@ -48,7 +48,15 @@ function CrateTripRepository(databaseConnector) {
      */
     this.getCrateTripsByCrateId = async function(id) {
         const crateTrips = await databaseConnector.findAll("crate_trips");
-        return crateTrips.filter(trip => trip.crateId === id);
+        return crateTrips.filter(t => t.crateId === id);
+    }
+
+    /**
+     * @param {String} id - uuid for a user
+     */
+    this.getCrateTripsByRecipientId = async function(id) {
+        const crateTrips = await databaseConnector.findAll("crate_trips");
+        return crateTrips.filter(t => t.recipientId === id);
     }
 
     /**
@@ -60,8 +68,6 @@ function CrateTripRepository(databaseConnector) {
             collection: "crate_trips"
         });
     } 
-
-
 
     /**
      * @param {CrateTripDTO} crateTripDTO - an instance of CrateTelemetryDTO

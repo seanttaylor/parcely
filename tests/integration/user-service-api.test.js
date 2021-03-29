@@ -8,8 +8,10 @@ const supertest = require("supertest");
 const request = supertest(app);
 const faker = require("faker");
 const starkUserId = "e98417a8-d912-44e0-8d37-abe712ca840f";
+const starkEmailAddress = "tstark@avengers.io";
 const thorUserId = "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09";
-
+const thorEmailAddress = "thor@avengers.io";
+const superSecretPassword = "superSecretPassword";
 
 test("Should be able to get a userId and access credential when a new User instance is created", async()=> {
     const fakePassword = faker.internet.password();
@@ -36,8 +38,8 @@ describe("Authorization", function Authorization() {
         test("Platform Users should be able to access their own data", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
             .send({
-                emailAddress: "tstark@avengers.io",
-                password: "superSecretPassword"
+                emailAddress: starkEmailAddress,
+                password: superSecretPassword
             })
             .expect(200);
 
@@ -52,8 +54,8 @@ describe("Authorization", function Authorization() {
         test("Platform Users should NOT be able to access other users' data", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
             .send({
-                emailAddress: "tstark@avengers.io",
-                password: "superSecretPassword"
+                emailAddress: starkEmailAddress,
+                password: superSecretPassword
             })
             .expect(200);
 
@@ -66,8 +68,8 @@ describe("Authorization", function Authorization() {
 
             const res3 = await request.post(`/api/v1/users/token`)
             .send({
-                emailAddress: "thor@avengers.io",
-                password: "superSecretPassword"
+                emailAddress: thorEmailAddress,
+                password: superSecretPassword
             })
             .expect(200);
 
@@ -82,8 +84,8 @@ describe("Authorization", function Authorization() {
         test("Platform Users should be able to edit their own account data", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
             .send({
-                emailAddress: "tstark@avengers.io",
-                password: "superSecretPassword"
+                emailAddress: starkEmailAddress,
+                password: superSecretPassword
             })
             .expect(200);
 
@@ -103,8 +105,8 @@ describe("Authorization", function Authorization() {
         test("Platform Users should NOT be able to edit other users' account  data", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
             .send({
-                emailAddress: "thor@avengers.io",
-                password: "superSecretPassword"
+                emailAddress: thorEmailAddress,
+                password: superSecretPassword
             })
             .expect(200);
 
@@ -122,8 +124,8 @@ describe("Authorization", function Authorization() {
         test("Platform Users should be able to find geolocation data for all crates associated with their own account", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
             .send({
-                emailAddress: "thor@avengers.io",
-                password: "superSecretPassword"
+                emailAddress: thorEmailAddress,
+                password: superSecretPassword
             })
             .expect(200);
 
@@ -147,6 +149,48 @@ describe("Authorization", function Authorization() {
 
         }); 
     */ 
+});
+
+describe("UserCrateAccess", function CrateAccess() {
+    test("Should be able to get a list of trips associated with a user account", async() => {
+        const res1 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: thorEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
+
+        const thorAccessToken = res1.body.accessToken;
+
+        const res2 = await request.get(`/api/v1/users/${thorUserId}/shipments`)
+        .set("authorization", `Bearer ${thorAccessToken}`)
+        .send()
+        .expect(200);
+
+        expect(Array.isArray(res2.body.entries)).toBe(true);
+        expect(res2.body.count === 1).toBe(true);
+    
+    });
+
+    test("Should be able to get a filtered list of trips associated with a user account based on trip status", async() => {
+        const res1 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: thorEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
+
+        const thorAccessToken = res1.body.accessToken;
+
+        const res2 = await request.get(`/api/v1/users/${thorUserId}/shipments?status=inProgress`)
+        .set("authorization", `Bearer ${thorAccessToken}`)
+        .send()
+        .expect(200);
+
+        expect(Array.isArray(res2.body.entries)).toBe(true);
+        expect(res2.body.count === 0).toBe(true);
+    
+    });
 });
 
 
