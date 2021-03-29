@@ -121,33 +121,11 @@ describe("Authorization", function Authorization() {
             .expect(401);
 
         });
-
-        test("Platform Users should be able to find geolocation data for all crates associated with their own account", async() => {
-            const res1 = await request.post(`/api/v1/users/token`)
-            .send({
-                emailAddress: thorEmailAddress,
-                password: superSecretPassword
-            })
-            .expect(200);
-
-            const thorAccessToken = res1.body.accessToken;
-
-            const res2 = await request.get(`/api/v1/users/${thorUserId}/crates`)
-            .set("authorization", `Bearer ${thorAccessToken}`)
-            .send()
-            .expect(200);
-
-            expect(Array.isArray(res2.body.entries)).toBe(true);
-            expect(res2.body.count === 1).toBe(true);
-            expect(res2["body"]["entries"][0]["data"]["recipientId"] === thorUserId).toBe(true);
-
-            expect(Object.keys(res2["body"]["entries"][0]["data"]).includes("telemetry")).toBe(true);
-        });
         
     }); 
     
     describe("Admin Auth", function AdminAuth() {
-        test("Admin users should be able to access ANY user account", async() => {
+        test("Admin users should be able to access ANY user account data", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
             .send({
                 emailAddress: furyEmailAddress,
@@ -170,6 +148,31 @@ describe("Authorization", function Authorization() {
             .expect(200);
 
             expect(res3["body"]["entries"][0]["data"]["emailAddress"] === thorEmailAddress).toBe(true);
+        });
+
+        test("Admin users should be able to edit ANY user account data", async() => {
+            const res1 = await request.post(`/api/v1/users/token`)
+            .send({
+                emailAddress: furyEmailAddress,
+                password: superSecretPassword
+            })
+            .expect(200);
+
+            const furyAccessToken = res1.body.accessToken;
+
+            const res2 = await request.put(`/api/v1/users/${starkUserId}/name`)
+            .set("authorization", `Bearer ${furyAccessToken}`)
+            .send({
+                lastName: "PoopyHead"
+            })
+            .expect(200);
+
+            const res3 = await request.get(`/api/v1/users/${starkUserId}`)
+            .set("authorization", `Bearer ${furyAccessToken}`)
+            .send()
+            .expect(200);
+
+            expect(res3["body"]["entries"][0]["data"]["lastName"] === "PoopyHead").toBe(true);
         });
     });  
 });
@@ -213,6 +216,28 @@ describe("UserCrateAccess", function CrateAccess() {
         expect(Array.isArray(res2.body.entries)).toBe(true);
         expect(res2.body.count === 0).toBe(true);
     
+    });
+
+    test("Platform Users should be able to find geolocation data for all crates associated with their own account", async() => {
+        const res1 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: thorEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
+
+        const thorAccessToken = res1.body.accessToken;
+
+        const res2 = await request.get(`/api/v1/users/${thorUserId}/crates`)
+        .set("authorization", `Bearer ${thorAccessToken}`)
+        .send()
+        .expect(200);
+
+        expect(Array.isArray(res2.body.entries)).toBe(true);
+        expect(res2.body.count === 1).toBe(true);
+        expect(res2["body"]["entries"][0]["data"]["recipientId"] === thorUserId).toBe(true);
+
+        expect(Object.keys(res2["body"]["entries"][0]["data"]).includes("telemetry")).toBe(true);
     });
 });
 
