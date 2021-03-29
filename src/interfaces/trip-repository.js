@@ -45,6 +45,11 @@ function ICrateTripRepository(myImpl) {
     @returns {Array} - a list of CrateTrip instances
     */
     this.getCrateTripsByCrateId = myImpl.getCrateTripsByCrateId || required;   
+
+    /**
+    @returns {Array} - a list of CrateTrip instances
+    */
+    this.getCrateTripsByRecipientId = myImpl.getCrateTripsByRecipientId || required;   
     
     this.addTripWaypoint = myImpl.addTripWaypoint || required;   
 

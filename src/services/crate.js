@@ -118,10 +118,11 @@ function Crate(repo, crateDTO) {
         const status = ["inTransit"];
         const crateTripDTO = new CrateTripDTO({
             id,
+            crateId: this._data.id,
+            recipientId: this._data.recipientId,
             originAddress, 
             destinationAddress, 
             trackingNumber,
-            crateId: this._data.id,
             arrivalZip: destinationAddress.zip,
             departureZip: originAddress.zip,
             departureTimestamp: new Date().toISOString()
@@ -196,7 +197,19 @@ function CrateTrip(repo, crateTripDTO) {
             createdDate: this._data.createdDate,
             lastModified: this._data.lastModified,
             data: {
-                //TODO: figure out what fields make sense here
+                id: this.id,
+                crateId: this._data.crateId,
+                recipientId: this._data.recipientId,
+                departureTimestamp: this._data.departureTimestamp,
+                departureZip: this._data.departureZip,
+                arrivalTimestamp: this._data.arrivalTimestamp,
+                arrivalZip: this._data.arrivalZip,
+                trackingNumber: this._data.trackingNumber,
+                originAddress: this._data.originAddress,
+                destinationAddress: this._data.destinationAddress,
+                status: this._data.status,
+                waypoints: this._data.waypoints
+                
             }
         };
     }
@@ -313,6 +326,22 @@ function CrateService({crateRepo, crateTripRepo}) {
     }
 
     /**
+     * @param {User} user - an instance of a User
+     * @param {Object} options - an options object 
+     */
+    this.getShipmentHistoryOf = async function(user, {filterBy}) {
+        const crateTripList = await this._repo.crateTrip.getCrateTripsByRecipientId(user.id);
+
+        return crateTripList.filter((t) => {
+            if (filterBy) {
+                return t.status[0] === filterBy;
+            }
+            return true;  
+        })
+        .map((t) => new CrateTrip(this._repo.crateTrip, new CrateTripDTO(t)));
+    }
+
+    /**
      * @param {String} id - a uuid for a crate
      */
     this.deleteCrate = async function(id) {
@@ -321,7 +350,7 @@ function CrateService({crateRepo, crateTripRepo}) {
 
     /**
      * @param {Crate} crate - an instance of a Crate
-    */
+     */
     this.markCrateReturned = async function(crate) {
         const crateDTO = new CrateDTO(Object.assign(crate._data, {
             status: ["pendingReturn"]

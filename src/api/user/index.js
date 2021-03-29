@@ -92,6 +92,26 @@ const {
     });
 
 
+    router.get("/:id/shipments", authorizeRequest({actionId: "readOwn:users"}), verifyUserExists, async function getUserShipmentHistory(req, res, next) {
+        const userId = req.params.id;
+        const statusFilter = req.query.status;
+
+        try {
+            const [user] = await userService.findUserById(userId);
+            const shipmentList = await crateService.getShipmentHistoryOf(user, {filterBy: statusFilter});
+            res.set("content-type", "application/json");
+            res.status(200);
+            res.json({
+                entries: shipmentList.map(t => t.toJSON()),
+                count: shipmentList.length
+            });
+        }
+        catch (e) {
+            next(e);
+        }
+    });
+
+
     /*** POST ****/
 
     
