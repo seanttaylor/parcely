@@ -19,18 +19,33 @@ module.exports = {
             "lastName": "Odinson",
             "createdDate": "2020-09-26T23:08:27.645Z",
             "lastModified": null
+        },
+        "5298b9ab-9493-4fee-bf7e-805e47bb5d42": {
+            "id": "5298b9ab-9493-4fee-bf7e-805e47bb5d42",
+            "emailAddress": "nfury@shield.gov",
+            "phoneNumber": "12125552121",
+            "firstName": "Nick",
+            "lastName": "Fury",
+            "createdDate": "2020-09-26T23:08:27.645Z",
+            "lastModified": null
         }
     },
     "user_roles": {
         "e98417a8-d912-44e0-8d37-abe712ca840f": {
             "id": "e98417a8-d912-44e0-8d37-abe712ca840f",
-            "role": "admin",
+            "role": "user",
             "createdDate": "2020-09-26T23:08:27.645Z",
             "lastModified": null
         },
         "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09": {
             "id": "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09",
             "role": "user",
+            "createdDate": "2020-09-26T23:08:27.645Z",
+            "lastModified": null
+        },
+        "5298b9ab-9493-4fee-bf7e-805e47bb5d42": {
+            "id": "5298b9ab-9493-4fee-bf7e-805e47bb5d42",
+            "role": "admin",
             "createdDate": "2020-09-26T23:08:27.645Z",
             "lastModified": null
         }
@@ -47,6 +62,13 @@ module.exports = {
             "userId": "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09",
             "password": "$2y$12$VMp52ykXPMUJoubKQ9H0ru9oGpkXR6Cxrq.s3ddh.si9zS4A6VekC",
             "emailAddress": "thor@avengers.io",
+            "createdDate": "2020-09-26T23:08:27.645Z",
+            "lastModified": null
+        },
+        "nfury@shield.gov": {
+            "userId": "5298b9ab-9493-4fee-bf7e-805e47bb5d42",
+            "password": "$2y$12$VMp52ykXPMUJoubKQ9H0ru9oGpkXR6Cxrq.s3ddh.si9zS4A6VekC",
+            "emailAddress": "nfury@shield.gov",
             "createdDate": "2020-09-26T23:08:27.645Z",
             "lastModified": null
         }

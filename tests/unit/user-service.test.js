@@ -140,7 +140,7 @@ test("Should be able get the user role associated with a specified", async() => 
     const [user] = await testUserService.findUserById("e98417a8-d912-44e0-8d37-abe712ca840f");
     const userRole = await testUserService.getUserRole(user);
 
-    expect(userRole === "admin").toBe(true);
+    expect(userRole === "user").toBe(true);
 });
 
 

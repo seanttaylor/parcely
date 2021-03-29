@@ -9,10 +9,11 @@ function UserAuthService({cacheService, userService}) {
     /**
      * Issues a new authorization credential for a specified user
      * @param {User} user - an instance of the User class
+     * @param {String} role - role associated with the user in the datastore
      * @returns a JSON Web Token
     */
 
-    this.issueAuthCredential = async function(user) {
+    this.issueAuthCredential = async function(user, role) {
         const expiresInOneHour = Math.floor(Date.now() / 1000) + (60 * 60);
         //TODO: Figure out why getUserRole returns no role for an existing user
         //const userRole = await userService.getUserRole(user);
@@ -20,7 +21,7 @@ function UserAuthService({cacheService, userService}) {
             iss: "api@nicely", 
             exp: expiresInOneHour,
             sub: user.id,
-            role: ["user"]
+            role: [role]
         }, process.env.JWT_SECRET);
         cacheService.set({key: user.id, value: token, ttl: expiresInOneHour});
         return token;
