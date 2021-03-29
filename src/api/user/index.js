@@ -120,6 +120,7 @@ const {
         const userEmailAddress = req.body.emailAddress;
         const [user] = await userService.findUserByEmail(userEmailAddress);
         const result = await userService.isUserPasswordCorrect({user, password});
+        const role = await userService.getUserRole(user);
 
         if (!result) {
             res.status(401);
@@ -127,7 +128,7 @@ const {
                 error: "Email address and/or password do not match"
             });
         }
-        const accessToken = await authService.issueAuthCredential(user);
+        const accessToken = await authService.issueAuthCredential(user, role);
         res.status(200);
         res.json({
             accessToken,

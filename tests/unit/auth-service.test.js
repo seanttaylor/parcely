@@ -8,7 +8,7 @@ const testAuthService = new AuthService({cacheService: mockCacheService, userSer
 /**Tests**/
 
 test("Should assign a new authorization credential to a user", async() => {
-    const credential = await testAuthService.issueAuthCredential({});
+    const credential = await testAuthService.issueAuthCredential({}, "user");
     //expect(mockUserService.calledMethods.getUserRole).toBe(true);
     expect(typeof(credential) === "string").toBe(true);
 });

@@ -9,6 +9,8 @@ const request = supertest(app);
 const faker = require("faker");
 const starkUserId = "e98417a8-d912-44e0-8d37-abe712ca840f";
 const starkEmailAddress = "tstark@avengers.io";
+const furyUserId = "5298b9ab-9493-4fee-bf7e-805e47bb5d42";
+const furyEmailAddress = "nfury@shield.gov";
 const thorUserId = "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09";
 const thorEmailAddress = "thor@avengers.io";
 const superSecretPassword = "superSecretPassword";
@@ -18,7 +20,6 @@ test("Should be able to get a userId and access credential when a new User insta
     const res1 = await request.post(`/api/v1/users`)
     .send({
         handle: faker.internet.userName(),
-        motto: "Hulk smash!",
         emailAddress: faker.internet.email(),
         firstName: "Bruce",
         lastName: "Banner",
@@ -144,11 +145,33 @@ describe("Authorization", function Authorization() {
         });
         
     }); 
-    /*
-        describe("Admin Auth", function AdminAuth() {
+    
+    describe("Admin Auth", function AdminAuth() {
+        test("Admin users should be able to access ANY user account", async() => {
+            const res1 = await request.post(`/api/v1/users/token`)
+            .send({
+                emailAddress: furyEmailAddress,
+                password: superSecretPassword
+            })
+            .expect(200);
 
-        }); 
-    */ 
+            const furyAccessToken = res1.body.accessToken;
+
+            const res2 = await request.get(`/api/v1/users/${starkUserId}`)
+            .set("authorization", `Bearer ${furyAccessToken}`)
+            .send()
+            .expect(200);
+
+            expect(res2["body"]["entries"][0]["data"]["emailAddress"] === starkEmailAddress).toBe(true);
+
+            const res3 = await request.get(`/api/v1/users/${thorUserId}`)
+            .set("authorization", `Bearer ${furyAccessToken}`)
+            .send()
+            .expect(200);
+
+            expect(res3["body"]["entries"][0]["data"]["emailAddress"] === thorEmailAddress).toBe(true);
+        });
+    });  
 });
 
 describe("UserCrateAccess", function CrateAccess() {
