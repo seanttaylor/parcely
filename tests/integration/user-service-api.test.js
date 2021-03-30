@@ -35,8 +35,8 @@ test("Should be able to get a userId and access credential when a new User insta
 });
 
 describe("Authorization", function Authorization() {
-    describe("User Auth", function UserAuth() {
-        test("Platform Users should be able to access their own data", async() => {
+    describe("User Auth", function Users() {
+        test("Platform users should be able to access their own data", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
             .send({
                 emailAddress: starkEmailAddress,
@@ -52,7 +52,7 @@ describe("Authorization", function Authorization() {
             .expect(200);
         });
 
-        test("Platform Users should NOT be able to access other users' data", async() => {
+        test("Platform users should NOT be able to access other users' data", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
             .send({
                 emailAddress: starkEmailAddress,
@@ -82,7 +82,7 @@ describe("Authorization", function Authorization() {
             .expect(200);
         });
 
-        test("Platform Users should be able to edit their own account data", async() => {
+        test("Platform users should be able to edit their own account data", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
             .send({
                 emailAddress: starkEmailAddress,
@@ -103,7 +103,7 @@ describe("Authorization", function Authorization() {
 
         });
 
-        test("Platform Users should NOT be able to edit other users' account  data", async() => {
+        test("Platform users should NOT be able to edit other users' account  data", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
             .send({
                 emailAddress: thorEmailAddress,
@@ -124,7 +124,7 @@ describe("Authorization", function Authorization() {
         
     }); 
     
-    describe("Admin Auth", function AdminAuth() {
+    describe("Admin Auth", function Admins() {
         test("Admin users should be able to access ANY user account data", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
             .send({
@@ -175,70 +175,6 @@ describe("Authorization", function Authorization() {
             expect(res3["body"]["entries"][0]["data"]["lastName"] === "PoopyHead").toBe(true);
         });
     });  
-});
-
-describe("UserCrateAccess", function CrateAccess() {
-    test("Should be able to get a list of trips associated with a user account", async() => {
-        const res1 = await request.post(`/api/v1/users/token`)
-        .send({
-            emailAddress: thorEmailAddress,
-            password: superSecretPassword
-        })
-        .expect(200);
-
-        const thorAccessToken = res1.body.accessToken;
-
-        const res2 = await request.get(`/api/v1/users/${thorUserId}/shipments`)
-        .set("authorization", `Bearer ${thorAccessToken}`)
-        .send()
-        .expect(200);
-
-        expect(Array.isArray(res2.body.entries)).toBe(true);
-        expect(res2.body.count === 1).toBe(true);
-    
-    });
-
-    test("Should be able to get a filtered list of trips associated with a user account based on trip status", async() => {
-        const res1 = await request.post(`/api/v1/users/token`)
-        .send({
-            emailAddress: thorEmailAddress,
-            password: superSecretPassword
-        })
-        .expect(200);
-
-        const thorAccessToken = res1.body.accessToken;
-
-        const res2 = await request.get(`/api/v1/users/${thorUserId}/shipments?status=inProgress`)
-        .set("authorization", `Bearer ${thorAccessToken}`)
-        .send()
-        .expect(200);
-
-        expect(Array.isArray(res2.body.entries)).toBe(true);
-        expect(res2.body.count === 0).toBe(true);
-    
-    });
-
-    test("Platform Users should be able to find geolocation data for all crates associated with their own account", async() => {
-        const res1 = await request.post(`/api/v1/users/token`)
-        .send({
-            emailAddress: thorEmailAddress,
-            password: superSecretPassword
-        })
-        .expect(200);
-
-        const thorAccessToken = res1.body.accessToken;
-
-        const res2 = await request.get(`/api/v1/users/${thorUserId}/crates`)
-        .set("authorization", `Bearer ${thorAccessToken}`)
-        .send()
-        .expect(200);
-
-        expect(Array.isArray(res2.body.entries)).toBe(true);
-        expect(res2.body.count === 1).toBe(true);
-        expect(res2["body"]["entries"][0]["data"]["recipientId"] === thorUserId).toBe(true);
-
-        expect(Object.keys(res2["body"]["entries"][0]["data"]).includes("telemetry")).toBe(true);
-    });
 });
 
 

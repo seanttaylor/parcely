@@ -8,30 +8,28 @@ const {
 } = require("../../lib/middleware");
 
 /**
- * @param {AuthService} authService - an instance of the AuthService
- * @param {EventEmitter} eventEmitter - an instance of the AuthService
+ * @param {CrateService} crateService - an instance of the CrateService
+ * @param {EventEmitter} eventEmitter - an instance of EventEmitter
  * @returns router - an instance of an Express router
  */
 
- function CrateRouter() {
+ function CrateRouter({crateService, eventEmitter}) {
 
-   /*
-   router.get("/", async(req, res, next) => {
+   router.get("/", authorizeRequest({actionId: "readAny:crates"}), async(req, res, next) => {
 
         try {
-            const userList = await userService.findAllUsers();
+            const crateList = await crateService.getAllCrates();
             res.set("content-type", "application/json");
             res.status(200);
             res.json({
-                data: userList.map(u => u.toJSON()),
-                entries: userList.length
+                entries: crateList.map(c => c.toJSON()),
+                count: crateList.length
             });
         }
         catch (e) {
             next(e);
         }
     });
-    */
 
 
     return router;

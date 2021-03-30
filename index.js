@@ -49,6 +49,7 @@ const crateService = new CrateService({crateRepo, crateTripRepo});
 /************************************APIS**************************************/
 
 const UserAPI = require("./src/api/user");
+const CrateAPI = require("./src/api/crate");
 
 /******************************************************************************/
 app.set("view engine", "ejs");
@@ -70,6 +71,12 @@ app.use("/api/v1/users", UserAPI({
     authService,
     crateService,
     userService, 
+    eventEmitter
+}));
+
+app.use("/api/v1/crates", CrateAPI({
+    authService,
+    crateService,
     eventEmitter
 }));
 

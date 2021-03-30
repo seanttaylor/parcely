@@ -17,13 +17,6 @@ const ac = new AccessControl(accessGrants.grants);
 
 module.exports = function({actionId, allowResourceOwnerOnly=true}) { 
     return async function authorizeRequest(req, res, next) {
-        if (!actionId) {
-            console.error("Middleware.Authorize.MissingActionId => Authorize middleware cannot be called without an actionId");
-            res.status(500).send({
-                error: "There was an error."
-            });
-            return;
-        }
 
         try {
             const [action, resource] = actionId.split(":");
@@ -52,6 +45,7 @@ module.exports = function({actionId, allowResourceOwnerOnly=true}) {
                     error: "Unauthorized: missing access grant(s)",
                     count: 0
                 });
+                return;
             }
 
             //The requester is NOT authorized to access the specified resource; no overrides applied
