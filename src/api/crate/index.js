@@ -15,7 +15,9 @@ const {
 
  function CrateRouter({crateService, eventEmitter}) {
 
-   router.get("/", authorizeRequest({actionId: "readAny:crates"}), async(req, res, next) => {
+   /****** GET *******/
+
+   router.get("/", authorizeRequest({actionId: "readAny:crates"}), async function getAllCrates(req, res, next) {
 
         try {
             const crateList = await crateService.getAllCrates();
@@ -24,6 +26,26 @@ const {
             res.json({
                 entries: crateList.map(c => c.toJSON()),
                 count: crateList.length
+            });
+        }
+        catch (e) {
+            next(e);
+        }
+    });
+
+
+    /****** POST *******/
+
+    router.post("/", authorizeRequest({actionId: "createAny:crates"}), async function createCrate(req, res, next) {
+        const crateData = req.body;
+
+        try {
+            const crate = await crateService.createCrate(crateData);
+            res.set("content-type", "application/json");
+            res.status(200);
+            res.json({
+                entries: [crate.toJSON()],
+                count: 1
             });
         }
         catch (e) {

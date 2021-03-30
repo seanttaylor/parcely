@@ -116,7 +116,48 @@ describe("CrateAccess", function CrateAccess() {
             .send()
             .expect(401);
         });
+    });
+});
 
+describe("CrateManagement", function CrateManagement() {
+    test("Platform users should NOT be able to create new crates", async() => {
+        const res1 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: starkEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
+
+        const starkAccessToken = res1.body.accessToken;
+
+        const res2 = await request.post(`/api/v1/crates`)
+        .set("authorization", `Bearer ${starkAccessToken}`)
+        .send({
+            size: ["L"]
+        })
+        .expect(401);
+    });
+
+    test("Admins should be able to create new crates", async() => {
+        const res1 = await request.post(`/api/v1/users/token`)
+            .send({
+                emailAddress: furyEmailAddress,
+                password: superSecretPassword
+            })
+            .expect(200);
+
+            const furyAccessToken = res1.body.accessToken;
+
+            const res2 = await request.post(`/api/v1/crates`)
+            .set("authorization", `Bearer ${furyAccessToken}`)
+            .send({
+                size: ["L"]
+            })
+            .expect(200);
+
+            expect(res2.body.count === 1).toBe(true);
+            expect(Object.keys(res2["body"]["entries"][0]).includes("id"));
+            expect(res2["body"]["entries"][0]["data"]["size"][0] === "L");
     });
 });
 
