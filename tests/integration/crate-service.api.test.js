@@ -159,6 +159,42 @@ describe("CrateManagement", function CrateManagement() {
             expect(Object.keys(res2["body"]["entries"][0]).includes("id"));
             expect(res2["body"]["entries"][0]["data"]["size"][0] === "L");
     });
+
+    test("Admins should be able to set the recipient of an existing crate", async() => {
+        const res1 = await request.post(`/api/v1/users/token`)
+            .send({
+                emailAddress: furyEmailAddress,
+                password: superSecretPassword
+            })
+            .expect(200);
+
+            const furyAccessToken = res1.body.accessToken;
+
+            const res2 = await request.post(`/api/v1/crates`)
+            .set("authorization", `Bearer ${furyAccessToken}`)
+            .send({
+                size: ["L"]
+            })
+            .expect(200);
+
+
+            const crateId = res2["body"]["entries"][0]["id"];
+            const fakeRecipientId = faker.random.uuid();
+            
+            const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+            .set("authorization", `Bearer ${furyAccessToken}`)
+            .send({
+                recipientId: fakeRecipientId
+            })
+            .expect(204);
+
+            const res4 = await request.get(`/api/v1/crates/${crateId}`)
+            .set("authorization", `Bearer ${furyAccessToken}`)
+            .send()
+            .expect(200);
+
+            expect(res4["body"]["entries"][0]["data"]["recipientId"] === fakeRecipientId).toBe(true);
+    });
 });
 
 

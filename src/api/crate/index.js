@@ -33,6 +33,23 @@ const {
         }
     });
 
+    router.get("/:id", authorizeRequest({actionId: "readAny:crates"}), async function getCrateById(req, res, next) {
+        const crateId = req.params.id;
+
+        try {
+            const crate = await crateService.getCrateById(crateId);
+            res.set("content-type", "application/json");
+            res.status(200);
+            res.json({
+                entries: [crate.toJSON()],
+                count: 1
+            });
+        }
+        catch (e) {
+            next(e);
+        }
+    });
+
 
     /****** POST *******/
 
@@ -41,12 +58,33 @@ const {
 
         try {
             const crate = await crateService.createCrate(crateData);
+            await crate.save();
             res.set("content-type", "application/json");
             res.status(200);
             res.json({
                 entries: [crate.toJSON()],
                 count: 1
             });
+        }
+        catch (e) {
+            next(e);
+        }
+    });
+
+
+    /****** PUT *******/
+
+    router.put("/:id/recipient", authorizeRequest({actionId: "updateAny:crates"}), async function setRecipient(req, res, next) {
+        const crateId = req.params.id;
+        const recipientId = req.body.recipientId;
+
+        try {
+            const crate = await crateService.getCrateById(crateId);
+            await crate.setRecipient(recipientId);
+
+            res.set("content-type", "application/json");
+            res.status(204);
+            res.send();
         }
         catch (e) {
             next(e);
