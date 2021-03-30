@@ -46,7 +46,9 @@ function CrateRepository(databaseConnector) {
         return record;
     }
 
-
+    /**
+     * @param {CrateDTO} crateDTO - an instance of a CrateDTO
+     */
     this.setCrateRecipient = async function(crateDTO) {
         const result = await databaseConnector.updateOne({
             doc: crateDTO,
@@ -54,12 +56,6 @@ function CrateRepository(databaseConnector) {
         });
     }
 
-    /*this.removeCrateRecipient = async function(crateDTO) {
-        const result = await databaseConnector.updateOne({
-            doc: crateDTO,
-            collection: "crates"
-        });
-    }*/
 
     /**
      * @param {CrateDTO} crateDTO - an instance of a CrateDTO
