@@ -61,8 +61,9 @@ function Crate(repo, crateDTO) {
             throw new Error("CrateError.CannotSetRecipient => Recipient has already been assigned for this crate");
         }
 
-        const crateDTO = new CrateDTO(Object.assign(this._data, recipientId));
-        const crate = await this._repo.crate.setCrateRecipient(crateDTO);
+        const crateDTO = new CrateDTO(Object.assign(this._data, {recipientId}));
+        await this._repo.crate.setCrateRecipient(crateDTO);
+        
         this._data.recipientId = recipientId;
     }
 
@@ -282,7 +283,7 @@ function CrateService({crateRepo, crateTripRepo}) {
      */
     this.getCrateById = async function(id) {
         const crateData = await this._repo.crate.getCrateById(id);
-        const crate = new Crate(this._repo.crate, new CrateDTO(crateData));
+        const crate = new Crate(this._repo, new CrateDTO(crateData));
         const {tripId} = crate._data;
 
         if (tripId) {
