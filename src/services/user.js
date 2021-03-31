@@ -41,7 +41,6 @@ function User(repo, userDTO) {
         };
     }
 
-
     /**
     Saves a new user to the data store
     @returns {String} - a uuid for the new user
@@ -70,6 +69,19 @@ function User(repo, userDTO) {
         await this._repo.editName(userDTO);
         this._data.firstName = firstName;
         this._data.lastName = lastName;
+    }
+
+    /**
+    Edit emailAddress on an existing user in the data store
+    @param {String} emailAddress - updated emailAddress
+    */
+    this.editEmailAddress = async function(emailAddress) {
+        const userDTO = new UserDTO(Object.assign(this._data, {
+            emailAddress
+        }));
+
+        await this._repo.editEmailAddress(userDTO);
+        this._data.emailAddress = emailAddress;
     }
 
     /**

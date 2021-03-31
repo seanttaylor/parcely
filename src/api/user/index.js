@@ -180,26 +180,44 @@ const {
         }
     });
     
-
-    /*
-    router.put("/:id/phone", validateJWT, validateRequestBodyWith({requiredFields: false, schema: "user"}), async(req, res, next) => {
+    router.put("/:id/phone", verifyUserExists, authorizeRequest({actionId: "updateOwn:users"}), async function editPhoneNumber(req, res, next) {
         const userId = req.params.id;
+        const phoneNumber = req.body.phoneNumber;
 
         try {
             const [user] = await userService.findUserById(userId);
-            await user.editPhoneNumber(req.body.phoneNumber);
+            await user.editPhoneNumber(phoneNumber);
             res.set("content-type", "application/json");
             res.status(200);
             res.json({
-                data: [user],
-                entries: 1
+                entries: [user],
+                count: 1
             });
         }
         catch (e) {
             next(e);
         }
     });
-    */
+
+
+    router.put("/:id/email", verifyUserExists, authorizeRequest({actionId: "updateOwn:users"}), async function editEmailAddress(req, res, next) {
+        const userId = req.params.id;
+        const emailAddress = req.body.emailAddress;
+
+        try {
+            const [user] = await userService.findUserById(userId);
+            await user.editEmailAddress(emailAddress);
+            res.set("content-type", "application/json");
+            res.status(200);
+            res.json({
+                entries: [user],
+                count: 1
+            });
+        }
+        catch (e) {
+            next(e);
+        }
+    });
 
     return router;
 }
