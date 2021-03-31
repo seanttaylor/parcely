@@ -177,6 +177,29 @@ describe("Authorization", function Authorization() {
     });  
 });
 
+describe("UserAccountManagement", function UserAccountManagement() {
+    test("Platform users should be able to edit the phone number on their account", async() => {
+        const fakePhoneNumber = faker.phone.phoneNumber();
+
+        const res1 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: starkEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
+
+        const starkAccessToken = res1.body.accessToken;
+
+        const res2 = await request.put(`/api/v1/users/${starkUserId}/phone`)
+        .set("authorization", `Bearer ${starkAccessToken}`)
+        .send({
+            phoneNumber: fakePhoneNumber
+        })
+        .expect(200);
+    });
+ 
+});
+
 
 
 
