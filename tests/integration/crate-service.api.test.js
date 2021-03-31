@@ -195,6 +195,75 @@ describe("CrateManagement", function CrateManagement() {
 
             expect(res4["body"]["entries"][0]["data"]["recipientId"] === fakeRecipientId).toBe(true);
     });
+
+    test("Admins should be able to delete an existing crate", async() => {
+        const res1 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: furyEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
+
+        const furyAccessToken = res1.body.accessToken;
+
+        const res2 = await request.post(`/api/v1/crates`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send({
+            size: ["L"]
+        })
+        .expect(200);
+
+        const crateId = res2["body"]["entries"][0]["id"];
+            
+        const res3 = await request.delete(`/api/v1/crates/${crateId}`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send()
+        .expect(204);
+
+        const res4 = await request.get(`/api/v1/crates/${crateId}`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send()
+        .expect(404);
+    });
+
+    test("Platform users should NOT be able to delete an existing crate", async() => {
+        const res1 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: furyEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
+
+        const furyAccessToken = res1.body.accessToken;
+
+        const res2 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: starkEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
+
+        const starkAccessToken = res2.body.accessToken;
+
+        const res3 = await request.post(`/api/v1/crates`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send({
+            size: ["L"]
+        })
+        .expect(200);
+
+        const crateId = res3["body"]["entries"][0]["id"];
+            
+        const res4 = await request.delete(`/api/v1/crates/${crateId}`)
+        .set("authorization", `Bearer ${starkAccessToken}`)
+        .send()
+        .expect(401);
+
+        const res5 = await request.get(`/api/v1/crates/${crateId}`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send()
+        .expect(200);
+    });
 });
 
 

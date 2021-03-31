@@ -283,6 +283,11 @@ function CrateService({crateRepo, crateTripRepo}) {
      */
     this.getCrateById = async function(id) {
         const crateData = await this._repo.crate.getCrateById(id);
+
+        if (!crateData) {
+            return;
+        }
+
         const crate = new Crate(this._repo, new CrateDTO(crateData));
         const {tripId} = crate._data;
 

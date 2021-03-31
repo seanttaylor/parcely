@@ -184,7 +184,6 @@ function InMemoryDatabaseConnector({console}) {
         try {
             
             if (!data[collection][id]) {
-                console.info(`InMemoryDatabaseConnector.UpdateError: Could NOT find ${collection}.${id}`);
                 return [];
             }
             

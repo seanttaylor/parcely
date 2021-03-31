@@ -105,6 +105,7 @@ function CrateRepository(databaseConnector) {
 
 
     this.deleteCrate = async function(id) {
+        await databaseConnector.removeOne(id, "crates");
         return
     }
 

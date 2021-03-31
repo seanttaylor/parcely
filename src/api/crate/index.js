@@ -39,6 +39,13 @@ const {
         try {
             const crate = await crateService.getCrateById(crateId);
             res.set("content-type", "application/json");
+
+            if (!crate) {
+                res.status(404);
+                res.end();
+                return;  
+            }
+            
             res.status(200);
             res.json({
                 entries: [crate.toJSON()],
@@ -81,6 +88,24 @@ const {
         try {
             const crate = await crateService.getCrateById(crateId);
             await crate.setRecipient(recipientId);
+
+            res.set("content-type", "application/json");
+            res.status(204);
+            res.send();
+        }
+        catch (e) {
+            next(e);
+        }
+    });
+
+
+    /****** DELETE *******/
+
+    router.delete("/:id", authorizeRequest({actionId: "deleteAny:crates"}), async function deleteCrate(req, res, next) {
+        const crateId = req.params.id;
+
+        try {
+            const crate = await crateService.deleteCrate(crateId);
 
             res.set("content-type", "application/json");
             res.status(204);
