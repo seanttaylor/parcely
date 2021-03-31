@@ -50,6 +50,7 @@ const crateService = new CrateService({crateRepo, crateTripRepo});
 
 const UserAPI = require("./src/api/user");
 const CrateAPI = require("./src/api/crate");
+const StatusAPI = require("./src/api/status");
 
 /******************************************************************************/
 app.set("view engine", "ejs");
@@ -79,6 +80,8 @@ app.use("/api/v1/crates", CrateAPI({
     crateService,
     eventEmitter
 }));
+
+app.use("/status", StatusAPI());
 
 app.use((req, res, next) => {
     //console.error(`Error 404 on ${req.url}.`);
