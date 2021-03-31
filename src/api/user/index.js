@@ -199,6 +199,26 @@ const {
         }
     });
 
+
+    router.put("/:id/email", verifyUserExists, authorizeRequest({actionId: "updateOwn:users"}), async function editEmailAddress(req, res, next) {
+        const userId = req.params.id;
+        const emailAddress = req.body.emailAddress;
+
+        try {
+            const [user] = await userService.findUserById(userId);
+            await user.editEmailAddress(emailAddress);
+            res.set("content-type", "application/json");
+            res.status(200);
+            res.json({
+                entries: [user],
+                count: 1
+            });
+        }
+        catch (e) {
+            next(e);
+        }
+    });
+
     return router;
 }
 

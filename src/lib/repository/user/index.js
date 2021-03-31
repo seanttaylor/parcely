@@ -99,6 +99,18 @@ function UserRepository(databaseConnector) {
         return { lastModified: record.lastModified };
     }
 
+    /**
+     * @param {UserDTO} userDTO - an instance of UserDTO
+     */
+    this.editEmailAddress = async function(userDTO) {
+        const [record] = await databaseConnector.updateOne({
+            doc: userDTO,
+            collection: "users"
+        });
+
+        return { lastModified: record.lastModified };
+    }
+
 
     this.getUserRole = async function(currentUserId) {
         const [result] = await databaseConnector.findOne({

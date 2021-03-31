@@ -7,6 +7,7 @@
 * @property {Function} findOneById - finds a user in the data store by uuid
 * @property {Function} findAll - finds all users in the data store
 * @property {Function} editName - update user.firstName and/or user.lastName properties
+* @property {Function} editEmailAddress - update user.emailAddress property
 * @property {Function} delete - deletes a user in the data store by its uuid
 */
 
@@ -51,12 +52,17 @@ function IUserRepository(myImpl) {
     this.editPhoneNumber = myImpl.editPhoneNumber || required;
 
     /**
+    @returns 
+    */
+    this.editEmailAddress = myImpl.editEmailAddress|| required;
+
+    /**
     @returns
     */
     this.deleteUser = myImpl.deleteUser || required;
 
     /**
-    @returns
+    @returns {String}
     */
     this.getUserRole = myImpl.getUserRole || required;
 
@@ -66,7 +72,7 @@ function IUserRepository(myImpl) {
     this.createUserPassword = myImpl.createUserPassword || required;
 
     /**
-    @returns
+    @returns {String}
     */
     this.getUserPassword = myImpl.getUserPassword || required;
 
