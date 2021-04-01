@@ -18,7 +18,7 @@ const superSecretPassword = "superSecretPassword";
 describe("CrateAccess", function CrateAccess() {
 
     describe("UserAccess", function Users() {
-        test("Should be able to get a list of trips associated with a user account", async() => {
+        test("Platform users should be able to get a list of trips associated with a user account", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
             .send({
                 emailAddress: thorEmailAddress,
@@ -37,7 +37,7 @@ describe("CrateAccess", function CrateAccess() {
             expect(res2.body.count === 1).toBe(true);
         });
 
-        test("Should be able to get a filtered list of trips associated with a user account based on trip status", async() => {
+        test("Platform users should be able to get a filtered list of trips associated with a user account based on trip status", async() => {
         const res1 = await request.post(`/api/v1/users/token`)
         .send({
             emailAddress: thorEmailAddress,
@@ -264,6 +264,128 @@ describe("CrateManagement", function CrateManagement() {
         .send()
         .expect(200);
     });
+});
+
+describe("ShipmentManagement", function ShipmentManagement() {
+    test("Platform should be able to start shipment of a specified crate", async() => {
+        const res1 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: furyEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
+
+        const furyAccessToken = res1.body.accessToken;
+        const fakeMerchantId = faker.random.uuid();
+
+        const res2 = await request.post(`/api/v1/crates`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send({
+            size: ["L"],
+            merchantId: fakeMerchantId
+        })
+        .expect(200);
+
+        const crateId = res2["body"]["entries"][0]["id"];
+
+        const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send({
+            recipientId: faker.random.uuid()
+        })
+        .expect(204);
+
+        const res4 = await request.post(`/api/v1/crates/${crateId}/shipments`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send({
+            originAddress: {
+                street: faker.address.streetName(),
+                apartmentNumber: "7",
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            destinationAddress: {
+                street: faker.address.streetName(),
+                apartmentNumber: "7",
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            trackingNumber: faker.random.uuid()
+        })
+        .expect(201);
+
+        expect(res4["body"]["entries"][0]["id"] === crateId).toBe(true);
+        expect(res4["body"]["entries"][0]["data"]["tripId"]).toBeTruthy();
+        expect(res4["body"]["entries"][0]["data"]["merchantId"] === fakeMerchantId).toBe(true);
+
+        const res5 = await request.get(`/api/v1/crates/${crateId}`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send()
+        .expect(200);
+
+        
+        expect(res5["body"]["entries"][0]["data"]["status"][0] === "inTransit").toBe(true);
+    });
+
+    test("Platform should be able to get a list of all shipments for a specified crate", async() => {
+            const res1 = await request.post(`/api/v1/users/token`)
+            .send({
+                emailAddress: furyEmailAddress,
+                password: superSecretPassword
+            })
+            .expect(200);
+
+            const furyAccessToken = res1.body.accessToken;
+            const fakeMerchantId = faker.random.uuid();
+
+            const res2 = await request.post(`/api/v1/crates`)
+            .set("authorization", `Bearer ${furyAccessToken}`)
+            .send({
+                size: ["L"],
+                merchantId: fakeMerchantId
+            })
+            .expect(200);
+
+            const crateId = res2["body"]["entries"][0]["id"];
+
+            const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+            .set("authorization", `Bearer ${furyAccessToken}`)
+            .send({
+                recipientId: faker.random.uuid()
+            })
+            .expect(204);
+
+            const res4 = await request.post(`/api/v1/crates/${crateId}/shipments`)
+            .set("authorization", `Bearer ${furyAccessToken}`)
+            .send({
+                originAddress: {
+                    street: faker.address.streetName(),
+                    apartmentNumber: "7",
+                    city: faker.address.city(),
+                    state: faker.address.stateAbbr(),
+                    zip: faker.address.zipCode()
+                },
+                destinationAddress: {
+                    street: faker.address.streetName(),
+                    apartmentNumber: "7",
+                    city: faker.address.city(),
+                    state: faker.address.stateAbbr(),
+                    zip: faker.address.zipCode()
+                },
+                trackingNumber: faker.random.uuid()
+            })
+            .expect(201);
+
+            const res5 = await request.get(`/api/v1/crates/${crateId}/shipments`)
+            .set("authorization", `Bearer ${furyAccessToken}`)
+            .send()
+            .expect(200);
+            
+            expect(res5["body"]["count"] === 1).toBe(true);
+            expect(res5["body"]["entries"][0]["data"]["status"][0] === "inProgress").toBe(true);
+        });
 });
 
 

@@ -57,6 +57,25 @@ const {
         }
     });
 
+    router.get("/:id/shipments", authorizeRequest({actionId: "readAny:crates"}), async function getCrateTripsByCrateId(req, res, next) {
+        const crateId = req.params.id;
+
+        try {
+            const crate = await crateService.getCrateById(crateId);
+            const shipmentList = await crateService.getCrateTrips(crate);
+            res.set("content-type", "application/json");
+            
+            res.status(200);
+            res.json({
+                entries: shipmentList.map(s => s.toJSON()),
+                count: shipmentList.length
+            });
+        }
+        catch (e) {
+            next(e);
+        }
+    });
+
 
     /****** POST *******/
 
@@ -68,6 +87,29 @@ const {
             await crate.save();
             res.set("content-type", "application/json");
             res.status(200);
+            res.json({
+                entries: [crate.toJSON()],
+                count: 1
+            });
+        }
+        catch (e) {
+            next(e);
+        }
+    });
+
+    router.post("/:id/shipments", authorizeRequest({actionId: "updateAny:crates"}), async function startCrateShipment(req, res, next) {
+        const crateId = req.params.id;
+        const {originAddress, destinationAddress, trackingNumber} = req.body;
+
+        try {
+            const crate = await crateService.getCrateById(crateId);
+            await crate.startTrip({
+                originAddress, 
+                destinationAddress, 
+                trackingNumber
+            });
+            res.set("content-type", "application/json");
+            res.status(201);
             res.json({
                 entries: [crate.toJSON()],
                 count: 1

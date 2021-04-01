@@ -35,7 +35,8 @@ function Crate(repo, crateDTO) {
                 merchantId: this._data.merchantId,
                 recipientId: this._data.recipientId,
                 telemetry: this._data.telemetry,
-                lastPing: this._data.lastPing
+                lastPing: this._data.lastPing,
+                status: this._data.status
             }
         };
     }
