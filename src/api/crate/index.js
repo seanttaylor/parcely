@@ -178,6 +178,20 @@ const {
         }
     });
 
+    router.put("/:id/shipments/:shipmentId/status", authorizeRequest({actionId: "updateAny:crates"}), async function setShipmentStatus(req, res, next) {
+        const crateId = req.params.id;
+
+        try {
+            const crate = await crateService.getCrateById(crateId);
+            await crate.completeTrip();
+            res.status(204);
+            res.send();
+        }
+        catch (e) {
+            next(e);
+        }
+    });
+
 
     /****** DELETE *******/
 
