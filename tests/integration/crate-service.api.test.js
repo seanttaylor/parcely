@@ -358,6 +358,8 @@ describe("CrateManagement", function CrateManagement() {
         .send()
         .expect(200);
     });
+
+
 });
 
 describe("ShipmentManagement", function ShipmentManagement() {
@@ -424,62 +426,144 @@ describe("ShipmentManagement", function ShipmentManagement() {
     });
 
     test("Platform should be able to get a list of all shipments for a specified crate", async() => {
-            const res1 = await request.post(`/api/v1/users/token`)
-            .send({
-                emailAddress: furyEmailAddress,
-                password: superSecretPassword
-            })
-            .expect(200);
+        const res1 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: furyEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
 
-            const furyAccessToken = res1.body.accessToken;
-            const fakeMerchantId = faker.random.uuid();
+        const furyAccessToken = res1.body.accessToken;
+        const fakeMerchantId = faker.random.uuid();
 
-            const res2 = await request.post(`/api/v1/crates`)
-            .set("authorization", `Bearer ${furyAccessToken}`)
-            .send({
-                size: ["L"],
-                merchantId: fakeMerchantId
-            })
-            .expect(201);
+        const res2 = await request.post(`/api/v1/crates`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send({
+            size: ["L"],
+            merchantId: fakeMerchantId
+        })
+        .expect(201);
 
-            const crateId = res2["body"]["entries"][0]["id"];
+        const crateId = res2["body"]["entries"][0]["id"];
 
-            const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
-            .set("authorization", `Bearer ${furyAccessToken}`)
-            .send({
-                recipientId: faker.random.uuid()
-            })
-            .expect(204);
+        const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send({
+            recipientId: faker.random.uuid()
+        })
+        .expect(204);
 
-            const res4 = await request.post(`/api/v1/crates/${crateId}/shipments`)
-            .set("authorization", `Bearer ${furyAccessToken}`)
-            .send({
-                originAddress: {
-                    street: faker.address.streetName(),
-                    apartmentNumber: "7",
-                    city: faker.address.city(),
-                    state: faker.address.stateAbbr(),
-                    zip: faker.address.zipCode()
-                },
-                destinationAddress: {
-                    street: faker.address.streetName(),
-                    apartmentNumber: "7",
-                    city: faker.address.city(),
-                    state: faker.address.stateAbbr(),
-                    zip: faker.address.zipCode()
-                },
-                trackingNumber: faker.random.uuid()
-            })
-            .expect(201);
+        const res4 = await request.post(`/api/v1/crates/${crateId}/shipments`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send({
+            originAddress: {
+                street: faker.address.streetName(),
+                apartmentNumber: "7",
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            destinationAddress: {
+                street: faker.address.streetName(),
+                apartmentNumber: "7",
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            trackingNumber: faker.random.uuid()
+        })
+        .expect(201);
 
-            const res5 = await request.get(`/api/v1/crates/${crateId}/shipments`)
-            .set("authorization", `Bearer ${furyAccessToken}`)
-            .send()
-            .expect(200);
-            
-            expect(res5["body"]["count"] === 1).toBe(true);
-            expect(res5["body"]["entries"][0]["data"]["status"][0] === "inProgress").toBe(true);
-        });
+        const res5 = await request.get(`/api/v1/crates/${crateId}/shipments`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send()
+        .expect(200);
+        
+        expect(res5["body"]["count"] === 1).toBe(true);
+        expect(res5["body"]["entries"][0]["data"]["status"][0] === "inProgress").toBe(true);
+    });
+
+    test("Platform should be able to complete shipment of a specified crate", async() => {
+        const res1 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: furyEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
+
+        const furyAccessToken = res1.body.accessToken;
+        const fakeMerchantId = faker.random.uuid();
+
+        const res2 = await request.post(`/api/v1/crates`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send({
+            size: ["L"],
+            merchantId: fakeMerchantId
+        })
+        .expect(201);
+
+        const crateId = res2["body"]["entries"][0]["id"];
+
+        const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send({
+            recipientId: faker.random.uuid()
+        })
+        .expect(204);
+
+        const res4 = await request.post(`/api/v1/crates/${crateId}/shipments`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send({
+            originAddress: {
+                street: faker.address.streetName(),
+                apartmentNumber: "7",
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            destinationAddress: {
+                street: faker.address.streetName(),
+                apartmentNumber: "7",
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            trackingNumber: faker.random.uuid()
+        })
+        .expect(201);
+
+        const shipmentId = res4["body"]["entries"][0]["data"]["tripId"];
+
+        expect(res4["body"]["entries"][0]["id"] === crateId).toBe(true);
+        expect(res4["body"]["entries"][0]["data"]["tripId"]).toBeTruthy();
+        expect(res4["body"]["entries"][0]["data"]["merchantId"] === fakeMerchantId).toBe(true);
+
+        const res5 = await request.get(`/api/v1/crates/${crateId}`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send()
+        .expect(200);
+        
+        expect(res5["body"]["entries"][0]["data"]["status"][0] === "inTransit").toBe(true);
+
+        const res6 = await request.put(`/api/v1/crates/${crateId}/shipments/${shipmentId}/status`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send()
+        .expect(204);
+
+        const res7 = await request.get(`/api/v1/crates/${crateId}`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send()
+        .expect(200);
+        
+        expect(res7["body"]["entries"][0]["data"]["status"][0] === "delivered").toBe(true);
+
+        const res8 = await request.get(`/api/v1/crates/${crateId}/shipments/${shipmentId}`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send()
+        .expect(200);
+
+        expect(res8["body"]["entries"][0]["data"]["status"][0] === "complete").toBe(true);
+    });
 });
 
 

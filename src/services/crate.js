@@ -150,15 +150,17 @@ function Crate(repo, crateDTO) {
     Completes an existing trip for the current crate; crate trip data becomes read-only
     */
     this.completeTrip = async function() {
-        const status = ["complete"];
+        const tripStatus = ["complete"];
+        const crateStatus = ["delivered"];
         const arrivalTimestamp = new Date().toISOString();
         const crateDTO = new CrateDTO(Object.assign({}, this._data, {
             tripId: null,
-            recipientId: null
+            recipientId: null,
+            status: crateStatus
         }));
         const crateTripDTO = new CrateTripDTO(
             Object.assign({}, this.currentTrip._data, {
-                status,
+                status: tripStatus,
                 crateId: this._data.id,
                 arrivalTimestamp
             })
@@ -166,9 +168,10 @@ function Crate(repo, crateDTO) {
 
         await this._repo.crate.setCrateRecipient(crateDTO);
         await this._repo.crateTrip.completeCrateTrip(crateTripDTO);
-        this.currentTrip._data.status = status;
+        this.currentTrip._data.status = tripStatus;
         this._data.recipientId = null;
         this._data.tripId = null;
+        this._data.status = crateStatus;
     }
 }
 
