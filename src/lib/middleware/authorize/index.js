@@ -30,8 +30,8 @@ module.exports = function({actionId, allowResourceOwnerOnly=true}) {
                 return;
             }
 
-            /*The request is for a child resource; permissions are overridden at the 
-            * router-level to permit access to the child resource
+            /*The request is for a child resource; permissions are overridden 
+            * at the router-level to permit access to the child resource
             */
             if (!allowResourceOwnerOnly) {
                 next()
@@ -50,7 +50,7 @@ module.exports = function({actionId, allowResourceOwnerOnly=true}) {
 
             //The requester is NOT authorized to access the specified resource; no overrides applied
             if (req.params.id !== decodedToken.sub) {
-                res.status(401).send({
+                res.status(403).send({
                     entries: [],
                     error: "Unauthorized: missing access grant(s)",
                     count: 0
