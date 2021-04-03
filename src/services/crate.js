@@ -135,7 +135,8 @@ function Crate(repo, crateDTO) {
 
         await crateTrip.save();
         await this._repo.crate.startCrateTrip(new CrateDTO(Object.assign(this._data, {
-            status
+            status,
+            tripId: id
         })));
         
         this._data.status = status;
@@ -211,7 +212,6 @@ function CrateTrip(repo, crateTripDTO) {
                 destinationAddress: this._data.destinationAddress,
                 status: this._data.status,
                 waypoints: this._data.waypoints
-                
             }
         };
     }
@@ -233,8 +233,9 @@ function CrateTrip(repo, crateTripDTO) {
     @param {String} timestamp - date/time telemetry data was recorded
     @param {Object} telemetry - sensor data collected from the hardware crate
     */
-    this.addWaypoint = async function({timestamp, telemetry}) {
+    this.addWaypoint = async function({telemetry}) {
         const [currentTripStatus] = this._data.status;
+        const timestamp = new Date().toISOString();
 
         if (currentTripStatus === "complete") {
             return; 

@@ -57,7 +57,7 @@ const {
         }
     });
 
-    router.get("/:id/shipments", authorizeRequest({actionId: "readAny:crates"}), async function getCrateTripsByCrateId(req, res, next) {
+    router.get("/:id/shipments", authorizeRequest({actionId: "readAny:crates"}), async function getCrateShipmentsByCrateId(req, res, next) {
         const crateId = req.params.id;
 
         try {
@@ -67,8 +67,27 @@ const {
             
             res.status(200);
             res.json({
-                entries: shipmentList.map(s => s.toJSON()),
+                entries: shipmentList.map((s) => s.toJSON()),
                 count: shipmentList.length
+            });
+        }
+        catch (e) {
+            next(e);
+        }
+    });
+
+    router.get("/:id/shipments/:shipmentId", authorizeRequest({actionId: "readOwn:crates", allowResourceOwnerOnly: false}), async function getCrateShipmentTelemetry(req, res, next) {
+        const crateId = req.params.id;
+        const shipmentId = req.params.shipmentId;
+
+        try {
+            const shipment = await crateService.getCrateTripById(shipmentId);
+            res.set("content-type", "application/json");
+            
+            res.status(200);
+            res.json({
+                entries: [shipment],
+                count: 1
             });
         }
         catch (e) {
@@ -86,7 +105,7 @@ const {
             const crate = await crateService.createCrate(crateData);
             await crate.save();
             res.set("content-type", "application/json");
-            res.status(200);
+            res.status(201);
             res.json({
                 entries: [crate.toJSON()],
                 count: 1
@@ -97,7 +116,7 @@ const {
         }
     });
 
-    router.post("/:id/shipments", authorizeRequest({actionId: "updateAny:crates"}), async function startCrateShipment(req, res, next) {
+    router.post("/:id/shipments", authorizeRequest({actionId: "createAny:crates"}), async function startCrateShipment(req, res, next) {
         const crateId = req.params.id;
         const {originAddress, destinationAddress, trackingNumber} = req.body;
 
@@ -108,6 +127,25 @@ const {
                 destinationAddress, 
                 trackingNumber
             });
+            res.set("content-type", "application/json");
+            res.status(201);
+            res.json({
+                entries: [crate.toJSON()],
+                count: 1
+            });
+        }
+        catch (e) {
+            next(e);
+        }
+    });
+
+    router.post("/:id/shipments/:shipmentId/waypoints", authorizeRequest({actionId: "createAny:crates"}), async function addShipmentWaypoint(req, res, next) {
+        const crateId = req.params.id;
+        const telemetry = req.body;
+
+        try {
+            const crate = await crateService.getCrateById(crateId);
+            await crate.currentTrip.addWaypoint({telemetry});
             res.set("content-type", "application/json");
             res.status(201);
             res.json({

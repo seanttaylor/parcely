@@ -18,7 +18,7 @@ const superSecretPassword = "superSecretPassword";
 describe("CrateAccess", function CrateAccess() {
 
     describe("UserAccess", function Users() {
-        test("Platform users should be able to get a list of trips associated with a user account", async() => {
+        test("Platform users should be able to get a list of shipments associated with a user account", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
             .send({
                 emailAddress: thorEmailAddress,
@@ -32,12 +32,12 @@ describe("CrateAccess", function CrateAccess() {
             .set("authorization", `Bearer ${thorAccessToken}`)
             .send()
             .expect(200);
-
+            
             expect(Array.isArray(res2.body.entries)).toBe(true);
             expect(res2.body.count === 1).toBe(true);
         });
 
-        test("Platform users should be able to get a filtered list of trips associated with a user account based on trip status", async() => {
+        test("Platform users should be able to get a filtered list of shipments associated with a user account based on trip status", async() => {
         const res1 = await request.post(`/api/v1/users/token`)
         .send({
             emailAddress: thorEmailAddress,
@@ -77,6 +77,100 @@ describe("CrateAccess", function CrateAccess() {
         expect(res2["body"]["entries"][0]["data"]["recipientId"] === thorUserId).toBe(true);
 
         expect(Object.keys(res2["body"]["entries"][0]["data"]).includes("telemetry")).toBe(true);
+        });
+
+        test("Platform users should be able to get a summarized list of real-time telemetry data points for a specified crate shipment", async() => {
+            const res1 = await request.post(`/api/v1/users/token`)
+            .send({
+                emailAddress: furyEmailAddress,
+                password: superSecretPassword
+            })
+            .expect(200);
+
+            const res2 = await request.post(`/api/v1/users/token`)
+            .send({
+                emailAddress: thorEmailAddress,
+                password: superSecretPassword
+            })
+            .expect(200);
+
+            const furyAccessToken = res1.body.accessToken;
+            const thorAccessToken = res2.body.accessToken;
+
+            const res3 = await request.post(`/api/v1/crates`)
+            .set("authorization", `Bearer ${furyAccessToken}`)
+            .send({
+                size: ["L"],
+                merchantId: faker.random.uuid()
+            })
+            .expect(201);
+
+            const crateId = res3["body"]["entries"][0]["id"];
+
+            const res4 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+            .set("authorization", `Bearer ${furyAccessToken}`)
+            .send({
+                recipientId: thorUserId
+            })
+            .expect(204);
+
+            const res5 = await request.post(`/api/v1/crates/${crateId}/shipments`)
+            .set("authorization", `Bearer ${furyAccessToken}`)
+            .send({ 
+                originAddress: {
+                    street: faker.address.streetName(),
+                    apartmentNumber: "7",
+                    city: faker.address.city(),
+                    state: faker.address.stateAbbr(),
+                    zip: faker.address.zipCode()
+                },
+                destinationAddress: {
+                    street: faker.address.streetName(),
+                    apartmentNumber: "7",
+                    city: faker.address.city(),
+                    state: faker.address.stateAbbr(),
+                    zip: faker.address.zipCode()
+                },
+                trackingNumber: faker.random.uuid()
+            }).expect(201);
+
+            //STILL need to add a waypoint via API endpoint here
+            const shipmentId = res5["body"]["entries"][0]["data"]["tripId"];
+
+            const res6 = await request.post(`/api/v1/crates/${crateId}/shipments/${shipmentId}/waypoints`)
+            .set("authorization", `Bearer ${furyAccessToken}`)
+            .send({
+                "temp": {
+                    "degreesFahrenheit": String(faker.random.float())
+                },
+                "location": {
+                    "coords": {
+                        "lat": faker.address.latitude(),
+                        "long": faker.address.longitude()
+                    },
+                    "zip": faker.address.zipCode()
+                },
+                "sensors": {
+                    "moisture": {
+                        "thresholdExceeded": false
+                    },
+                    "thermometer": {
+                        "thresholdExceeded": false
+                    },
+                    "photometer": {
+                        "thresholdExceeded": false
+                    }
+                }
+            })
+            .expect(201);
+
+            const res7 = await request.get(`/api/v1/crates/${crateId}/shipments/${shipmentId}`)
+            .set("authorization", `Bearer ${thorAccessToken}`)
+            .send()
+
+            expect(Array.isArray(res7["body"]["entries"])).toBe(true);
+            expect(res7["body"]["entries"]["length"] === 1).toBe(true);
+            expect(res7["body"]["count"] === 1).toBe(true);
         });
     });
 
@@ -153,7 +247,7 @@ describe("CrateManagement", function CrateManagement() {
             .send({
                 size: ["L"]
             })
-            .expect(200);
+            .expect(201);
 
             expect(res2.body.count === 1).toBe(true);
             expect(Object.keys(res2["body"]["entries"][0]).includes("id"));
@@ -175,7 +269,7 @@ describe("CrateManagement", function CrateManagement() {
             .send({
                 size: ["L"]
             })
-            .expect(200);
+            .expect(201);
 
 
             const crateId = res2["body"]["entries"][0]["id"];
@@ -211,7 +305,7 @@ describe("CrateManagement", function CrateManagement() {
         .send({
             size: ["L"]
         })
-        .expect(200);
+        .expect(201);
 
         const crateId = res2["body"]["entries"][0]["id"];
             
@@ -250,7 +344,7 @@ describe("CrateManagement", function CrateManagement() {
         .send({
             size: ["L"]
         })
-        .expect(200);
+        .expect(201);
 
         const crateId = res3["body"]["entries"][0]["id"];
             
@@ -284,7 +378,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
             size: ["L"],
             merchantId: fakeMerchantId
         })
-        .expect(200);
+        .expect(201);
 
         const crateId = res2["body"]["entries"][0]["id"];
 
@@ -346,7 +440,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
                 size: ["L"],
                 merchantId: fakeMerchantId
             })
-            .expect(200);
+            .expect(201);
 
             const crateId = res2["body"]["entries"][0]["id"];
 

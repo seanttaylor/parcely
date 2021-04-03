@@ -65,7 +65,7 @@ describe("Authorization", function Authorization() {
             const res2 = await request.get(`/api/v1/users/${thorUserId}`)
             .set("authorization", `Bearer ${starkAccessToken}`)
             .send()
-            .expect(401);
+            .expect(403);
 
             const res3 = await request.post(`/api/v1/users/token`)
             .send({
@@ -97,8 +97,7 @@ describe("Authorization", function Authorization() {
             .send({
                 firstName: "PoopyHead"
             })
-            .expect(401);
-
+            .expect(403);
         });
         
     }); 
