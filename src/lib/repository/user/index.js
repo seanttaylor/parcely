@@ -63,8 +63,7 @@ function UserRepository(databaseConnector) {
     this.findOneByEmail = async function(emailAddress) {
         //Remember: the result of a failed Array.find is `undefined`
         const result = await databaseConnector.findAll("users");
-        const user = result.find((u)=> u.emailAddress === emailAddress);
-        
+        const user = result.find((u)=> u.emailAddress === emailAddress);        
         return [ user || {} ];
     }
 
