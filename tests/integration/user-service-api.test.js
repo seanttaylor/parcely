@@ -217,6 +217,29 @@ describe("UserAccountManagement", function UserAccountManagement() {
 
         expect(res2["body"]["entries"][0]["data"]["emailAddress"] === fakeEmail).toBe(true);
     });
+
+    test("Platform should be able to determine if a specified email address already exists in the datastore", async() => {
+        const fakeEmail = faker.internet.email();
+
+        const res1 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: furyEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
+
+        const furyAccessToken = res1.body.accessToken;
+
+        const res2 = await request.get(`/api/v1/users/email_exists/${fakeEmail}`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send()
+        .expect(404);
+
+        const res3 = await request.get(`/api/v1/users/email_exists/${furyEmailAddress}`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send()
+        .expect(200);
+    });
 });
 
 

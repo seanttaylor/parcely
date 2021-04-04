@@ -112,6 +112,24 @@ const {
     });
 
 
+    router.get("/email_exists/:emailAddress", validateJWT, authorizeRequest({actionId: "readAny:users"}), async function verifyEmailExists(req, res, next) {
+        const emailAddress = req.params.emailAddress;
+        
+        try {
+            //This throws an error when the email address isn't found in the datastore
+            const [user] = await userService.findUserByEmail(emailAddress);            
+            res.set("content-type", "application/json");
+            res.status(200);
+            res.send();
+        }
+        catch (e) {
+            res.set("content-type", "application/json");
+            res.status(404);
+            res.send();
+        }
+    });
+
+
     /*** POST ****/
 
     
