@@ -60,7 +60,7 @@ module.exports = function({actionId, allowResourceOwnerOnly=true}) {
             next();
             
         } catch(e) {
-            console.error(e);
+            //console.error(e);
              res.status(401).send({
                 entries: [],
                 error: "Unauthorized: authorization failed",
