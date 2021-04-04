@@ -214,7 +214,8 @@ function CrateTrip(repo, crateTripDTO) {
                 originAddress: this._data.originAddress,
                 destinationAddress: this._data.destinationAddress,
                 status: this._data.status,
-                waypoints: this._data.waypoints
+                waypoints: this._data.waypoints,
+                waypointsIncluded: this._data.waypointsIncluded
             }
         };
     }
@@ -321,19 +322,38 @@ function CrateService({crateRepo, crateTripRepo}) {
 
     /**
      * @param {String} tripId - a uuid of a CrateTrip
+     * @param {Object} options - a configuration object
      */
-    this.getCrateTripById = async function(tripId) {
+    this.getCrateTripById = async function(tripId, {includeWaypoints=false}={}) {
         const tripData = await this._repo.crateTrip.getCrateTripById(tripId);
-        return new CrateTrip(this._repo.crateTrip, new CrateTripDTO(tripData));
+        const trip = new CrateTrip(this._repo.crateTrip, new CrateTripDTO(tripData));
+        
+        trip._data.waypointsIncluded = includeWaypoints;
+
+        if (!includeWaypoints) {
+            trip._data.waypoints = [];
+        }
+       
+        return trip;
     }
 
     /**
      * @param {Crate} crate - an instance of a Crate
+     * @param {Object} options - a configuration object
      */
-    this.getCrateTrips = async function(crate) {
+    this.getCrateTrips = async function(crate, {includeWaypoints=false}={}) {
         const crateTripList = await this._repo.crateTrip.getCrateTripsByCrateId(crate.id);
 
-        return crateTripList.map((t) => new CrateTrip(this._repo.crateTrip, new CrateTripDTO(t)));
+        return crateTripList.map((tripData) => {
+            const trip = new CrateTrip(this._repo.crateTrip, new CrateTripDTO(tripData));
+            trip._data.waypointsIncluded = includeWaypoints;
+
+            if (!includeWaypoints) {
+                trip._data.waypoints = [];
+            }
+            
+            return trip;
+        });
     }
 
     /**

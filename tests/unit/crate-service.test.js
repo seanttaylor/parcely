@@ -322,7 +322,7 @@ test("Pushing crate telemetry should add a waypoint to the associated CrateTrip"
     const updatedTestCrate = await testCrateService.getCrateById(testCrateId);
     expect(updatedTestCrate._data.telemetry.location.zip ===  fakeTelemetryData.location.zip).toBe(true);
 
-    const updatedTestCrateTrip  = await testCrateService.getCrateTripById(testCrateTripId);
+    const updatedTestCrateTrip  = await testCrateService.getCrateTripById(testCrateTripId, {includeWaypoints: true});
     expect(updatedTestCrateTrip.waypoints[0].telemetry.location.zip === fakeTelemetryData.location.zip).toBe(true);
 
 });
@@ -491,9 +491,18 @@ test("Should return JSON object representation of a CrateTrip", async() => {
         destinationAddress, 
         trackingNumber: faker.random.uuid()
     });
-    const [crateTrip] = await testCrateService.getCrateTrips(testCrate);
-    
-    expect(typeof(crateTrip.toJSON()) === "object").toBe(true);
+    const [crateTripNoWaypoints] = await testCrateService.getCrateTrips(testCrate);
+        
+    expect(typeof(crateTripNoWaypoints.toJSON()) === "object").toBe(true);
+    expect(crateTripNoWaypoints.toJSON().data.waypoints.length === 0).toBe(true);
+    expect(crateTripNoWaypoints.toJSON().data.waypointsIncluded === false).toBe(true);
+
+    const [crateTripWithWaypoints] = await testCrateService.getCrateTrips(testCrate, {includeWaypoints: true});
+
+    expect(typeof(crateTripWithWaypoints.toJSON()) === "object").toBe(true);
+    expect(crateTripWithWaypoints.toJSON().data.waypoints.length === 0).toBe(true);
+    expect(crateTripWithWaypoints.toJSON().data.waypointsIncluded).toBe(true);
+
 });
 
 
@@ -552,7 +561,7 @@ test("Should NOT be able to add waypoints to a CrateTrip with a 'completed' stat
     await testCrate.completeTrip();
     await testCrate.pushTelemetry(fakeTelemetryData);
 
-    const testCrateTrip = await testCrateService.getCrateTripById(testCrateTripId);
+    const testCrateTrip = await testCrateService.getCrateTripById(testCrateTripId, {includeWaypoints: true});
 
     await testCrateTrip.addWaypoint({
         timestamp: new Date().toISOString(),
