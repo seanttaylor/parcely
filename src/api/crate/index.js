@@ -17,7 +17,7 @@ const {
 
    /****** GET *******/
 
-   router.get("/", authorizeRequest({actionId: "readAny:crates"}), async function getAllCrates(req, res, next) {
+   router.get("/", validateJWT, authorizeRequest({actionId: "readAny:crates"}), async function getAllCrates(req, res, next) {
 
         try {
             const crateList = await crateService.getAllCrates();
@@ -33,7 +33,7 @@ const {
         }
     });
 
-    router.get("/:id", authorizeRequest({actionId: "readAny:crates"}), async function getCrateById(req, res, next) {
+    router.get("/:id", validateJWT, authorizeRequest({actionId: "readAny:crates"}), async function getCrateById(req, res, next) {
         const crateId = req.params.id;
 
         try {
@@ -57,7 +57,7 @@ const {
         }
     });
 
-    router.get("/:id/shipments", authorizeRequest({actionId: "readAny:crates"}), async function getCrateShipmentsByCrateId(req, res, next) {
+    router.get("/:id/shipments", validateJWT, authorizeRequest({actionId: "readAny:crates"}), async function getCrateShipmentsByCrateId(req, res, next) {
         const crateId = req.params.id;
 
         try {
@@ -76,7 +76,7 @@ const {
         }
     });
 
-    router.get("/:id/shipments/:shipmentId", authorizeRequest({actionId: "readOwn:crates", allowResourceOwnerOnly: false}), async function getCrateShipmentTelemetry(req, res, next) {
+    router.get("/:id/shipments/:shipmentId", validateJWT, authorizeRequest({actionId: "readOwn:crates", allowResourceOwnerOnly: false}), async function getCrateShipmentTelemetry(req, res, next) {
         const crateId = req.params.id;
         const shipmentId = req.params.shipmentId;
 
@@ -98,7 +98,7 @@ const {
 
     /****** POST *******/
 
-    router.post("/", authorizeRequest({actionId: "createAny:crates"}), async function createCrate(req, res, next) {
+    router.post("/", validateJWT, authorizeRequest({actionId: "createAny:crates"}), async function createCrate(req, res, next) {
         const crateData = req.body;
 
         try {
@@ -116,7 +116,7 @@ const {
         }
     });
 
-    router.post("/:id/shipments", authorizeRequest({actionId: "createAny:crates"}), async function startCrateShipment(req, res, next) {
+    router.post("/:id/shipments", validateJWT, authorizeRequest({actionId: "createAny:crates"}), async function startCrateShipment(req, res, next) {
         const crateId = req.params.id;
         const {originAddress, destinationAddress, trackingNumber} = req.body;
 
@@ -139,7 +139,7 @@ const {
         }
     });
 
-    router.post("/:id/shipments/:shipmentId/waypoints", authorizeRequest({actionId: "createAny:crates"}), async function addShipmentWaypoint(req, res, next) {
+    router.post("/:id/shipments/:shipmentId/waypoints", validateJWT, authorizeRequest({actionId: "createAny:crates"}), async function addShipmentWaypoint(req, res, next) {
         const crateId = req.params.id;
         const telemetry = req.body;
 
@@ -161,7 +161,7 @@ const {
 
     /****** PUT *******/
 
-    router.put("/:id/recipient", authorizeRequest({actionId: "updateAny:crates"}), async function setRecipient(req, res, next) {
+    router.put("/:id/recipient", validateJWT, authorizeRequest({actionId: "updateAny:crates"}), async function setRecipient(req, res, next) {
         const crateId = req.params.id;
         const recipientId = req.body.recipientId;
 
@@ -178,7 +178,7 @@ const {
         }
     });
 
-    router.put("/:id/shipments/:shipmentId/status", authorizeRequest({actionId: "updateAny:crates"}), async function setShipmentStatus(req, res, next) {
+    router.put("/:id/shipments/:shipmentId/status", validateJWT, authorizeRequest({actionId: "updateAny:crates"}), async function setShipmentStatus(req, res, next) {
         const crateId = req.params.id;
 
         try {
@@ -195,7 +195,7 @@ const {
 
     /****** DELETE *******/
 
-    router.delete("/:id", authorizeRequest({actionId: "deleteAny:crates"}), async function deleteCrate(req, res, next) {
+    router.delete("/:id", validateJWT, authorizeRequest({actionId: "deleteAny:crates"}), async function deleteCrate(req, res, next) {
         const crateId = req.params.id;
 
         try {

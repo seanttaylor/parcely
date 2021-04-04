@@ -15,14 +15,13 @@ function UserAuthService({cacheService, userService}) {
 
     this.issueAuthCredential = async function(user, role) {
         const expiresInOneHour = Math.floor(Date.now() / 1000) + (60 * 60);
-        //TODO: Figure out why getUserRole returns no role for an existing user
-        //const userRole = await userService.getUserRole(user);
         const token = jwt.sign({ 
-            iss: "api@nicely", 
+            iss: "api@parcely", 
             exp: expiresInOneHour,
             sub: user.id,
             role: [role]
         }, process.env.JWT_SECRET);
+        
         cacheService.set({key: user.id, value: token, ttl: expiresInOneHour});
         return token;
     }

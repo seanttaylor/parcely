@@ -55,7 +55,7 @@ const {
     */
 
     
-    router.get("/:id/crates", authorizeRequest({actionId: "readOwn:crates"}), verifyUserExists, async function getCratesByRecipient(req, res, next) {
+    router.get("/:id/crates", validateJWT, authorizeRequest({actionId: "readOwn:crates"}), verifyUserExists, async function getCratesByRecipient(req, res, next) {
         const id = req.params.id;
 
         try {
@@ -74,7 +74,7 @@ const {
     });
     
     
-    router.get("/:id", authorizeRequest({actionId: "readOwn:users"}), verifyUserExists, async function getUserById(req, res, next) {
+    router.get("/:id", validateJWT, authorizeRequest({actionId: "readOwn:users"}), verifyUserExists, async function getUserById(req, res, next) {
         const userId = req.params.id;
 
         try {
@@ -92,7 +92,7 @@ const {
     });
 
 
-    router.get("/:id/shipments", authorizeRequest({actionId: "readOwn:users"}), verifyUserExists, async function getUserShipmentHistory(req, res, next) {
+    router.get("/:id/shipments", validateJWT, authorizeRequest({actionId: "readOwn:users"}), verifyUserExists, async function getUserShipmentHistory(req, res, next) {
         const userId = req.params.id;
         const statusFilter = req.query.status;
 
@@ -161,7 +161,7 @@ const {
     /*** PUT ***/
 
     
-    router.put("/:id/name", verifyUserExists, authorizeRequest({actionId: "updateOwn:users"}), async function editName(req, res, next) {
+    router.put("/:id/name", validateJWT, verifyUserExists, authorizeRequest({actionId: "updateOwn:users"}), async function editName(req, res, next) {
         const userId = req.params.id;
 
         try {
@@ -180,7 +180,7 @@ const {
         }
     });
     
-    router.put("/:id/phone", verifyUserExists, authorizeRequest({actionId: "updateOwn:users"}), async function editPhoneNumber(req, res, next) {
+    router.put("/:id/phone", validateJWT, verifyUserExists, authorizeRequest({actionId: "updateOwn:users"}), async function editPhoneNumber(req, res, next) {
         const userId = req.params.id;
         const phoneNumber = req.body.phoneNumber;
 
@@ -200,7 +200,7 @@ const {
     });
 
 
-    router.put("/:id/email", verifyUserExists, authorizeRequest({actionId: "updateOwn:users"}), async function editEmailAddress(req, res, next) {
+    router.put("/:id/email", validateJWT, verifyUserExists, authorizeRequest({actionId: "updateOwn:users"}), async function editEmailAddress(req, res, next) {
         const userId = req.params.id;
         const emailAddress = req.body.emailAddress;
 
