@@ -383,11 +383,13 @@ function CrateService({crateRepo, crateTripRepo}) {
      * @param {Crate} crate - an instance of a Crate
      */
     this.markCrateReturned = async function(crate) {
-        const crateDTO = new CrateDTO(Object.assign(crate._data, {
-            status: ["pendingReturn"]
-        }));
+        if (crate._data.status[0] === "delivered") {
+            const crateDTO = new CrateDTO(Object.assign(crate._data, {
+                status: ["pendingReturn"]
+            }));
 
-        await this._repo.crate.markCrateReturned(crateDTO);
+            await this._repo.crate.markCrateReturned(crateDTO);
+        }
     }
 
 }
