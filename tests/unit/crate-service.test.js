@@ -6,16 +6,16 @@ const faker = require("faker");
 const crateSchema = require("../../src/schemas/crate.json");
 const { CrateService } = require("../../src/services/crate");
 const CrateRepository = require("../../src/lib/repository/crate");
-const CrateTripRepository = require("../../src/lib/repository/crate-trip");
+const CrateShipmentRepository = require("../../src/lib/repository/crate-shipment");
 const DatabaseConnector = require("../../src/lib/database/connectors/memory");
 const testDbConnector = new DatabaseConnector({console: mockImpl.console});
 const ICrateRepository = require("../../src/interfaces/crate-repository");
-const ICrateTripRepository = require("../../src/interfaces/trip-repository");
+const ICrateShipmentRepository = require("../../src/interfaces/shipment-repository");
 const testCrateRepo = new ICrateRepository(new CrateRepository(testDbConnector));
-const testCrateTripRepo = new ICrateTripRepository(new CrateTripRepository(testDbConnector));
+const testCrateShipmentRepo = new ICrateShipmentRepository(new CrateShipmentRepository(testDbConnector));
 const testCrateService = new CrateService({
     crateRepo: testCrateRepo,
-    crateTripRepo: testCrateTripRepo
+    crateShipmentRepo: testCrateShipmentRepo
 });
 
 /**Tests**/
@@ -119,7 +119,7 @@ describe("CrateManagement", function CrateManagement() {
         });
         
         const testCrateId = await testCrate.save();
-        const testCrateTripId = await testCrate.startTrip({
+        const testCrateTripId = await testCrate.startShipment({
             originAddress, 
             destinationAddress, 
             trackingNumber: faker.random.uuid()
@@ -128,7 +128,7 @@ describe("CrateManagement", function CrateManagement() {
         await testCrate.pushTelemetry(fakeTelemetryData);
         expect(testCrate.currentTrip.waypoints.length === 1).toBe(true);
 
-        await testCrate.completeTrip();
+        await testCrate.completeShipment();
         testCrateService.markCrateReturned(testCrate);
         const [crateStatus] = testCrate._data.status;
         
@@ -181,7 +181,7 @@ describe("CrateManagement", function CrateManagement() {
         });
         
         const testCrateId = await testCrate.save();
-        const testCrateTripId = await testCrate.startTrip({
+        const testCrateTripId = await testCrate.startShipment({
             originAddress, 
             destinationAddress, 
             trackingNumber: faker.random.uuid()
@@ -251,7 +251,7 @@ describe("CrateManagement", function CrateManagement() {
     });
 });
 
-describe("CrateTripManagement", function CrateTripManagement() {
+describe("ShipmentManagement", function ShipmentManagement() {
     test("Should be able to create a new CrateTrip instance", async() => {
         const testCrateData = {
             size: ["M"]
@@ -269,22 +269,22 @@ describe("CrateTripManagement", function CrateTripManagement() {
         });
         
         await testCrate.save();
-        const crateTripList = await testCrateService.getCrateTrips(testCrate);
+        const crateShipmentList = await testCrateService.getCrateShipments(testCrate);
     
-        expect(Array.isArray(crateTripList)).toBe(true);
+        expect(Array.isArray(crateShipmentList)).toBe(true);
     });
 
 
     test("Should be able to get a specified trip for a specified crate", async() => {
-        const testCrateTripId = "d54cc57f-c32c-454a-a295-6481f126eb8b";
+        const testCrateShipmentId = "d54cc57f-c32c-454a-a295-6481f126eb8b";
         const testCrate = await testCrateService.createCrate({
         size: ["S"]
         });
         
         await testCrate.save();
-        const crateTrip = await testCrateService.getCrateTripById(testCrateTripId);
+        const crateShipment = await testCrateService.getCrateShipmentById(testCrateShipmentId);
         
-        expect(crateTrip.id === testCrateTripId).toBe(true);
+        expect(crateShipment.id === testCrateShipmentId).toBe(true);
     });
 
 
@@ -309,15 +309,15 @@ describe("CrateTripManagement", function CrateTripManagement() {
         });
         
         const testCrateId = await testCrate.save();
-        const testCrateTripId = await testCrate.startTrip({
+        const testCrateShipmentId = await testCrate.startShipment({
             originAddress, 
             destinationAddress, 
             trackingNumber: faker.random.uuid()
         });
-        const [crateTrip] = await testCrateService.getCrateTrips(testCrate);
+        const [crateShipment] = await testCrateService.getCrateShipments(testCrate);
         const crateDbRecord = await testCrateService.getCrateById(testCrateId);
         
-        expect(crateTrip.id === testCrateTripId).toBe(true);
+        expect(crateShipment.id === testCrateShipmentId).toBe(true);
         expect(crateDbRecord._data.status[0] === "inTransit");
         expect(testCrate._data.status[0] === "inTransit");
     });
@@ -366,7 +366,7 @@ describe("CrateTripManagement", function CrateTripManagement() {
         };
         
         await testCrate.save();
-        const testCrateTripId = await testCrate.startTrip({
+        const testCrateTripId = await testCrate.startShipment({
             originAddress, 
             destinationAddress, 
             trackingNumber: faker.random.uuid()
@@ -432,7 +432,7 @@ describe("CrateTripManagement", function CrateTripManagement() {
         });
         
         const testCrateId = await testCrate.save();
-        const testCrateTripId = await testCrate.startTrip({
+        const testCrateShipmentId = await testCrate.startShipment({
             originAddress, 
             destinationAddress, 
             trackingNumber: faker.random.uuid()
@@ -444,8 +444,8 @@ describe("CrateTripManagement", function CrateTripManagement() {
         const updatedTestCrate = await testCrateService.getCrateById(testCrateId);
         expect(updatedTestCrate._data.telemetry.location.zip ===  fakeTelemetryData.location.zip).toBe(true);
 
-        const updatedTestCrateTrip  = await testCrateService.getCrateTripById(testCrateTripId, {includeWaypoints: true});
-        expect(updatedTestCrateTrip.waypoints[0].telemetry.location.zip === fakeTelemetryData.location.zip).toBe(true);
+        const updatedTestCrateShipment  = await testCrateService.getCrateShipmentById(testCrateShipmentId, {includeWaypoints: true});
+        expect(updatedTestCrateShipment.waypoints[0].telemetry.location.zip === fakeTelemetryData.location.zip).toBe(true);
 
     });
 
@@ -496,7 +496,7 @@ describe("CrateTripManagement", function CrateTripManagement() {
         });
         
         const testCrateId = await testCrate.save();
-        const testCrateTripId = await testCrate.startTrip({
+        const testCrateTripId = await testCrate.startShipment({
             originAddress, 
             destinationAddress, 
             trackingNumber: faker.random.uuid()
@@ -556,7 +556,7 @@ describe("CrateTripManagement", function CrateTripManagement() {
         });
         
         const testCrateId = await testCrate.save();
-        const testCrateTripId = await testCrate.startTrip({
+        const testCrateShipmentId = await testCrate.startShipment({
             originAddress, 
             destinationAddress, 
             trackingNumber: faker.random.uuid()
@@ -565,16 +565,16 @@ describe("CrateTripManagement", function CrateTripManagement() {
         await testCrate.pushTelemetry(fakeTelemetryData);
         expect(testCrate.currentTrip.waypoints.length === 1).toBe(true);
 
-        await testCrate.completeTrip();
+        await testCrate.completeShipment();
         expect(testCrate._data.recipientId === null).toBe(true);
-        expect(testCrate._data.tripId === null).toBe(true);
+        expect(testCrate._data.shipmentId === null).toBe(true);
 
         const returnedCrate = await testCrateService.getCrateById(testCrateId);   
         expect(returnedCrate._data.recipientId === null).toBe(true);
-        expect(returnedCrate._data.tripId === null).toBe(true);
+        expect(returnedCrate._data.shipmentId === null).toBe(true);
     });
 
-    test("Should NOT be able to add waypoints to a CrateTrip with a 'completed' status", async() => {
+    test("Should NOT be able to add waypoints to a CrateShipment with a 'completed' status", async() => {
         const originAddress = {
             street: faker.address.streetName(),
             apartmentNumber: "7",
@@ -618,27 +618,27 @@ describe("CrateTripManagement", function CrateTripManagement() {
         });
         
         await testCrate.save();
-        const testCrateTripId = await testCrate.startTrip({
+        const testCrateShipmentId = await testCrate.startShipment({
             originAddress, 
             destinationAddress, 
             trackingNumber: faker.random.uuid()
         });
         await testCrate.pushTelemetry(fakeTelemetryData);
-        await testCrate.completeTrip();
+        await testCrate.completeShipment();
         await testCrate.pushTelemetry(fakeTelemetryData);
 
-        const testCrateTrip = await testCrateService.getCrateTripById(testCrateTripId, {includeWaypoints: true});
+        const testCrateShipment = await testCrateService.getCrateShipmentById(testCrateShipmentId, {includeWaypoints: true});
 
-        await testCrateTrip.addWaypoint({
+        await testCrateShipment.addWaypoint({
             timestamp: new Date().toISOString(),
             telemetry: fakeTelemetryData
         });
 
-        expect(testCrateTrip.waypoints.length === 1).toBe(true);
+        expect(testCrateShipment.waypoints.length === 1).toBe(true);
         expect(testCrate.currentTrip.waypoints.length === 1).toBe(true);
     });
 
-    test("Should throw an error when CrateTrip is initialized without a merchantId assigned to the associated crate", async() => {
+    test("Should throw an error when CrateShipment is initialized without a merchantId assigned to the associated crate", async() => {
         const originAddress = {
             street: faker.address.streetName(),
             apartmentNumber: "7",
@@ -658,13 +658,13 @@ describe("CrateTripManagement", function CrateTripManagement() {
         await testCrate.save();
 
         try {
-            await testCrate.startTrip({
+            await testCrate.startShipment({
                 originAddress,
                 destinationAddress,
                 trackingNumber: faker.random.uuid()       
             });   
         } catch(e) {
-            expect(e.message).toMatch("CrateError.CannotStartTrip.missingMerchantId");
+            expect(e.message).toMatch("CrateError.CannotStartShipment.missingMerchantId");
         }
     });
 
@@ -689,17 +689,17 @@ describe("CrateTripManagement", function CrateTripManagement() {
         await testCrate.save();
 
         try {
-            await testCrate.startTrip({
+            await testCrate.startShipment({
                 originAddress,
                 destinationAddress,
                 trackingNumber: faker.random.uuid()       
             });   
         } catch(e) {
-            expect(e.message).toMatch("CrateError.CannotStartTrip.missingRecipientId");
+            expect(e.message).toMatch("CrateError.CannotStartShipment.missingRecipientId");
         }
     });
 
-    test("CrateTrip waypoints should be read-only", async() => {
+    test("CrateShipment waypoints should be read-only", async() => {
         const testCrate = await testCrateService.createCrate({
             size: ["S"],
             merchantId: faker.random.uuid(),
@@ -743,7 +743,7 @@ describe("CrateTripManagement", function CrateTripManagement() {
         };
         
         await testCrate.save();
-        const testCrateTripId = await testCrate.startTrip({
+        const testCrateTripId = await testCrate.startShipment({
             originAddress, 
             destinationAddress, 
             trackingNumber: faker.random.uuid()
@@ -804,22 +804,23 @@ describe("CrateTripManagement", function CrateTripManagement() {
     });
     
     await testCrate.save();
-    const testCrateTripId = await testCrate.startTrip({
+    const testCrateShipmentId = await testCrate.startShipment({
         originAddress, 
         destinationAddress, 
         trackingNumber: faker.random.uuid()
     });
-    const [crateTripNoWaypoints] = await testCrateService.getCrateTrips(testCrate);
+    const [crateShipmentNoWaypoints] = await testCrateService.getCrateShipments(testCrate);
         
-    expect(typeof(crateTripNoWaypoints.toJSON()) === "object").toBe(true);
-    expect(crateTripNoWaypoints.toJSON().data.waypoints.length === 0).toBe(true);
-    expect(crateTripNoWaypoints.toJSON().data.waypointsIncluded === false).toBe(true);
+    expect(typeof(crateShipmentNoWaypoints.toJSON()) === "object").toBe(true);
+    expect(crateShipmentNoWaypoints.toJSON().data.waypoints.length === 0).toBe(true);
+    expect(crateShipmentNoWaypoints.toJSON().data.waypointsIncluded === false).toBe(true);
 
-    const [crateTripWithWaypoints] = await testCrateService.getCrateTrips(testCrate, {includeWaypoints: true});
+    const [crateShipmentWithWaypoints] = await testCrateService.getCrateShipments(testCrate, {includeWaypoints: true});
 
-    expect(typeof(crateTripWithWaypoints.toJSON()) === "object").toBe(true);
-    expect(crateTripWithWaypoints.toJSON().data.waypoints.length === 0).toBe(true);
-    expect(crateTripWithWaypoints.toJSON().data.waypointsIncluded).toBe(true);
+    expect(typeof(crateShipmentWithWaypoints.toJSON()) === "object").toBe(true);
+
+    expect(crateShipmentWithWaypoints.toJSON().data.waypoints.length === 0).toBe(true);
+    expect(crateShipmentWithWaypoints.toJSON().data.waypointsIncluded).toBe(true);
 
     });
 });

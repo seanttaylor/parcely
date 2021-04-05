@@ -9,7 +9,7 @@
         {
             "id": "2055c145-7d3e-446c-a7ad-ae6aaf886335",
             "size": ["L"],
-            "tripId": "172b101d-3d24-4172-8e9d-2c34beb9c07f",
+            "shipmentId": "172b101d-3d24-4172-8e9d-2c34beb9c07f",
             "recipientId": "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09",
             "merchantId": "e3634bd2-7cb4-45b7-a442-f38ee4ad008b",
             "createdDate": "2021-02-24T19:04:33.436344",
@@ -44,7 +44,7 @@
     "required": [
         "id",
         "size",
-        "tripId",
+        "shipmentId",
         "merchantId",
         "lastPing",
         "telemetry",
@@ -90,11 +90,11 @@
                 "L"
             ]
         },
-        "tripId": {
-            "$id": "#/properties/tripId",
+        "shipmentId": {
+            "$id": "#/properties/shipmentId",
             "type": ["string", "null"],
-            "title": "The tripId schema",
-            "description": "The uuid of the crate's current trip.",
+            "title": "The shipmentId schema",
+            "description": "The uuid of the crate's current shipment.",
             "default": "",
             "examples": [
                 "172b101d-3d24-4172-8e9d-2c34beb9c07f"

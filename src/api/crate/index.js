@@ -62,7 +62,7 @@ const {
 
         try {
             const crate = await crateService.getCrateById(crateId);
-            const shipmentList = await crateService.getCrateTrips(crate);
+            const shipmentList = await crateService.getCrateShipments(crate);
             res.set("content-type", "application/json");
             
             res.status(200);
@@ -81,7 +81,7 @@ const {
         const shipmentId = req.params.shipmentId;
 
         try {
-            const shipment = await crateService.getCrateTripById(shipmentId);
+            const shipment = await crateService.getCrateShipmentById(shipmentId);
             res.set("content-type", "application/json");
             
             res.status(200);
@@ -122,7 +122,7 @@ const {
 
         try {
             const crate = await crateService.getCrateById(crateId);
-            await crate.startTrip({
+            await crate.startShipment({
                 originAddress, 
                 destinationAddress, 
                 trackingNumber
@@ -183,7 +183,7 @@ const {
 
         try {
             const crate = await crateService.getCrateById(crateId);
-            await crate.completeTrip();
+            await crate.completeShipment();
             res.status(204);
             res.send();
         }

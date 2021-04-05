@@ -12,7 +12,7 @@ function InMemoryDatabaseConnector({console}) {
         "user_credentials": require("../../../../schemas/user-credentials.json"),
         "users": require("../../../../schemas/user.json"),
         "crates": require("../../../../schemas/crate.json"),
-        "crate_trips": require("../../../../schemas/trip.json")
+        "crate_shipments": require("../../../../schemas/shipment.json")
     };
 
 
