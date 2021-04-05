@@ -192,6 +192,22 @@ const {
         }
     });
 
+    router.put("/:id/status", validateJWT, authorizeRequest({actionId: "updateAny:crates"}), async function setCrateStatus(req, res, next) {
+        const crateId = req.params.id;
+
+        try {
+            const crate = await crateService.getCrateById(crateId);
+            await crateService.markCrateReturned(crate);
+
+            res.set("content-type", "application/json");
+            res.status(204);
+            res.send();
+        }
+        catch (e) {
+            next(e);
+        }
+    });
+
 
     /****** DELETE *******/
 
