@@ -1,8 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "http://schemas.parcely.com/trip.json?version=0.0.1",
+    "$id": "http://schemas.parcely.com/shipment.json?version=0.0.1",
     "type": "object",
-    "title": "The Trip schema",
+    "title": "The Shipment schema",
     "description": "The root schema comprises the entire JSON document.",
     "default": {},
     "examples": [
@@ -67,7 +67,7 @@
         "id": {
             "$id": "#/properties/id",
             "default": "",
-            "description": "Unique id of the trip",
+            "description": "Unique id of the shipment",
             "examples": [
                 "d54cc57f-c32c-454a-a295-6481f126eb8b"
             ],
@@ -77,7 +77,7 @@
         "crateId": {
             "$id": "#/properties/crateId",
             "default": "",
-            "description": "Crate associated with this trip",
+            "description": "Crate associated with this shipment",
             "examples": [
                 "d54cc57f-c32c-454a-a295-6481f126eb8b"
             ],
@@ -87,7 +87,7 @@
         "recipientId": {
             "$id": "#/properties/recipientId",
             "default": "",
-            "description": "Recipient associated with this trip",
+            "description": "Recipient associated with this shipment",
             "examples": [
                 "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09"
             ],
@@ -108,7 +108,7 @@
             "$id": "#/properties/lastModified",
             "type": ["string", "null"],
             "title": "The lastModified schema",
-            "description": "The datetime the trip data was last modified",
+            "description": "The datetime the shipment data was last modified",
             "default": "",
             "examples": [
                 "2021-01-24T17:45:36.230152"
@@ -147,7 +147,7 @@
         "arrivalZip": {
             "$id": "#/properties/arrivalZip",
             "default": "",
-            "description": "The zip code a crate must arrive in to complete a trip.",
+            "description": "The zip code a crate must arrive in to complete a shipment.",
             "examples": [
                 "40511-2345"
             ],
@@ -167,7 +167,7 @@
         "tripLengthMiles": {
             "$id": "#/properties/tripLengthMiles",
             "default": "",
-            "description": "The estimated length of the trip in miles.",
+            "description": "The estimated length of the trip (shipment) in miles.",
             "examples": [
                 "706.4"
             ],
@@ -183,7 +183,7 @@
         "waypoints": {
             "$id": "#/properties/waypoints",
             "default": [],
-            "description": "A list of each point in the trip where the crate pushed telemetry data to the logistics API.",
+            "description": "A list of each point in the trip (shipment) where the crate pushed telemetry data to the logistics API.",
             "examples": [
                 [
                     {
@@ -533,7 +533,7 @@
                 "enum": ["inProgress", "complete", "cancelled"]
             },
             "title": "The status schema",
-            "description": "The status of a specified crate trip.",
+            "description": "The status of a specified crate shipment.",
             "default": "",
             "examples": [
                 "inProgess"

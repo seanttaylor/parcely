@@ -6,12 +6,12 @@
 * @property {Function} create - creates a new crate in the data store
 * @property {Function} getCrateById - finds a crate in the data store by uuid
 * @property {Function} getAllCrates - finds all crates in the data store
-* @property {Function} getCrateTripsByCrateId - finds a list of all unique trips of a specified crate
+* @property {Function} getCrateShipmentsByCrateId - finds a list of all unique shipments of a specified crate
 * @property {Function} getCratesByRecipientId - finds all crates associated with a specified recipient
 * @property {Function} markCrateReturned -  set a crate's status to indicate a pending return
 * @property {Function} delete - deletes a crate in the data store by its uuid
 * @property {Function} setCrateRecipient - associates a crate with a specified recipient user in the data store
-* @property {Function} startCrateTrip - initializes a new trip for the current crate
+* @property {Function} startCrateShipment - initializes a new shipment for the current crate
 * @property {Function} updateCrateTelemetry - updates crate telemetry with latest sensor data
 */
 
@@ -43,14 +43,14 @@ function ICrateRepository(myImpl) {
     this.getAllCrates = myImpl.getAllCrates || required;
 
     /**
-    @returns {CrateTrip} - an instance of a specified CrateTrip
+    @returns {CrateShipment} - an instance of a specified CrateShipment
     */
-    this.getCrateTripById = myImpl.getCrateTripById || required;
+    this.getCrateShipmentById = myImpl.getCrateShipmentById || required;
 
     /**
-    @returns {Array} - a list of CrateTrip instances
+    @returns {Array} - a list of CrateShipment instances
     */
-    this.getCrateTripsByCrateId = myImpl.getCrateTripsByCrateId || required;    
+    this.getCrateShipmentsByCrateId = myImpl.getCrateShipmentsByCrateId || required;    
 
     /**
     @param {User} user - an instance of User
@@ -78,7 +78,7 @@ function ICrateRepository(myImpl) {
     */
     this.updateCrateTelemetry = myImpl.updateCrateTelemetry || required;
 
-    this.startCrateTrip = myImpl.startCrateTrip || required;
+    this.startCrateShipment = myImpl.startCrateShipment || required;
 
 }
 

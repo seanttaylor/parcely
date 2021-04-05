@@ -30,17 +30,15 @@ function CrateRepository(databaseConnector) {
         return record;
     }
 
-
     this.getAllCrates = async function() {
         const result = await databaseConnector.findAll("crates");
         return result;
     }
 
-    
-    this.getCrateTripById = async function(tripId) {
+    this.getCrateShipmentById = async function(shipmentId) {
         const [record] = await databaseConnector.findOne({
-            id: tripId,
-            collection: "crate_trips"
+            id: shipmentId,
+            collection: "crate_shipments"
         });
 
         return record;
@@ -56,45 +54,32 @@ function CrateRepository(databaseConnector) {
         });
     }
 
-
     /**
      * @param {CrateDTO} crateDTO - an instance of a CrateDTO
      */
-    this.startCrateTrip = async function(crateDTO) {
+    this.startCrateShipment = async function(crateDTO) {
         const result = await databaseConnector.updateOne({
             doc: crateDTO,
             collection: "crates"
         });
     }
 
-
-    this.getCrateTripsByCrateId = async function(id) {
-        const crateTrips = await databaseConnector.findAll("crate_trips");
-        return crateTrips.filter(trip => trip.crateId === id);
+    this.getCrateShipmentsByCrateId = async function(id) {
+        const crateShipments = await databaseConnector.findAll("crate_trips");
+        return crateShipments.filter(s => s.crateId === id);
     }
-
 
     this.getCratesByRecipientId = async function(id) {
         const crates = await databaseConnector.findAll("crates");
         return crates.filter(crate => crate.recipientId === id);
     }
 
-
     this.markCrateReturned = async function(crateDTO) {
         const [result] = await databaseConnector.updateOne({
             doc: crateDTO, 
             collection: "crates"
         });
     }
-
-
-    this.markCrateReturned = async function(crateDTO) {
-        const [result] = await databaseConnector.updateOne({
-            doc: crateDTO, 
-            collection: "crates"
-        });
-    }
-
 
     this.updateCrateTelemetry = async function(crateDTO) {
         const [result] = await databaseConnector.updateOne({
@@ -102,7 +87,6 @@ function CrateRepository(databaseConnector) {
             collection: "crates"
         });
     }
-
 
     this.deleteCrate = async function(id) {
         await databaseConnector.removeOne(id, "crates");

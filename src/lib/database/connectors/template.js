@@ -77,7 +77,7 @@ module.exports = {
         "2055c145-7d3e-446c-a7ad-ae6aaf886335": {
             "id": "2055c145-7d3e-446c-a7ad-ae6aaf886335",
             "size": ["L"],
-            "tripId": "172b101d-3d24-4172-8e9d-2c34beb9c07f",
+            "shipmentId": "172b101d-3d24-4172-8e9d-2c34beb9c07f",
             "merchantId": "e3634bd2-7cb4-45b7-a442-f38ee4ad008b",
             "recipientId": "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09",
             "createdDate": "2021-02-24T19:04:33.436344",
@@ -108,7 +108,7 @@ module.exports = {
             }
         }
     },
-    "crate_trips": {
+    "crate_shipments": {
         "d54cc57f-c32c-454a-a295-6481f126eb8b": {
             "id": "d54cc57f-c32c-454a-a295-6481f126eb8b",
             "crateId": "2055c145-7d3e-446c-a7ad-ae6aaf886335",

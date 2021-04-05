@@ -135,7 +135,7 @@ describe("CrateAccess", function CrateAccess() {
             }).expect(201);
 
             //STILL need to add a waypoint via API endpoint here
-            const shipmentId = res5["body"]["entries"][0]["data"]["tripId"];
+            const shipmentId = res5["body"]["entries"][0]["data"]["shipmentId"];
 
             const res6 = await request.post(`/api/v1/crates/${crateId}/shipments/${shipmentId}/waypoints`)
             .set("authorization", `Bearer ${furyAccessToken}`)
@@ -408,10 +408,10 @@ describe("CrateManagement", function CrateManagement() {
         })
         .expect(201);
 
-        const shipmentId = res4["body"]["entries"][0]["data"]["tripId"];
+        const shipmentId = res4["body"]["entries"][0]["data"]["shipmentId"];
 
         expect(res4["body"]["entries"][0]["id"] === crateId).toBe(true);
-        expect(res4["body"]["entries"][0]["data"]["tripId"]).toBeTruthy();
+        expect(res4["body"]["entries"][0]["data"]["shipmentId"]).toBeTruthy();
         expect(res4["body"]["entries"][0]["data"]["merchantId"] === fakeMerchantId).toBe(true);
 
         const res5 = await request.get(`/api/v1/crates/${crateId}`)
@@ -507,7 +507,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
         .expect(201);
 
         expect(res4["body"]["entries"][0]["id"] === crateId).toBe(true);
-        expect(res4["body"]["entries"][0]["data"]["tripId"]).toBeTruthy();
+        expect(res4["body"]["entries"][0]["data"]["shipmentId"]).toBeTruthy();
         expect(res4["body"]["entries"][0]["data"]["merchantId"] === fakeMerchantId).toBe(true);
 
         const res5 = await request.get(`/api/v1/crates/${crateId}`)
@@ -626,10 +626,10 @@ describe("ShipmentManagement", function ShipmentManagement() {
         })
         .expect(201);
 
-        const shipmentId = res4["body"]["entries"][0]["data"]["tripId"];
+        const shipmentId = res4["body"]["entries"][0]["data"]["shipmentId"];
 
         expect(res4["body"]["entries"][0]["id"] === crateId).toBe(true);
-        expect(res4["body"]["entries"][0]["data"]["tripId"]).toBeTruthy();
+        expect(res4["body"]["entries"][0]["data"]["shipmentId"]).toBeTruthy();
         expect(res4["body"]["entries"][0]["data"]["merchantId"] === fakeMerchantId).toBe(true);
 
         const res5 = await request.get(`/api/v1/crates/${crateId}`)

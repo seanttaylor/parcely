@@ -1,7 +1,7 @@
 const uuid = require("uuid");
 const coreUtils = require("../lib/utils");
 const {CrateDTO} = require("../lib/repository/crate/dto");
-const {CrateTripDTO, CrateTelemetryDTO} = require("../lib/repository/crate-trip/dto");
+const {CrateShipmentDTO, CrateTelemetryDTO} = require("../lib/repository/crate-shipment/dto");
 
 /**
 * @typedef {Object} Crate
@@ -31,7 +31,7 @@ function Crate(repo, crateDTO) {
             data: {
                 id: this.id,
                 size: this._data.size, 
-                tripId: this._data.tripId,
+                shipmentId: this._data.shipmentId,
                 merchantId: this._data.merchantId,
                 recipientId: this._data.recipientId,
                 telemetry: this._data.telemetry,
@@ -73,9 +73,9 @@ function Crate(repo, crateDTO) {
     @param {Object} telemetry - data from the sensors
     */
     this.pushTelemetry = async function(telemetry) {
-        const [currentTripStatus] = this.currentTrip._data.status;
+        const [currentShipmentStatus] = this.currentTrip._data.status;
 
-        if (currentTripStatus === "complete") {
+        if (currentShipmentStatus === "complete") {
             return;
         } 
 
@@ -102,23 +102,23 @@ function Crate(repo, crateDTO) {
 
 
     /**
-    Initializes a new trip for the current crate
+    Initializes a new shipment for the current crate
     @param {Object} originAddress - the postal address a crate originates from
     @param {Object} destinationAddress - the postal address a crate ships to
-    @param {String} trackingNumber - shipping carrier tracking number associated with this crate for this trip
+    @param {String} trackingNumber - shipping carrier tracking number associated with this crate for this shipment
     */
-    this.startTrip = async function({originAddress, destinationAddress, trackingNumber}) {
+    this.startShipment = async function({originAddress, destinationAddress, trackingNumber}) {
         if (!this._data.merchantId) {
-            throw new Error("CrateError.CannotStartTrip.missingMerchantId => Cannot start crate trip without merchantId assigned to associated crate");
+            throw new Error("CrateError.CannotStartShipment.missingMerchantId => Cannot start crate shipment without merchantId assigned to associated crate");
         }
 
         if (!this._data.recipientId) {
-            throw new Error("CrateError.CannotStartTrip.missingRecipientId => Cannot start crate trip without recipientId assigned to associated crate")
+            throw new Error("CrateError.CannotStartShipment.missingRecipientId => Cannot start crate shipment without recipientId assigned to associated crate");
         }
 
         const id = uuid.v4();
         const status = ["inTransit"];
-        const crateTripDTO = new CrateTripDTO({
+        const crateShipmentDTO = new CrateShipmentDTO({
             id,
             crateId: this._data.id,
             recipientId: this._data.recipientId,
@@ -130,67 +130,67 @@ function Crate(repo, crateDTO) {
             departureTimestamp: new Date().toISOString()
         });
 
-        const crateTrip = new CrateTrip(this._repo.crateTrip, crateTripDTO);
-        crateTrip._data.crateId = this._data.id;
+        const crateShipment = new CrateShipment(this._repo.crateShipment, crateShipmentDTO);
+        crateShipment._data.crateId = this._data.id;
 
-        await crateTrip.save();
-        await this._repo.crate.startCrateTrip(new CrateDTO(Object.assign(this._data, {
+        await crateShipment.save();
+        await this._repo.crate.startCrateShipment(new CrateDTO(Object.assign(this._data, {
             status,
-            tripId: id
+            shipmentId: id
         })));
         
         this._data.status = status;
-        this._data.tripId = id;
-        this.currentTrip = crateTrip;
-        return crateTrip.id;
+        this._data.shipmentId = id;
+        this.currentTrip = crateShipment;
+        return crateShipment.id;
     }
 
 
     /**
-    Completes an existing trip for the current crate; crate trip data becomes read-only
+    Completes an existing shipment for the current crate; crate shipment data becomes read-only
     */
-    this.completeTrip = async function() {
-        const tripStatus = ["complete"];
+    this.completeShipment = async function() {
+        const shipmentStatus = ["complete"];
         const crateStatus = ["delivered"];
         const arrivalTimestamp = new Date().toISOString();
         const crateDTO = new CrateDTO(Object.assign({}, this._data, {
-            tripId: null,
+            shipmentId: null,
             recipientId: null,
             status: crateStatus
         }));
-        const crateTripDTO = new CrateTripDTO(
+        const crateShipmentDTO = new CrateShipmentDTO(
             Object.assign({}, this.currentTrip._data, {
-                status: tripStatus,
+                status: shipmentStatus,
                 crateId: this._data.id,
                 arrivalTimestamp
             })
         );
 
         await this._repo.crate.setCrateRecipient(crateDTO);
-        await this._repo.crateTrip.completeCrateTrip(crateTripDTO);
-        this.currentTrip._data.status = tripStatus;
+        await this._repo.crateShipment.completeCrateShipment(crateShipmentDTO);
+        this.currentTrip._data.status = shipmentStatus;
         this._data.recipientId = null;
-        this._data.tripId = null;
+        this._data.shipmentId = null;
         this._data.status = crateStatus;
     }
 }
 
 
 /**
-* @typedef {Object} CrateTrip
-* @property {String} id - the uuid of the crateTrip
-* @property {Object} _data - the crateTrip data
-* @property {Object} _repo - the repository instance associated with this trip
+* @typedef {Object} CrateShipment
+* @property {String} id - the uuid of the CrateShipment
+* @property {Object} _data - the CrateShipment data
+* @property {Object} _repo - the repository instance associated with this shipment
 */
 
 /**
  * 
- * @param {Object} repo - the repo associated with this crateTrip
- * @param {crateTripDTO} crateTripDTO - an instance of the CrateTripDTO
+ * @param {Object} repo - the repo associated with this crateShipment
+ * @param {CrateShipmentDTO} crateShipmentDTO - an instance of the CrateShipmentDTO
  */
 
-function CrateTrip(repo, crateTripDTO) {
-    const dtoData = crateTripDTO.value();
+function CrateShipment(repo, crateShipmentDTO) {
+    const dtoData = crateShipmentDTO.value();
     
     this._data = dtoData;
     this._repo = repo;
@@ -222,26 +222,26 @@ function CrateTrip(repo, crateTripDTO) {
 
 
     /**
-    Saves a new CrateTrip to the data store
+    Saves a new CrateShipment to the data store
     @returns {String} - a uuid for the new user
     */
     this.save = async function() {
-        const crateTripDTO = new CrateTripDTO(this._data);
-        const crateTrip = await this._repo.create(crateTripDTO);
-        return crateTrip.id;
+        const crateShipmentDTO = new CrateShipmentDTO(this._data);
+        const crateShipment = await this._repo.create(crateShipmentDTO);
+        return crateShipment.id;
     }
 
 
     /**
-    Adds a new waypoint to an existing trip
+    Adds a new waypoint to an in progress shipment
     @param {String} timestamp - date/time telemetry data was recorded
     @param {Object} telemetry - sensor data collected from the hardware crate
     */
     this.addWaypoint = async function({telemetry}) {
-        const [currentTripStatus] = this._data.status;
+        const [currentShipmentStatus] = this._data.status;
         const timestamp = new Date().toISOString();
 
-        if (currentTripStatus === "complete") {
+        if (currentShipmentStatus === "complete") {
             return; 
         }
 
@@ -251,9 +251,9 @@ function CrateTrip(repo, crateTripDTO) {
         // freeze all telemetry objects in the waypoints list
         this._data.waypoints = this._data.waypoints.map(coreUtils.deepFreeze);
 
-        const crateTripDTO = new CrateTripDTO(Object.assign({}, this._data));
+        const crateShipmentDTO = new CrateShipmentDTO(Object.assign({}, this._data));
         
-        await this._repo.addTripWaypoint(crateTripDTO);
+        await this._repo.addTripWaypoint(crateShipmentDTO);
         // copy the internal waypoints list to an public read-only property
         this.waypoints = coreUtils.deepFreeze([...this._data.waypoints]);
     }
@@ -269,10 +269,10 @@ function CrateTrip(repo, crateTripDTO) {
  * @param {Object} repo - the repos associated with this service
  */
 
-function CrateService({crateRepo, crateTripRepo}) {
+function CrateService({crateRepo, crateShipmentRepo}) {
     this._repo = {
         crate: crateRepo,
-        crateTrip: crateTripRepo
+        crateShipment: crateShipmentRepo
      }
     
     /**
@@ -295,12 +295,14 @@ function CrateService({crateRepo, crateTripRepo}) {
         }
 
         const crate = new Crate(this._repo, new CrateDTO(crateData));
-        const {tripId} = crate._data;
+        const {shipmentId} = crate._data;
 
-        if (tripId) {
-            const crateTripData = await this._repo.crateTrip.getCrateTripById(tripId);
-            const crateTrip = new CrateTrip(this._repo.crateTrip, new CrateTripDTO(crateTripData));
-            crate.currentTrip = crateTrip;
+        if (shipmentId) {
+            const crateShipmentData = await this._repo.crateShipment.getCrateShipmentById(shipmentId);
+
+            const crateShipment = new CrateShipment(this._repo.crateShipment, new CrateShipmentDTO(crateShipmentData));
+
+            crate.currentTrip = crateShipment;
         } 
        
         return crate;
@@ -321,38 +323,38 @@ function CrateService({crateRepo, crateTripRepo}) {
     }
 
     /**
-     * @param {String} tripId - a uuid of a CrateTrip
+     * @param {String} shipmentId - a uuid of a CrateShipment
      * @param {Object} options - a configuration object
      */
-    this.getCrateTripById = async function(tripId, {includeWaypoints=false}={}) {
-        const tripData = await this._repo.crateTrip.getCrateTripById(tripId);
-        const trip = new CrateTrip(this._repo.crateTrip, new CrateTripDTO(tripData));
+    this.getCrateShipmentById = async function(shipmentId, {includeWaypoints=false}={}) {
+        const shipmentData = await this._repo.crateShipment.getCrateShipmentById(shipmentId);
+        const shipment = new CrateShipment(this._repo.crateShipment, new CrateShipmentDTO(shipmentData));
         
-        trip._data.waypointsIncluded = includeWaypoints;
+        shipment._data.waypointsIncluded = includeWaypoints;
 
         if (!includeWaypoints) {
-            trip._data.waypoints = [];
+            shipment._data.waypoints = [];
         }
        
-        return trip;
+        return shipment;
     }
 
     /**
      * @param {Crate} crate - an instance of a Crate
      * @param {Object} options - a configuration object
      */
-    this.getCrateTrips = async function(crate, {includeWaypoints=false}={}) {
-        const crateTripList = await this._repo.crateTrip.getCrateTripsByCrateId(crate.id);
+    this.getCrateShipments = async function(crate, {includeWaypoints=false}={}) {
+        const crateShipmentList = await this._repo.crateShipment.getCrateShipmentsByCrateId(crate.id);
 
-        return crateTripList.map((tripData) => {
-            const trip = new CrateTrip(this._repo.crateTrip, new CrateTripDTO(tripData));
-            trip._data.waypointsIncluded = includeWaypoints;
+        return crateShipmentList.map((shipmentData) => {
+            const shipment = new CrateShipment(this._repo.crateShipment, new CrateShipmentDTO(shipmentData));
+            shipment._data.waypointsIncluded = includeWaypoints;
 
             if (!includeWaypoints) {
-                trip._data.waypoints = [];
+                shipment._data.waypoints = [];
             }
             
-            return trip;
+            return shipment;
         });
     }
 
@@ -361,15 +363,15 @@ function CrateService({crateRepo, crateTripRepo}) {
      * @param {Object} options - an options object 
      */
     this.getShipmentHistoryOf = async function(user, {filterBy}) {
-        const crateTripList = await this._repo.crateTrip.getCrateTripsByRecipientId(user.id);
+        const crateShipmentList = await this._repo.crateShipment.getCrateShipmentsByRecipientId(user.id);
 
-        return crateTripList.filter((t) => {
+        return crateShipmentList.filter((t) => {
             if (filterBy) {
                 return t.status[0] === filterBy;
             }
             return true;  
         })
-        .map((t) => new CrateTrip(this._repo.crateTrip, new CrateTripDTO(t)));
+        .map((t) => new CrateShipment(this._repo.crateShipment, new CrateShipmentDTO(t)));
     }
 
     /**

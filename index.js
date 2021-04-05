@@ -36,12 +36,12 @@ const authService = new AuthService({cacheService, userService});
 /**CrateService**/
 const { CrateService } = require("./src/services/crate");
 const CrateRepository = require("./src/lib/repository/crate");
-const CrateTripRepository = require("./src/lib/repository/crate-trip");
-const ICrateTripRepository = require("./src/interfaces/trip-repository");
+const CrateShipmentRepository = require("./src/lib/repository/crate-shipment");
+const ICrateShipmentRepository = require("./src/interfaces/shipment-repository");
 const ICrateRepository = require("./src/interfaces/crate-repository");
 const crateRepo = new ICrateRepository(new CrateRepository(asiagoDatabaseConnector));
-const crateTripRepo = new ICrateTripRepository(new CrateTripRepository(asiagoDatabaseConnector));
-const crateService = new CrateService({crateRepo, crateTripRepo});
+const crateShipmentRepo = new ICrateShipmentRepository(new CrateShipmentRepository(asiagoDatabaseConnector));
+const crateService = new CrateService({crateRepo, crateShipmentRepo});
 
 /******************************************************************************/
 
