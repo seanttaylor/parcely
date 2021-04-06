@@ -1,0 +1,255 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://schemas.parcely.com/merchant.json?version=0.0.1",
+    "default": {},
+    "description": "The root schema comprises the entire JSON document.",
+    "examples": [
+        {
+            "id": "dd8b20dd-1637-4396-bba5-bcd6d65e2d5d",
+            "name": "Tony's Pizza",
+            "address": {
+                "street": "120 Broadway",
+                "state": "New York",
+                "city": "NY",
+                "zip": "10201"
+            },
+            "phone": "12125552424",
+            "emailAddress": "tony@tonyspizza.biz",
+            "plan": {
+                "name": ["smallBusiness"],
+                "startDate": "01/01/2021",
+                "expiryDate": "01/01/2022",
+                "status": [
+                    "active"
+                ],
+                "autoRenew": true
+            },
+            "createdDate": "2021-02-24T17:45:36.230152",
+            "lastModified": "2021-02-24T17:45:36.230152"
+        }
+    ],
+    "required": [
+        "id",
+        "name",
+        "address",
+        "phone",
+        "emailAddress",
+        "plan",
+        "createdDate"
+    ],
+    "title": "The Merchant schema",
+    "type": "object",
+    "properties": {
+        "id": {
+            "$id": "#/properties/id",
+            "type": "string",
+            "title": "The id schema",
+            "description": "The uuid of the merchant",
+            "default": "",
+            "examples": [
+                "dd8b20dd-1637-4396-bba5-bcd6d65e2d5d"
+            ]
+        },
+        "name": {
+            "$id": "#/properties/name",
+            "type": "string",
+            "title": "The name schema",
+            "description": "The name of the merchant (i.e. the business name)",
+            "default": "",
+            "examples": [
+                "Tony's Pizza"
+            ]
+        },
+        "address": {
+            "$id": "#/properties/address",
+            "type": "object",
+            "title": "The address schema",
+            "description": "The business address",
+            "default": {},
+            "examples": [
+                {
+                    "street": "120 Broadway",
+                    "state": "New York",
+                    "city": "NY",
+                    "zip": "10201"
+                }
+            ],
+            "required": [
+                "street",
+                "state",
+                "city",
+                "zip"
+            ],
+            "properties": {
+                "street": {
+                    "$id": "#/properties/address/properties/street",
+                    "type": "string",
+                    "title": "The street schema",
+                    "description": "The street",
+                    "default": "",
+                    "examples": [
+                        "120 Broadway"
+                    ]
+                },
+                "state": {
+                    "$id": "#/properties/address/properties/state",
+                    "type": "string",
+                    "title": "The state schema",
+                    "description": "The state",
+                    "default": "",
+                    "examples": [
+                        "New York"
+                    ]
+                },
+                "city": {
+                    "$id": "#/properties/address/properties/city",
+                    "type": "string",
+                    "title": "The city schema",
+                    "description": "The city",
+                    "default": "",
+                    "examples": [
+                        "NY"
+                    ]
+                },
+                "zip": {
+                    "$id": "#/properties/address/properties/zip",
+                    "type": "string",
+                    "title": "The zip schema",
+                    "description": "The zip code",
+                    "default": "",
+                    "examples": [
+                        "10201"
+                    ]
+                }
+            },
+            "additionalProperties": true
+        },
+        "phone": {
+            "$id": "#/properties/phone",
+            "type": "string",
+            "title": "The phone schema",
+            "description": "The business phone",
+            "default": "",
+            "examples": [
+                "12125552424"
+            ]
+        },
+        "emailAddress": {
+            "$id": "#/properties/emailAddress",
+            "type": "string",
+            "title": "The emailAddress schema",
+            "description": "The business email address",
+            "default": "",
+            "examples": [
+                "tony@tonyspizza.biz"
+            ]
+        },
+        "plan": {
+            "$id": "#/properties/plan",
+            "type": "object",
+            "title": "The plan schema",
+            "description": "The Parcely plan associated with the merchant",
+            "default": {},
+            "examples": [
+                {
+                    "type": "small_business",
+                    "startDate": "01/01/2021",
+                    "expiryDate": "01/01/2022",
+                    "status": [
+                        "active"
+                    ],
+                    "autoRenew": true
+                }
+            ],
+            "required": [
+                "name",
+                "startDate",
+                "expiryDate",
+                "status",
+                "autoRenew"
+            ],
+            "properties": {
+                "name": {
+                    "$id": "#/properties/plan/properties/type",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": ["smallBusiness", "enterprise"]
+                    },
+                    "title": "The name schema",
+                    "description": "The name of the Parcely plan associated with the merchant",
+                    "default": "",
+                    "examples": [
+                        "smallBusiness"
+                    ]
+                },
+                "startDate": {
+                    "$id": "#/properties/plan/properties/startDate",
+                    "type": "string",
+                    "title": "The startDate schema",
+                    "description": "The date the current plan became active",
+                    "default": "",
+                    "examples": [
+                        "01/01/2021"
+                    ]
+                },
+                "expiryDate": {
+                    "$id": "#/properties/plan/properties/expiryDate",
+                    "type": "string",
+                    "title": "The expiryDate schema",
+                    "description": "The date the current plan will expire",
+                    "default": "",
+                    "examples": [
+                        "01/01/2022"
+                    ]
+                },
+                "status": {
+                    "$id": "#/properties/status",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": ["active", "suspended", "cancelled", "archived"]
+                    },
+                    "title": "The status schema",
+                    "description": "The status of the current plan.",
+                    "default": "",
+                    "examples": [
+                        "inTransit"
+                    ]
+                },
+                "autoRenew": {
+                    "$id": "#/properties/plan/properties/autoRenew",
+                    "type": "boolean",
+                    "title": "The autoRenew schema",
+                    "description": "Indicates whether the plan will automatically renew on its expiryDate",
+                    "default": false,
+                    "examples": [
+                        true
+                    ]
+                }
+            },
+            "additionalProperties": false
+        },
+        "createdDate": {
+            "$id": "#/properties/createdDate",
+            "type": "string",
+            "title": "The createdDate schema",
+            "description": "The date the merchant record was created",
+            "default": "",
+            "examples": [
+                "2021-02-24T17:45:36.230152"
+            ]
+        },
+        "lastModified": {
+            "$id": "#/properties/lastModified",
+            "type": "string",
+            "title": "The lastModified schema",
+            "description": "The date the merchant record was last modified",
+            "default": "",
+            "examples": [
+                "2021-02-24T17:45:36.230152"
+            ]
+        }
+    },
+    "additionalProperties": true
+}
