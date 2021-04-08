@@ -50,6 +50,20 @@ function Merchant(repo, merchantDTO) {
         return merchant.id;
     }
 
+    /**
+    Updates an existing plan for a merchant
+    @returns {Object} plan - valid Parcely plan
+    */
+    this.updatePlan = async function(plan) {
+        const updatedPlan = Object.assign(this._data.plan, plan);
+        const merchantDTO = new MerchantDTO(Object.assign(this._data, {
+            plan: updatedPlan
+        }));
+        const merchant = await this._repo.updateMerchantPlan(merchantDTO);
+        
+        this._data.plan = updatedPlan;
+    }
+
 }
 
 

@@ -12,7 +12,7 @@ const IMerchantRepository = require("../../src/interfaces/merchant-repository");
 const testMerchantRepo = new IMerchantRepository(new MerchantRepository(testDbConnector));
 const testMerchantService = new MerchantService(testMerchantRepo);
 const defaultPlan = {
-    name: ["smallBusiness"],
+    planType: ["smallBusiness"],
     startDate: "01/01/2021",
     expiryDate: "01/01/2022",
     status: [
@@ -75,6 +75,41 @@ describe("MerchantManagement", function MerchantManagement() {
         
         expect(record.id === testMerchantId).toBe(true);
         expect(fakeRecord === undefined).toBe(true);
+    });
+
+    test("Should be able to update an existing plan for a merchant", async() => {
+        const testMerchantData = {
+            name: faker.company.companyName(),
+            userId: faker.random.uuid(),
+            address: {
+                street: faker.address.streetName(),
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            emailAddress: faker.internet.email(),
+            phoneNumber: faker.phone.phoneNumber(),
+            plan: defaultPlan
+        };
+        const testMerchant = await testMerchantService.createMerchant(testMerchantData);
+
+        await testMerchant.save();
+
+        const testMerchantId = testMerchant.id;
+
+        await testMerchant.updatePlan({
+            planType: ["enterprise"],
+            status: ["suspended"]
+        }); 
+        
+        expect(testMerchant._data.plan.planType[0] === "enterprise").toBe(true);
+        expect(testMerchant._data.plan.status[0] === "suspended").toBe(true);
+
+
+        const record = await testMerchantService.getMerchantById(testMerchantId);
+
+        expect(record._data.plan.planType[0] === "enterprise").toBe(true);
+        expect(record._data.plan.status[0] === "suspended").toBe(true);
     });
 
     test("Should return JSON object representation of a Merchant", async() => {

@@ -41,6 +41,11 @@ function IMerchantRepository(myImpl) {
     */
     this.archiveMerchant = myImpl.archiveMerchant || required;
 
+    /**
+    @param {MerchantDTO} Merchant - an instance of MerchantDTO
+    */
+    this.updateMerchantPlan = myImpl.updateMerchantPlan || required;
+
 }
 
 module.exports = IMerchantRepository;

@@ -43,6 +43,13 @@ function MerchantRepository(databaseConnector) {
         });
     }
 
+    this.updateMerchantPlan = async function(merchantDTO) {
+        const [result] = await databaseConnector.updateOne({
+            doc: merchantDTO, 
+            collection: "merchants"
+        });
+    }
+
 }
 
 /*MerchantRepository*/
