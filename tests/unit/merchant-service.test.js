@@ -49,6 +49,34 @@ describe("MerchantManagement", function MerchantManagement() {
         expect(Object.keys(testMerchant).includes("_data")).toBe(true);    
     });
 
+    test("Should be able to find a merchant by id", async() => {
+        const testMerchantData = {
+            name: faker.company.companyName(),
+            userId: faker.random.uuid(),
+            address: {
+                street: faker.address.streetName(),
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            emailAddress: faker.internet.email(),
+            phoneNumber: faker.phone.phoneNumber(),
+            plan: defaultPlan
+        };
+        const testMerchant = await testMerchantService.createMerchant(testMerchantData);
+
+        await testMerchant.save();
+
+        const testMerchantId = testMerchant.id;
+
+        const record = await testMerchantService.getMerchantById(testMerchantId);
+
+        const fakeRecord = await testMerchantService.getMerchantById(faker.random.uuid());
+        
+        expect(record.id === testMerchantId).toBe(true);
+        expect(fakeRecord === undefined).toBe(true);
+    });
+
     test("Should return JSON object representation of a Merchant", async() => {
         const testMerchant = await testMerchantService.createMerchant({
             name: faker.company.companyName(),

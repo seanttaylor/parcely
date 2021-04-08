@@ -27,6 +27,7 @@ function MerchantRepository(databaseConnector) {
 
     this.getMerchantById = async function(id) {
         const [record] = await databaseConnector.findOne({id, collection: "merchants"});
+        
         return record;
     }
 
