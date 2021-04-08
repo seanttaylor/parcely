@@ -122,7 +122,7 @@ module.exports = {
             "phoneNumber": "12125552424",
             "emailAddress": "tony@tonyspizza.biz",
             "plan": {
-                "name": ["smallBusiness"],
+                "planType": ["smallBusiness"],
                 "startDate": "01/01/2021",
                 "expiryDate": "01/01/2022",
                 "status": [

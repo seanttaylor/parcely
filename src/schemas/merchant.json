@@ -17,7 +17,7 @@
             "phoneNumber": "12125552424",
             "emailAddress": "tony@tonyspizza.biz",
             "plan": {
-                "name": ["smallBusiness"],
+                "planType": ["smallBusiness"],
                 "startDate": "01/01/2021",
                 "expiryDate": "01/01/2022",
                 "status": [
@@ -174,21 +174,21 @@
                 }
             ],
             "required": [
-                "name",
+                "planType",
                 "startDate",
                 "expiryDate",
                 "status",
                 "autoRenew"
             ],
             "properties": {
-                "name": {
-                    "$id": "#/properties/plan/properties/type",
+                "planType": {
+                    "$id": "#/properties/plan/properties/planType",
                     "type": "array",
                     "items": {
                         "type": "string",
                         "enum": ["smallBusiness", "enterprise"]
                     },
-                    "title": "The name schema",
+                    "title": "The planType schema",
                     "description": "The name of the Parcely plan associated with the merchant",
                     "default": "",
                     "examples": [
