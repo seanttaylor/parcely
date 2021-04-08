@@ -108,6 +108,32 @@ module.exports = {
             }
         }
     },
+    "merchants": {
+        "dd8b20dd-1637-4396-bba5-bcd6d65e2d5d": {
+            "id": "dd8b20dd-1637-4396-bba5-bcd6d65e2d5d",
+            "userId": "e98417a8-d912-44e0-8d37-abe712ca840f",
+            "name": "Tony's Pizza",
+            "address": {
+                "street": "120 Broadway",
+                "state": "New York",
+                "city": "NY",
+                "zip": "10201"
+            },
+            "phoneNumber": "12125552424",
+            "emailAddress": "tony@tonyspizza.biz",
+            "plan": {
+                "name": ["smallBusiness"],
+                "startDate": "01/01/2021",
+                "expiryDate": "01/01/2022",
+                "status": [
+                    "active"
+                ],
+                "autoRenew": true
+            },
+            "createdDate": "2021-02-24T17:45:36.230152",
+            "lastModified": "2021-02-24T17:45:36.230152"
+        }
+    },
     "crate_shipments": {
         "d54cc57f-c32c-454a-a295-6481f126eb8b": {
             "id": "d54cc57f-c32c-454a-a295-6481f126eb8b",

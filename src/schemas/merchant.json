@@ -6,6 +6,7 @@
     "examples": [
         {
             "id": "dd8b20dd-1637-4396-bba5-bcd6d65e2d5d",
+            "userId": "e98417a8-d912-44e0-8d37-abe712ca840f",
             "name": "Tony's Pizza",
             "address": {
                 "street": "120 Broadway",
@@ -13,7 +14,7 @@
                 "city": "NY",
                 "zip": "10201"
             },
-            "phone": "12125552424",
+            "phoneNumber": "12125552424",
             "emailAddress": "tony@tonyspizza.biz",
             "plan": {
                 "name": ["smallBusiness"],
@@ -30,9 +31,10 @@
     ],
     "required": [
         "id",
+        "userId",
         "name",
         "address",
-        "phone",
+        "phoneNumber",
         "emailAddress",
         "plan",
         "createdDate"
@@ -48,6 +50,16 @@
             "default": "",
             "examples": [
                 "dd8b20dd-1637-4396-bba5-bcd6d65e2d5d"
+            ]
+        },
+        "userId": {
+            "$id": "#/properties/userId",
+            "type": "string",
+            "title": "The userId schema",
+            "description": "The userId of the merchant",
+            "default": "",
+            "examples": [
+                "e98417a8-d912-44e0-8d37-abe712ca840f"
             ]
         },
         "name": {
@@ -124,10 +136,10 @@
             },
             "additionalProperties": true
         },
-        "phone": {
-            "$id": "#/properties/phone",
+        "phoneNumber": {
+            "$id": "#/properties/phoneNumber",
             "type": "string",
-            "title": "The phone schema",
+            "title": "The phoneNumber schema",
             "description": "The business phone",
             "default": "",
             "examples": [
@@ -242,7 +254,7 @@
         },
         "lastModified": {
             "$id": "#/properties/lastModified",
-            "type": "string",
+            "type": ["string", "null"],
             "title": "The lastModified schema",
             "description": "The date the merchant record was last modified",
             "default": "",
