@@ -80,26 +80,15 @@ function MerchantService(repo) {
     /**
      * @param {String} id - a uuid for a merchant
      */
-    /*this.getMerchantById = async function(id) {
-        const crateData = await this._repo.crate.getCrateById(id);
-
-        if (!crateData) {
+    this.getMerchantById = async function(id) {
+        const merchantData = await this._repo.getMerchantById(id);
+        
+        if (!merchantData) {
             return;
         }
 
-        const crate = new Crate(this._repo, new CrateDTO(crateData));
-        const {shipmentId} = crate._data;
-
-        if (shipmentId) {
-            const crateShipmentData = await this._repo.crateShipment.getCrateShipmentById(shipmentId);
-
-            const crateShipment = new CrateShipment(this._repo.crateShipment, new CrateShipmentDTO(crateShipmentData));
-
-            crate.currentTrip = crateShipment;
-        } 
-       
-        return crate;
-    }*/
+        return new Merchant(this._repo, new MerchantDTO(merchantData));
+    }
 
     /*
     this.getAllMerchants = async function() {

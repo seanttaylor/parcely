@@ -42,7 +42,8 @@ function InMemoryDatabaseConnector({console}) {
                 throw new Error(`ValidationError.SchemaError: ${collection} ${JSON.stringify(validate.errors, null, 2)}`); 
             }
 
-            data[collection][record.id] = record; 
+            data[collection][record.id] = record;
+           
             return [record];
             
         } catch(e) {
@@ -174,6 +175,10 @@ function InMemoryDatabaseConnector({console}) {
      */
 
     this.findOne = async function({id, collection}) {
+        if (collection === "merchants") {
+            console.log("merchants");
+        }
+
         if (!Object.keys(this._schemaValidators).includes(collection)) {
             throw new Error(`InMemoryDatabaseConnectorError.FindOneError: Collection (${collection}) does not exist`);
         }
