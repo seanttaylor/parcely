@@ -52,7 +52,7 @@ function Merchant(repo, merchantDTO) {
 
     /**
     Updates an existing plan for a merchant
-    @returns {Object} plan - valid Parcely plan
+    @param {Object} plan - valid Parcely plan
     */
     this.updatePlan = async function(plan) {
         const updatedPlan = Object.assign(this._data.plan, plan);
@@ -62,6 +62,23 @@ function Merchant(repo, merchantDTO) {
         const merchant = await this._repo.updateMerchantPlan(merchantDTO);
         
         this._data.plan = updatedPlan;
+    }
+
+    /**
+    Cancels an existing plan for a merchant
+    @returns
+    */
+    this.cancelPlan = async function() {
+        const cancelledPlan = Object.assign(this._data.plan, {
+            status: ["cancelled"]
+        });
+        const merchantDTO = new MerchantDTO(Object.assign(this._data, {
+            plan: cancelledPlan
+        }));
+
+        const merchant = await this._repo.updateMerchantPlan(merchantDTO);
+        
+        this._data.plan = cancelledPlan;
     }
 
 }
