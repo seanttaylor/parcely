@@ -112,6 +112,35 @@ describe("MerchantManagement", function MerchantManagement() {
         expect(record._data.plan.status[0] === "suspended").toBe(true);
     });
 
+    test("Should be able to cancel an existing plan for a merchant", async() => {
+        const testMerchantData = {
+            name: faker.company.companyName(),
+            userId: faker.random.uuid(),
+            address: {
+                street: faker.address.streetName(),
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            emailAddress: faker.internet.email(),
+            phoneNumber: faker.phone.phoneNumber(),
+            plan: defaultPlan
+        };
+        const testMerchant = await testMerchantService.createMerchant(testMerchantData);
+
+        await testMerchant.save();
+
+        const testMerchantId = testMerchant.id;
+
+        await testMerchant.cancelPlan(); 
+        
+        expect(testMerchant._data.plan.status[0] === "cancelled").toBe(true);
+
+        const record = await testMerchantService.getMerchantById(testMerchantId);
+
+        expect(record._data.plan.status[0] === "cancelled").toBe(true);
+    });
+
     test("Should return JSON object representation of a Merchant", async() => {
         const testMerchant = await testMerchantService.createMerchant({
             name: faker.company.companyName(),
