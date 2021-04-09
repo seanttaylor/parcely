@@ -5,12 +5,21 @@ const ajv = new Ajv();
 const faker = require("faker");
 const crateSchema = require("../../src/schemas/crate.json");
 const { MerchantService } = require("../../src/services/merchant");
-const MerchantRepository = require("../../src/lib/repository/merchant");
+const { UserService } = require("../../src/services/user");
 const DatabaseConnector = require("../../src/lib/database/connectors/memory");
 const testDbConnector = new DatabaseConnector({console: mockImpl.console});
 const IMerchantRepository = require("../../src/interfaces/merchant-repository");
+const IUserRepository = require("../../src/interfaces/user-repository");
+const UserRepository = require("../../src/lib/repository/user");
+const MerchantRepository = require("../../src/lib/repository/merchant");
+const testUserRepo = new IUserRepository(new UserRepository(testDbConnector));
 const testMerchantRepo = new IMerchantRepository(new MerchantRepository(testDbConnector));
-const testMerchantService = new MerchantService(testMerchantRepo);
+const fakeUserService = {
+    userExists() {
+        return true;
+    }
+};
+const testMerchantService = new MerchantService(testMerchantRepo, fakeUserService);
 const defaultPlan = {
     planType: ["smallBusiness"],
     startDate: "01/01/2021",
@@ -47,6 +56,73 @@ describe("MerchantManagement", function MerchantManagement() {
         expect(Object.keys(testMerchant).includes("id")).toBe(true);
         expect(Object.keys(testMerchant).includes("_repo")).toBe(true);
         expect(Object.keys(testMerchant).includes("_data")).toBe(true);    
+    });
+
+    test("Should NOT be able to create a new Merchant instance for non-existing user", async() => {
+        const anotherTestMerchantService = new MerchantService(testMerchantRepo, {
+            userExists() {
+                return false;
+            }
+        });
+        const testMerchantData = {
+            name: faker.company.companyName(),
+            userId: faker.random.uuid(),
+            address: {
+                street: faker.address.streetName(),
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            emailAddress: faker.internet.email(),
+            phoneNumber: faker.phone.phoneNumber(),
+            plan: defaultPlan
+        };
+
+        try {
+            const testMerchant = await anotherTestMerchantService.createMerchant(testMerchantData);
+        } catch(e) {
+            expect(e.message).toMatch("MerchantServiceError.CannotCreateMerchant.UserDoesNotExist");
+        } 
+    });
+
+    test("Should NOT be able to create a new Merchant instance for user that is already a merchant", async() => {
+        const uuid = faker.random.uuid();
+        const testMerchantData = {
+            name: faker.company.companyName(),
+            userId: uuid,
+            address: {
+                street: faker.address.streetName(),
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            emailAddress: faker.internet.email(),
+            phoneNumber: faker.phone.phoneNumber(),
+            plan: defaultPlan
+        };
+        const testMerchantDataNo2 = {
+            name: faker.company.companyName(),
+            userId: uuid,
+            address: {
+                street: faker.address.streetName(),
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            emailAddress: faker.internet.email(),
+            phoneNumber: faker.phone.phoneNumber(),
+            plan: defaultPlan
+        };
+
+        const testMerchant = await testMerchantService.createMerchant(testMerchantData);
+
+        await testMerchant.save();
+
+        try {
+            const testMerchantNo2 = await testMerchantService.createMerchant(testMerchantDataNo2);
+        } catch(e) {
+            expect(e.message).toMatch("MerchantServiceError.CannotCreateMerchant.UserIsAlreadyMerchant");
+        } 
     });
 
     test("Should be able to find a merchant by id", async() => {
