@@ -7,6 +7,7 @@
 * @property {Function} getCrateById - finds a crate in the data store by uuid
 * @property {Function} getAllCrates - finds all crates in the data store
 * @property {Function} getCrateShipmentsByCrateId - finds a list of all unique shipments of a specified crate
+* @property {Function} getCratesByMerchantId - finds a list of all unique crates associated with a specified merchant
 * @property {Function} getCratesByRecipientId - finds all crates associated with a specified recipient
 * @property {Function} markCrateReturned -  set a crate's status to indicate a pending return
 * @property {Function} delete - deletes a crate in the data store by its uuid
@@ -51,6 +52,11 @@ function ICrateRepository(myImpl) {
     @returns {Array} - a list of CrateShipment instances
     */
     this.getCrateShipmentsByCrateId = myImpl.getCrateShipmentsByCrateId || required;    
+
+    /**
+    @returns {Array} - a list of Crate instances
+    */
+    this.getCratesByMerchantId = myImpl.getCratesByMerchantId || required;
 
     /**
     @param {User} user - an instance of User

@@ -17,6 +17,7 @@ const testCrateService = new CrateService({
     crateRepo: testCrateRepo,
     crateShipmentRepo: testCrateShipmentRepo
 });
+const starkMerchantId = "dd8b20dd-1637-4396-bba5-bcd6d65e2d5d";
 
 /**Tests**/
 afterAll(()=> {
@@ -238,6 +239,21 @@ describe("CrateManagement", function CrateManagement() {
 
         expect(Array.isArray(crateList)).toBe(true);
         expect(crateList[0]._data.recipientId === thorUserId).toBe(true);
+    });
+
+
+    test("Should be able to get a list of crates associated with a specified merchant", async() => {
+        
+        const testCrate = await testCrateService.createCrate({
+            size: ["S"],
+            merchantId: starkMerchantId
+        });
+        
+        await testCrate.save();
+    
+        const crateList = await testCrateService.getCratesByMerchantId(starkMerchantId);
+        
+        expect(Array.isArray(crateList)).toBe(true);
     });
 
 
