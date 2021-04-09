@@ -359,6 +359,17 @@ function CrateService({crateRepo, crateShipmentRepo}) {
     }
 
     /**
+     * @param {String} id - a uuid of a merchant
+     */
+    this.getCratesByMerchantId = async function(id) {
+        const crateList = await this._repo.crate.getCratesByMerchantId(id);
+
+        return crateList.map((crateData) => {
+            return new Crate(this._repo, new CrateDTO(crateData));
+        });
+    }
+
+    /**
      * @param {User} user - an instance of a User
      * @param {Object} options - an options object 
      */

@@ -69,6 +69,11 @@ function CrateRepository(databaseConnector) {
         return crateShipments.filter(s => s.crateId === id);
     }
 
+    this.getCratesByMerchantId = async function(id) {
+        const crateList = await databaseConnector.findAll("crates");
+        return crateList.filter(c => c.merchantId === id);
+    }
+
     this.getCratesByRecipientId = async function(id) {
         const crates = await databaseConnector.findAll("crates");
         return crates.filter(crate => crate.recipientId === id);
