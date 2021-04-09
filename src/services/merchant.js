@@ -84,8 +84,6 @@ function Merchant(repo, merchantDTO) {
 }
 
 
-
-
 /**
 * @typedef {Object} MerchantService
 * @property {Object} _repo - the repository associated with this service
@@ -94,18 +92,32 @@ function Merchant(repo, merchantDTO) {
 /**
  * 
  * @param {Object} repo - the repos associated with this service
+ * @param {UserService} userService - an instance of the UserService
  */
 
-function MerchantService(repo) {
+function MerchantService(repo, userService) {
     this._repo = repo;
     
     /**
      * @param {Object} doc - object representing valid merchant data
      */
     this.createMerchant = async function(doc) {
-        const id = uuid.v4();
-        const data = Object.assign({id}, doc);
-        return new Merchant(this._repo, new MerchantDTO(data));
+        /*for successful merchant account creation user account SHOULD already exist and merchant account SHOULD NOT already exist*/
+
+        const userExists = await userService.userExists(doc.userId);
+        const merchantAlreadyExists = await this.merchantExists(doc.userId);
+        
+        if (!userExists) {
+            throw new Error("MerchantServiceError.CannotCreateMerchant.UserDoesNotExist => Merchant account cannot be created for user that does not exist.");
+        }
+
+        if (!merchantAlreadyExists) {
+            const id = uuid.v4();
+            const data = Object.assign({id}, doc);
+            return new Merchant(this._repo, new MerchantDTO(data));
+        }
+
+        throw new Error("MerchantServiceError.CannotCreateMerchant.UserIsAlreadyMerchant => Merchant account cannot be created for user already assigned a merchant account");  
     }
 
     /**
@@ -137,20 +149,12 @@ function MerchantService(repo) {
     }*/
 
     /**
-     * @param {String} id - a uuid of a Merchant
+     * @param {String} id - a uuid of a User
      */
-    /*this.merchantExists = async function(id) {
-        const shipmentData = await this._repo.crateShipment.getCrateShipmentById(shipmentId);
-        const shipment = new CrateShipment(this._repo.crateShipment, new CrateShipmentDTO(shipmentData));
-        
-        shipment._data.waypointsIncluded = includeWaypoints;
-
-        if (!includeWaypoints) {
-            shipment._data.waypoints = [];
-        }
-       
-        return shipment;
-    }*/
+    this.merchantExists = async function(userId) {
+        const merchantList = await this._repo.getAllMerchants();
+        return merchantList.find((m) => m.userId === userId);
+    }
  
 }
 
