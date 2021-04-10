@@ -217,6 +217,68 @@ describe("MerchantManagement", function MerchantManagement() {
         expect(record._data.plan.status[0] === "cancelled").toBe(true);
     });
 
+    test("Should be able to archive an existing merchant", async() => {
+        const testMerchantData = {
+            name: faker.company.companyName(),
+            userId: faker.random.uuid(),
+            address: {
+                street: faker.address.streetName(),
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            emailAddress: faker.internet.email(),
+            phoneNumber: faker.phone.phoneNumber(),
+            plan: defaultPlan
+        };
+        const testMerchant = await testMerchantService.createMerchant(testMerchantData);
+
+        await testMerchant.save();
+
+        const testMerchantId = testMerchant.id;
+
+        await testMerchantService.archiveMerchant(testMerchant);
+
+        expect(testMerchant._data.status[0] === "archived").toBe(true);
+
+        const record = await testMerchantService.getMerchantById(testMerchantId);
+
+        expect(record._data.status[0] === "archived").toBe(true);
+    });
+
+    test("Should NOT be able to update existing merchants who have been archived", async() => {
+        const testMerchantData = {
+            name: faker.company.companyName(),
+            userId: faker.random.uuid(),
+            address: {
+                street: faker.address.streetName(),
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            emailAddress: faker.internet.email(),
+            phoneNumber: faker.phone.phoneNumber(),
+            plan: defaultPlan
+        };
+        const testMerchant = await testMerchantService.createMerchant(testMerchantData);
+
+        await testMerchant.save();
+
+        const testMerchantId = testMerchant.id;
+
+        await testMerchantService.archiveMerchant(testMerchant);
+
+        expect(testMerchant._data.status[0] === "archived").toBe(true);
+
+        await testMerchant.updatePlan({
+            planType: ["enterprise"],
+            status: ["suspended"]
+        });
+
+        console.log(testMerchant._data);
+        expect(testMerchant._data.plan.planType[0] === "smallBusiness").toBe(true);
+    });
+
     test("Should return JSON object representation of a Merchant", async() => {
         const testMerchant = await testMerchantService.createMerchant({
             name: faker.company.companyName(),

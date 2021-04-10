@@ -23,6 +23,7 @@ const merchantSchemaValidation = ajv.compile(merchantSchema);
   * @param {String} userId - userId for a merchant
   * @param {String} name - name of the merchant (e.g. the business name)
   * @param {String} phoneNumber - phone number of merchant (e.g. the business phone)
+  * @param {String} status - status of the merchant on the platform (e.g. active)
   * @param {Object} plan - Parcely plan associated with merchant
   * @param {Object} address - address of the merchant (e.g. business address)
   * @param {String} emailAddress - email address of merchant (e.g. business email)
@@ -31,13 +32,14 @@ const merchantSchemaValidation = ajv.compile(merchantSchema);
   * @returns {MerchantDTO}
   */
 
-function MerchantDTO({id, userId, name, plan, address, emailAddress, createdDate=new Date().toISOString(), phoneNumber, lastModified=null }) {
-    
+function MerchantDTO({id, userId, name, status=["active"], plan, address, emailAddress, createdDate=new Date().toISOString(), phoneNumber, lastModified=null }) {
+        
     const merchantData = {
       id,
       userId,
       name,
-      phoneNumber,  
+      phoneNumber,
+      status,  
       plan, 
       address, 
       emailAddress,
