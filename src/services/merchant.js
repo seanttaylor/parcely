@@ -55,7 +55,11 @@ function Merchant(repo, merchantDTO) {
     @param {Object} plan - valid Parcely plan
     */
     this.updatePlan = async function(plan) {
-        const updatedPlan = Object.assign(this._data.plan, plan);
+        if (this._data.status[0] === "archived") {
+            return;
+        }
+
+        const updatedPlan = Object.assign({}, this._data.plan, plan);
         const merchantDTO = new MerchantDTO(Object.assign(this._data, {
             plan: updatedPlan
         }));
@@ -69,7 +73,7 @@ function Merchant(repo, merchantDTO) {
     @returns
     */
     this.cancelPlan = async function() {
-        const cancelledPlan = Object.assign(this._data.plan, {
+        const cancelledPlan = Object.assign({}, this._data.plan, {
             status: ["cancelled"]
         });
         const merchantDTO = new MerchantDTO(Object.assign(this._data, {
@@ -143,10 +147,15 @@ function MerchantService(repo, userService) {
     /**
      * @param {Merchant} merchant - an instance of a Merchant
      */
-    /*this.archiveMerchant = async function(user) {
-        const crateList = await this._repo.crate.getCratesByRecipientId(user.id);
-        return crateList.map((c) => new Crate(this._repo.crate, new CrateDTO(c)));
-    }*/
+    this.archiveMerchant = async function(merchant) {
+        const merchantDTO = new MerchantDTO(Object.assign(merchant._data, {
+            status: ["archived"]
+        }));
+        
+        await this._repo.archiveMerchant(merchantDTO);
+       
+        merchant._data.status = ["archived"];
+    }
 
     /**
      * @param {String} id - a uuid of a User
