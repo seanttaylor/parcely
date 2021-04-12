@@ -175,9 +175,6 @@ function InMemoryDatabaseConnector({console}) {
      */
 
     this.findOne = async function({id, collection}) {
-        if (collection === "merchants") {
-            console.log("merchants");
-        }
 
         if (!Object.keys(this._schemaValidators).includes(collection)) {
             throw new Error(`InMemoryDatabaseConnectorError.FindOneError: Collection (${collection}) does not exist`);

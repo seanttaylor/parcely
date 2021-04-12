@@ -171,7 +171,7 @@ const {
                 userId: user.id,
             });
         }
-        catch (e) {
+        catch(e) {
             next(e);
         }
     });

@@ -10,12 +10,15 @@ const ac = new AccessControl(accessGrants.grants);
  * upon (e.g. posts) (e.g. "readAny:posts")
  * @param {Boolean} allowResourceOwnerOnly - indicates whether a child resource 
  * (e.g. /users/{id}/posts/{post_id}/comments) can ONLY be accessed by the owner of the top-level resource
+ * @param {Function} authzOverride - a user-defined predicate function that 
+ * authorizes a requests if the function returns true
+ * (e.g. /users/{id}/posts/{post_id}/comments) can ONLY be accessed by the owner of the top-level resource
  * @param {Function} next - Express 'next' function
  * @returns {Function} - function with Express middleware signature
  * 
 */
 
-module.exports = function({actionId, allowResourceOwnerOnly=true}) { 
+module.exports = function({actionId, authzOverride, allowResourceOwnerOnly=true}) { 
     return async function authorizeRequest(req, res, next) {
 
         try {
@@ -48,6 +51,11 @@ module.exports = function({actionId, allowResourceOwnerOnly=true}) {
                 return;
             }
 
+            if (authzOverride && authzOverride(decodedToken)) {
+                next();
+                return;
+            }
+            
             //The requester is NOT authorized to access the specified resource; no overrides applied
             if (req.params.id !== decodedToken.sub) {
                 res.status(403).send({
@@ -61,7 +69,7 @@ module.exports = function({actionId, allowResourceOwnerOnly=true}) {
             
         } catch(e) {
             //console.error(e);
-             res.status(401).send({
+            res.status(401).send({
                 entries: [],
                 error: "Unauthorized: authorization failed",
                 count: 0
