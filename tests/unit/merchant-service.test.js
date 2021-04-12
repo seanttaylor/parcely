@@ -81,7 +81,7 @@ describe("MerchantManagement", function MerchantManagement() {
         try {
             const testMerchant = await anotherTestMerchantService.createMerchant(testMerchantData);
         } catch(e) {
-            expect(e.message).toMatch("MerchantServiceError.CannotCreateMerchant.UserDoesNotExist");
+            expect(e.message).toMatch("MerchantServiceError.CannotCreateMerchant.BadRequest.UserDoesNotExist");
         } 
     });
 
@@ -121,7 +121,7 @@ describe("MerchantManagement", function MerchantManagement() {
         try {
             const testMerchantNo2 = await testMerchantService.createMerchant(testMerchantDataNo2);
         } catch(e) {
-            expect(e.message).toMatch("MerchantServiceError.CannotCreateMerchant.UserIsAlreadyMerchant");
+            expect(e.message).toMatch("MerchantServiceError.CannotCreateMerchant.BadRequest.UserIsAlreadyMerchant");
         } 
     });
 
@@ -275,7 +275,6 @@ describe("MerchantManagement", function MerchantManagement() {
             status: ["suspended"]
         });
 
-        console.log(testMerchant._data);
         expect(testMerchant._data.plan.planType[0] === "smallBusiness").toBe(true);
     });
 

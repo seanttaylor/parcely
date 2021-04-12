@@ -2,7 +2,6 @@
 const express = require("express");
 const router = new express.Router();
 const {
-    //validateRequestBodyWith, 
     authorizeRequest, 
     validateJWT,
 } = require("../../lib/middleware");

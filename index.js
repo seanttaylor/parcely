@@ -43,6 +43,14 @@ const crateRepo = new ICrateRepository(new CrateRepository(asiagoDatabaseConnect
 const crateShipmentRepo = new ICrateShipmentRepository(new CrateShipmentRepository(asiagoDatabaseConnector));
 const crateService = new CrateService({crateRepo, crateShipmentRepo});
 
+/**MerchantService**/
+const { MerchantService } = require("./src/services/merchant");
+const MerchantRepository = require("./src/lib/repository/merchant");
+const IMerchantRepository = require("./src/interfaces/merchant-repository");
+const merchantRepo = new IMerchantRepository(new MerchantRepository(asiagoDatabaseConnector));
+const merchantService = new MerchantService(merchantRepo, userService);
+
+
 /******************************************************************************/
 
 
@@ -51,6 +59,7 @@ const crateService = new CrateService({crateRepo, crateShipmentRepo});
 const UserAPI = require("./src/api/user");
 const CrateAPI = require("./src/api/crate");
 const StatusAPI = require("./src/api/status");
+const MerchantAPI = require("./src/api/merchant");
 
 /******************************************************************************/
 app.set("view engine", "ejs");
@@ -78,6 +87,11 @@ app.use("/api/v1/users", UserAPI({
 app.use("/api/v1/crates", CrateAPI({
     authService,
     crateService,
+    eventEmitter
+}));
+
+app.use("/api/v1/merchants", MerchantAPI({
+    merchantService,
     eventEmitter
 }));
 

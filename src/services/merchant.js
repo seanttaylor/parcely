@@ -112,7 +112,7 @@ function MerchantService(repo, userService) {
         const merchantAlreadyExists = await this.merchantExists(doc.userId);
         
         if (!userExists) {
-            throw new Error("MerchantServiceError.CannotCreateMerchant.UserDoesNotExist => Merchant account cannot be created for user that does not exist.");
+            throw new Error("MerchantServiceError.CannotCreateMerchant.BadRequest.UserDoesNotExist => Merchant account cannot be created for user that does not exist.");
         }
 
         if (!merchantAlreadyExists) {
@@ -121,7 +121,7 @@ function MerchantService(repo, userService) {
             return new Merchant(this._repo, new MerchantDTO(data));
         }
 
-        throw new Error("MerchantServiceError.CannotCreateMerchant.UserIsAlreadyMerchant => Merchant account cannot be created for user already assigned a merchant account");  
+        throw new Error("MerchantServiceError.CannotCreateMerchant.BadRequest.UserIsAlreadyMerchant => Merchant account cannot be created for user already assigned a merchant account");  
     }
 
     /**
