@@ -1,0 +1,136 @@
+/**********************************************/
+//ENSURE NODE_ENV is hardcoded to "ci/cd/test"//
+/**********************************************/
+process.env.NODE_ENV = "ci/cd/test";
+
+const app = require("../../index");
+const supertest = require("supertest");
+const request = supertest(app);
+const faker = require("faker");
+const starkUserId = "e98417a8-d912-44e0-8d37-abe712ca840f";
+const starkEmailAddress = "tstark@avengers.io";
+const furyUserId = "5298b9ab-9493-4fee-bf7e-805e47bb5d42";
+const furyEmailAddress = "nfury@shield.gov";
+const thorUserId = "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09";
+const thorEmailAddress = "thor@avengers.io";
+const superSecretPassword = "superSecretPassword";
+const defaultPlan = {
+    planType: ["smallBusiness"],
+    startDate: "01/01/2021",
+    expiryDate: "01/01/2022",
+    status: [
+        "active"
+    ],
+    autoRenew: true
+};
+
+describe("MerchantManagement", function MerchantManagement() {
+
+    test("Admins should be able to create a new merchant", async() => {
+        const res1 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: furyEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
+
+        const furyAccessToken = res1.body.accessToken;
+
+        const testMerchantData = {
+            name: faker.company.companyName(),
+            userId: thorUserId,
+            address: {
+                street: faker.address.streetName(),
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            emailAddress: faker.internet.email(),
+            phoneNumber: faker.phone.phoneNumber(),
+            plan: defaultPlan
+        };
+
+        const res2 = await request.post(`/api/v1/merchants`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send(testMerchantData)
+        .expect(201);
+
+        expect(Array.isArray(res2.body.entries)).toBe(true);
+        expect(res2.body.count === 1).toBe(true);
+        expect(Object.keys(res2["body"]["entries"][0]).includes("id")).toBe(true);
+    });
+
+    test("Admins should NOT be able to create a new merchant for a userId that does not exist", async() => {
+        const res1 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: furyEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
+
+        const furyAccessToken = res1.body.accessToken;
+
+        const testMerchantData = {
+            name: faker.company.companyName(),
+            userId: faker.random.uuid(),
+            address: {
+                street: faker.address.streetName(),
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            emailAddress: faker.internet.email(),
+            phoneNumber: faker.phone.phoneNumber(),
+            plan: defaultPlan
+        };
+
+        const res2 = await request.post(`/api/v1/merchants`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send(testMerchantData)
+        .expect(400);
+
+        expect(Array.isArray(res2.body.entries)).toBe(true);
+        expect(res2.body.count === 0).toBe(true);
+        expect(res2.body.error).toBeTruthy();
+        expect(res2.body.error).toMatch("MerchantServiceError.CannotCreateMerchant.BadRequest.UserDoesNotExist");
+    });
+
+    test("Admins should NOT be able to create a new merchant for a user that already has a merchant account", async() => {
+        const res1 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: furyEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
+
+        const furyAccessToken = res1.body.accessToken;
+
+        const testMerchantData = {
+            name: faker.company.companyName(),
+            userId: thorUserId,
+            address: {
+                street: faker.address.streetName(),
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            emailAddress: faker.internet.email(),
+            phoneNumber: faker.phone.phoneNumber(),
+            plan: defaultPlan
+        };
+
+        const res2 = await request.post(`/api/v1/merchants`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send(testMerchantData)
+        .expect(400);
+
+        expect(Array.isArray(res2.body.entries)).toBe(true);
+        expect(res2.body.count === 0).toBe(true);
+        expect(res2.body.error).toBeTruthy();
+        expect(res2.body.error).toMatch("MerchantServiceError.CannotCreateMerchant.BadRequest.UserIsAlreadyMerchant");
+    });
+});
+
+
+
+
