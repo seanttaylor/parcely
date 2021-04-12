@@ -13,7 +13,7 @@ function UserAuthService({cacheService, userService}) {
      * @returns a JSON Web Token
     */
 
-    this.issueAuthCredential = async function(user, role) {
+    this.issueAuthCredential = async function(user, role="user") {
         const expiresInOneHour = Math.floor(Date.now() / 1000) + (60 * 60);
         const token = jwt.sign({ 
             iss: "api@parcely", 
