@@ -55,7 +55,7 @@ function MerchantRouter({merchantService, eventEmitter}) {
 
     });
 
-    router.post("/:id/plan/cancellation", validateJWT, authorizeRequest({
+    router.post("/:id/plan/cancel", validateJWT, authorizeRequest({
         actionId: "updateOwn:merchants",
         authzOverride: merchantAuthzOverride(merchantService)
     }), async function cancelPlan(req, res, next) {
@@ -85,6 +85,26 @@ function MerchantRouter({merchantService, eventEmitter}) {
 
     });
 
+    router.post("/:id/status/archive", validateJWT, authorizeRequest({
+        actionId: "updateAny:merchants",
+    }), async function archiveMerchant(req, res, next) {
+        const merchantId = req.params.id;
+
+        res.set("content-type", "application/json"); 
+
+        try {
+            const merchant = await merchantService.getMerchantById(merchantId);
+            await merchantService.archiveMerchant(merchant);
+
+            res.status(204);
+            res.send();
+
+        } catch(e) {
+            next(e);
+        }
+
+    });
+
     /**GET**/
     router.get("/:id", validateJWT, authorizeRequest({
         actionId: "readOwn:merchants",
@@ -107,8 +127,6 @@ function MerchantRouter({merchantService, eventEmitter}) {
         }
 
     });
-
-
 
     /**PUT**/
     router.put("/:id/plan", validateJWT, authorizeRequest({

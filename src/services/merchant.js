@@ -34,7 +34,8 @@ function Merchant(repo, merchantDTO) {
                 name: this._data.name, 
                 address: this._data.address,
                 emailAddress: this._data.emailAddress,
-                plan: this._data.plan
+                plan: this._data.plan,
+                status: this._data.status
             }
         };
     }
