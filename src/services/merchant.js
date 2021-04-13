@@ -74,7 +74,8 @@ function Merchant(repo, merchantDTO) {
     */
     this.cancelPlan = async function() {
         const cancelledPlan = Object.assign({}, this._data.plan, {
-            status: ["cancelled"]
+            status: ["cancelled"],
+            autoRenew: false
         });
         const merchantDTO = new MerchantDTO(Object.assign(this._data, {
             plan: cancelledPlan
