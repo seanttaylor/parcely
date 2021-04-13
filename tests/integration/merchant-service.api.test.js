@@ -201,6 +201,72 @@ describe("MerchantManagement", function MerchantManagement() {
         expect(res5["body"]["entries"][0]["data"]["plan"]["planType"][0] === "enterprise").toBe(true);
 
     });
+
+    test("Merchants should be able to cancel their own plan", async() => {
+        const fakePassword = faker.internet.password();
+        const fakeEmailAddress = faker.internet.email();
+
+        const res = await request.post(`/api/v1/users`)
+        .send({
+            emailAddress: fakeEmailAddress,
+            firstName: faker.name.firstName(),
+            lastName: faker.name.lastName(),
+            phoneNumber: faker.phone.phoneNumber(),
+            password: fakePassword
+        })
+        .expect(200);
+
+        const fakeUserId = res.body.userId;
+
+        const res1 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: furyEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
+
+        const furyAccessToken = res1.body.accessToken;
+        const fakeAccessToken = res.body.accessToken;
+
+        const testMerchantData = {
+            name: faker.company.companyName(),
+            userId: fakeUserId,
+            address: {
+                street: faker.address.streetName(),
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            emailAddress: faker.internet.email(),
+            phoneNumber: faker.phone.phoneNumber(),
+            plan: defaultPlan
+        };
+
+        const res3 = await request.post(`/api/v1/merchants`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send(testMerchantData)
+        .expect(201);
+        
+        const merchantId = res3["body"]["entries"][0]["id"];
+
+        const res4 = await request.post(`/api/v1/merchants/${merchantId}/plan/cancellation`)
+        .set("authorization", `Bearer ${fakeAccessToken}`)
+        .send()
+        .expect(204);
+
+        const res5 = await request.get(`/api/v1/merchants/${merchantId}`)
+        .set("authorization", `Bearer ${fakeAccessToken}`)
+        .send()
+        .expect(200);
+
+
+        expect(Array.isArray(res5.body.entries)).toBe(true);
+        expect(res5.body.count === 1).toBe(true);
+        expect(res5["body"]["entries"][0]["id"] === merchantId).toBe(true);
+        expect(res5["body"]["entries"][0]["data"]["plan"]["status"][0] === "cancelled").toBe(true);
+        expect(res5["body"]["entries"][0]["data"]["plan"]["autoRenew"] === false).toBe(true);
+
+    });
 });
 
 
