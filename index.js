@@ -92,6 +92,7 @@ app.use("/api/v1/crates", CrateAPI({
 
 app.use("/api/v1/merchants", MerchantAPI({
     merchantService,
+    crateService,
     eventEmitter
 }));
 

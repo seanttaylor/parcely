@@ -9,12 +9,13 @@ const {
 
 /**
  * @param {MerchantService} merchantService - an instance of MerchantService
+ * @param {CrateService} crateService - an instance of CrateService
  * @param {EventEmitter} eventEmitter - an instance of EventEmitter
  * @returns router - an instance of an Express router
  */
 
 
-function MerchantRouter({merchantService, eventEmitter}) {
+function MerchantRouter({merchantService, crateService, eventEmitter}) {
 
     function merchantAuthzOverride(mechantService) {
         return async function(decodedToken) {
@@ -120,6 +121,28 @@ function MerchantRouter({merchantService, eventEmitter}) {
             res.json({
                 entries: [merchant],
                 count: 1
+            });
+
+        } catch(e) {
+            next(e);
+        }
+
+    });
+
+    router.get("/:id/crates", validateJWT, authorizeRequest({
+        actionId: "readOwn:merchants",
+        authzOverride: merchantAuthzOverride(merchantService)
+    }), async function getCratesByMerchant(req, res, next) {
+        const merchantId = req.params.id;
+        res.set("content-type", "application/json"); 
+
+        try {
+            const crateList = await crateService.getCratesByMerchantId(merchantId);
+
+            res.status(200);
+            res.json({
+                entries: crateList,
+                count: crateList.length
             });
 
         } catch(e) {
