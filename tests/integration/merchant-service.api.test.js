@@ -60,76 +60,6 @@ describe("MerchantManagement", function MerchantManagement() {
         expect(Object.keys(res2["body"]["entries"][0]).includes("id")).toBe(true);
     });
 
-    test("Admins should NOT be able to create a new merchant for a userId that does not exist", async() => {
-        const res1 = await request.post(`/api/v1/users/token`)
-        .send({
-            emailAddress: furyEmailAddress,
-            password: superSecretPassword
-        })
-        .expect(200);
-
-        const furyAccessToken = res1.body.accessToken;
-
-        const testMerchantData = {
-            name: faker.company.companyName(),
-            userId: faker.random.uuid(),
-            address: {
-                street: faker.address.streetName(),
-                city: faker.address.city(),
-                state: faker.address.stateAbbr(),
-                zip: faker.address.zipCode()
-            },
-            emailAddress: faker.internet.email(),
-            phoneNumber: faker.phone.phoneNumber(),
-            plan: defaultPlan
-        };
-
-        const res2 = await request.post(`/api/v1/merchants`)
-        .set("authorization", `Bearer ${furyAccessToken}`)
-        .send(testMerchantData)
-        .expect(400);
-
-        expect(Array.isArray(res2.body.entries)).toBe(true);
-        expect(res2.body.count === 0).toBe(true);
-        expect(res2.body.error).toBeTruthy();
-        expect(res2.body.error).toMatch("MerchantServiceError.CannotCreateMerchant.BadRequest.UserDoesNotExist");
-    });
-
-    test("Admins should NOT be able to create a new merchant for a user that already has a merchant account", async() => {
-        const res1 = await request.post(`/api/v1/users/token`)
-        .send({
-            emailAddress: furyEmailAddress,
-            password: superSecretPassword
-        })
-        .expect(200);
-
-        const furyAccessToken = res1.body.accessToken;
-
-        const testMerchantData = {
-            name: faker.company.companyName(),
-            userId: thorUserId,
-            address: {
-                street: faker.address.streetName(),
-                city: faker.address.city(),
-                state: faker.address.stateAbbr(),
-                zip: faker.address.zipCode()
-            },
-            emailAddress: faker.internet.email(),
-            phoneNumber: faker.phone.phoneNumber(),
-            plan: defaultPlan
-        };
-
-        const res2 = await request.post(`/api/v1/merchants`)
-        .set("authorization", `Bearer ${furyAccessToken}`)
-        .send(testMerchantData)
-        .expect(400);
-
-        expect(Array.isArray(res2.body.entries)).toBe(true);
-        expect(res2.body.count === 0).toBe(true);
-        expect(res2.body.error).toBeTruthy();
-        expect(res2.body.error).toMatch("MerchantServiceError.CannotCreateMerchant.BadRequest.UserIsAlreadyMerchant");
-    });
-
     test("Merchants should be able update their own plan", async() => {
         const fakePassword = faker.internet.password();
         const fakeEmailAddress = faker.internet.email();
@@ -202,6 +132,76 @@ describe("MerchantManagement", function MerchantManagement() {
 
     });
 
+    test("Admins should NOT be able to create a new merchant for a userId that does not exist", async() => {
+        const res1 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: furyEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
+
+        const furyAccessToken = res1.body.accessToken;
+
+        const testMerchantData = {
+            name: faker.company.companyName(),
+            userId: faker.random.uuid(),
+            address: {
+                street: faker.address.streetName(),
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            emailAddress: faker.internet.email(),
+            phoneNumber: faker.phone.phoneNumber(),
+            plan: defaultPlan
+        };
+
+        const res2 = await request.post(`/api/v1/merchants`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send(testMerchantData)
+        .expect(400);
+
+        expect(Array.isArray(res2.body.entries)).toBe(true);
+        expect(res2.body.count === 0).toBe(true);
+        expect(res2.body.error).toBeTruthy();
+        expect(res2.body.error).toMatch("MerchantServiceError.CannotCreateMerchant.BadRequest.UserDoesNotExist");
+    });
+
+    test("Admins should NOT be able to create a new merchant for a user that already has a merchant account", async() => {
+        const res1 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: furyEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
+
+        const furyAccessToken = res1.body.accessToken;
+
+        const testMerchantData = {
+            name: faker.company.companyName(),
+            userId: thorUserId,
+            address: {
+                street: faker.address.streetName(),
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            emailAddress: faker.internet.email(),
+            phoneNumber: faker.phone.phoneNumber(),
+            plan: defaultPlan
+        };
+
+        const res2 = await request.post(`/api/v1/merchants`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send(testMerchantData)
+        .expect(400);
+
+        expect(Array.isArray(res2.body.entries)).toBe(true);
+        expect(res2.body.count === 0).toBe(true);
+        expect(res2.body.error).toBeTruthy();
+        expect(res2.body.error).toMatch("MerchantServiceError.CannotCreateMerchant.BadRequest.UserIsAlreadyMerchant");
+    });
+
     test("Merchants should be able to cancel their own plan", async() => {
         const fakePassword = faker.internet.password();
         const fakeEmailAddress = faker.internet.email();
@@ -249,7 +249,7 @@ describe("MerchantManagement", function MerchantManagement() {
         
         const merchantId = res3["body"]["entries"][0]["id"];
 
-        const res4 = await request.post(`/api/v1/merchants/${merchantId}/plan/cancellation`)
+        const res4 = await request.post(`/api/v1/merchants/${merchantId}/plan/cancel`)
         .set("authorization", `Bearer ${fakeAccessToken}`)
         .send()
         .expect(204);
@@ -267,6 +267,70 @@ describe("MerchantManagement", function MerchantManagement() {
         expect(res5["body"]["entries"][0]["data"]["plan"]["autoRenew"] === false).toBe(true);
 
     });
+
+    test("Admins should be able to archive a specified merchant", async() => {
+        const fakePassword = faker.internet.password();
+        const fakeEmailAddress = faker.internet.email();
+
+        const res = await request.post(`/api/v1/users`)
+        .send({
+            emailAddress: fakeEmailAddress,
+            firstName: faker.name.firstName(),
+            lastName: faker.name.lastName(),
+            phoneNumber: faker.phone.phoneNumber(),
+            password: fakePassword
+        })
+        .expect(200);
+
+        const fakeUserId = res.body.userId;
+
+        const res1 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: furyEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
+
+        const furyAccessToken = res1.body.accessToken;
+        const fakeAccessToken = res.body.accessToken;
+
+        const testMerchantData = {
+            name: faker.company.companyName(),
+            userId: fakeUserId,
+            address: {
+                street: faker.address.streetName(),
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            emailAddress: faker.internet.email(),
+            phoneNumber: faker.phone.phoneNumber(),
+            plan: defaultPlan
+        };
+
+        const res3 = await request.post(`/api/v1/merchants`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send(testMerchantData)
+        .expect(201);
+        
+        const merchantId = res3["body"]["entries"][0]["id"];
+
+        const res4 = await request.post(`/api/v1/merchants/${merchantId}/status/archive`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send()
+        .expect(204);
+
+        const res5 = await request.get(`/api/v1/merchants/${merchantId}`)
+        .set("authorization", `Bearer ${fakeAccessToken}`)
+        .send()
+        .expect(200);
+
+        expect(Array.isArray(res5.body.entries)).toBe(true);
+        expect(res5.body.count === 1).toBe(true);
+        expect(res5["body"]["entries"][0]["id"] === merchantId).toBe(true);
+        expect(res5["body"]["entries"][0]["data"]["status"][0] === "archived").toBe(true);
+    });
+
 });
 
 
