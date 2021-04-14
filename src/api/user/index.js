@@ -145,7 +145,9 @@ const {
             res.json({
                 error: "Email address and/or password do not match"
             });
+            return;
         }
+        
         const accessToken = await authService.issueAuthCredential(user, role);
         res.status(200);
         res.json({
@@ -231,6 +233,23 @@ const {
                 entries: [user],
                 count: 1
             });
+        }
+        catch (e) {
+            next(e);
+        }
+    });
+
+
+    router.put("/:id/password", validateJWT, verifyUserExists, authorizeRequest({actionId: "updateOwn:users"}), async function resetPassword(req, res, next) {
+        const userId = req.params.id;
+        const password = req.body.password;
+
+        try {
+            const [user] = await userService.findUserById(userId);
+            await userService.resetUserPassword({user, password});
+            res.set("content-type", "application/json");
+            res.status(204);
+            res.send();
         }
         catch (e) {
             next(e);

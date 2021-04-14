@@ -85,7 +85,7 @@ function User(repo, userDTO) {
     }
 
     /**
-    Edit phoneNumber property of an existing user in the data store.
+    Edit phoneNumber property of an existing user in the data store
     @param {Integer} phoneNumber - a telephone number
     */
     this.editPhoneNumber = async function(phoneNumber) {
@@ -94,6 +94,7 @@ function User(repo, userDTO) {
         this._data.phoneNumber = phoneNumber;
         this._data.lastModified = lastModified;
     }
+
 }
 
 
@@ -163,18 +164,21 @@ function UserService(repo, validator = new UserValidator()) {
         }));
     }
     
-    
     this.isUserPasswordCorrect = async function({password, user}) {
         const storedUserPasswordHash = await this._repo.getUserPassword(user._data.emailAddress);
         const result = await passwordAndHashMatch(password, storedUserPasswordHash);        
         return result;
     } 
     
-    
     this.getUserRole = async function(user) {
         const result = await this._repo.getUserRole(user.id);
         return result.role; 
     }
+
+    this.resetUserPassword = async function({user, password}) {
+        await this.createUserPassword({user, password});
+    }
+
 }
 
 
