@@ -61,6 +61,7 @@ describe("MerchantManagement", function MerchantManagement() {
         expect(Object.keys(res2["body"]["entries"][0]).includes("id")).toBe(true);
     });
 
+
     test("Merchants should be able update their own plan", async() => {
         const fakePassword = faker.internet.password();
         const fakeEmailAddress = faker.internet.email();
@@ -133,6 +134,7 @@ describe("MerchantManagement", function MerchantManagement() {
 
     });
 
+
     test("Admins should NOT be able to create a new merchant for a userId that does not exist", async() => {
         const res1 = await request.post(`/api/v1/users/token`)
         .send({
@@ -168,6 +170,7 @@ describe("MerchantManagement", function MerchantManagement() {
         expect(res2.body.error).toMatch("MerchantServiceError.CannotCreateMerchant.BadRequest.UserDoesNotExist");
     });
 
+
     test("Admins should NOT be able to create a new merchant for a user that already has a merchant account", async() => {
         const res1 = await request.post(`/api/v1/users/token`)
         .send({
@@ -202,6 +205,7 @@ describe("MerchantManagement", function MerchantManagement() {
         expect(res2.body.error).toBeTruthy();
         expect(res2.body.error).toMatch("MerchantServiceError.CannotCreateMerchant.BadRequest.UserIsAlreadyMerchant");
     });
+
 
     test("Merchants should be able to cancel their own plan", async() => {
         const fakePassword = faker.internet.password();
@@ -269,6 +273,7 @@ describe("MerchantManagement", function MerchantManagement() {
 
     });
 
+
     test("Admins should be able to archive a specified merchant", async() => {
         const fakePassword = faker.internet.password();
         const fakeEmailAddress = faker.internet.email();
@@ -332,6 +337,7 @@ describe("MerchantManagement", function MerchantManagement() {
         expect(res5["body"]["entries"][0]["data"]["status"][0] === "archived").toBe(true);
     });
 
+
     test("Merchants should be able to get a list of crates associated with their account", async() => {
         const fakePassword = faker.internet.password();
         const fakeEmailAddress = faker.internet.email();
@@ -393,7 +399,6 @@ describe("MerchantManagement", function MerchantManagement() {
         expect(res5.body.count === 1).toBe(true);
         expect(res5["body"]["entries"][0]["data"]["merchantId"] === starkMerchantId).toBe(true);
     });
-
 });
 
 

@@ -30,8 +30,8 @@ const CacheService = require("./src/lib/cache");
 const cacheService = new ICache(new CacheService());
 
 /**AuthService**/
-const AuthService = require("./src/services/auth");
-const authService = new AuthService({cacheService, userService});
+const { UserAuthService } = require("./src/services/auth");
+const authService = new UserAuthService({cacheService, userService});
 
 /**CrateService**/
 const { CrateService } = require("./src/services/crate");

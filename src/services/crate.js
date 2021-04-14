@@ -7,12 +7,12 @@ const {CrateShipmentDTO, CrateTelemetryDTO} = require("../lib/repository/crate-s
 * @typedef {Object} Crate
 * @property {String} id - the uuid of the user
 * @property {Object} _data - the user data
-* @property {Object} _repo - the repository instance associated with this user
+* @property {Object} _repo - the repository instance associated with this entity
 */
 
 /**
  * 
- * @param {Object} repo - the repo associated with this user
+ * @param {Object} repo - the repo associated with this entity
  * @param {crateDTO} crateDTO - an instance of the CrateDTO
  */
 
@@ -53,6 +53,7 @@ function Crate(repo, crateDTO) {
         return crate.id;
     }
 
+
     /**
     Associates the crate with a recipient user in the data store
     @param {String} recipientId - a uuid for the recipient user
@@ -67,6 +68,7 @@ function Crate(repo, crateDTO) {
         
         this._data.recipientId = recipientId;
     }
+
 
     /**
     Pushes telemetry data from the physical crate sensors to the data store
@@ -92,7 +94,7 @@ function Crate(repo, crateDTO) {
 
 
     /**
-    Returns the most recent crate telemetry data
+    Returns the most recent crate telemetry data (i.e. a snapshot)
     @param {Object} telemetry - data from the sensors
     */
     this.getCurrentTelemetry = async function() {
@@ -222,9 +224,9 @@ function CrateShipment(repo, crateShipmentDTO) {
 
 
     /**
-    Saves a new CrateShipment to the data store
-    @returns {String} - a uuid for the new user
-    */
+     * Saves a new CrateShipment to the data store
+     * @returns {String} - a uuid for the new user
+     */
     this.save = async function() {
         const crateShipmentDTO = new CrateShipmentDTO(this._data);
         const crateShipment = await this._repo.create(crateShipmentDTO);
@@ -233,10 +235,10 @@ function CrateShipment(repo, crateShipmentDTO) {
 
 
     /**
-    Adds a new waypoint to an in progress shipment
-    @param {String} timestamp - date/time telemetry data was recorded
-    @param {Object} telemetry - sensor data collected from the hardware crate
-    */
+     * Adds a new waypoint to an in progress shipment
+     * @param {String} timestamp - date/time telemetry data was recorded
+     * @param {Object} telemetry - sensor data collected from the hardware crate
+     */
     this.addWaypoint = async function({telemetry}) {
         const [currentShipmentStatus] = this._data.status;
         const timestamp = new Date().toISOString();
@@ -259,16 +261,15 @@ function CrateShipment(repo, crateShipmentDTO) {
     }
 }
 
-/**
-* @typedef {Object} CrateService
-* @property {Object} _repo - the repository associated with this service
-*/
 
 /**
- * 
- * @param {Object} repo - the repos associated with this service
+ * @typedef {Object} CrateService
+ * @property {Object} _repo - the repository associated with this service
  */
 
+/**
+ * @param {Object} repo - the repos associated with this service
+ */
 function CrateService({crateRepo, crateShipmentRepo}) {
     this._repo = {
         crate: crateRepo,
@@ -309,7 +310,7 @@ function CrateService({crateRepo, crateShipmentRepo}) {
     }
 
     
-    this.getAllCrates = async function() {
+    this.getAllCrates = async function() { 
         const crates = await this._repo.crate.getAllCrates();
         return crates.map((c) => new Crate(this._repo.crate, new CrateDTO(c)));
     }

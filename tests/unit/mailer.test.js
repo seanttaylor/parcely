@@ -6,7 +6,6 @@ const myMockMailService = new MockMailImpl({eventEmitter});
 const testMailService = new IMailer(myMockMailService);
 const EmailTemplate = require("../../src/lib/mailer/email-templates");
 
-/**Tests**/
 
 test("Should print message metadata to the console when an email is sent", async() => {
     await testMailService.send({
@@ -59,13 +58,13 @@ test("Should use a named template file to render email if a template file path i
     expect(typeof(myTemplate) === "string").toBe(true);
 });
 
-test("Should send a welcome email on the userService.newUserCreated event", async() => {
+test("Should send a welcome email on the UserService.newUserCreated event", async() => {
     const mockUserObject = {
         _data: {
             emailAddress: "noone@nowhere.io"
         }
     };
-    eventEmitter.emit("userService.newUserCreated", mockUserObject);
+    eventEmitter.emit("UserService.newUserCreated", mockUserObject);
 
     expect(myMockMailService.calledMethods.send).toBe(true);
 });

@@ -29,6 +29,16 @@ Even with tools like Docker, subtle changes to the environment of developers' lo
 By separating the dev environment entirely from a developer's local machine, we're able to establish a truly cloud native software development practice. Through having to configure a single environment only once, we can ensure that _every_ developer environment is identical forever, all from an easy out-of-the-box solution.
 
 
+#### Gotchas and Other Field Notes
+
+* In development, note there is a _temporal dependency_ between and entities, their `create` methods and their `save` methods. That is, in order to persist an entity it must be created _and_ saved.
+
+``` 
+  const user = await userService.createUser();
+  await user.save();
+```
+
+In the example above the user entity is actually saved in the datastore until the `save` method is called. Obvious here but this behavior has been the cause of more than one time-sink in development. This behavior _will eventually be deprecated_ but until it is, keep this in mind. Particularly when investigating why a created entity does not appear to be saving.
 
 
 

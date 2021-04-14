@@ -31,9 +31,8 @@ const defaultPlan = {
 };
 const starkUserId = "e98417a8-d912-44e0-8d37-abe712ca840f";
 
-/**Tests**/
 afterAll(()=> {
-    //testSqlDbConnector.end();
+
 });
 
 describe("MerchantManagement", function MerchantManagement() {
@@ -57,6 +56,7 @@ describe("MerchantManagement", function MerchantManagement() {
         expect(Object.keys(testMerchant).includes("_repo")).toBe(true);
         expect(Object.keys(testMerchant).includes("_data")).toBe(true);    
     });
+
 
     test("Should NOT be able to create a new Merchant instance for non-existing user", async() => {
         const anotherTestMerchantService = new MerchantService(testMerchantRepo, {
@@ -84,6 +84,7 @@ describe("MerchantManagement", function MerchantManagement() {
             expect(e.message).toMatch("MerchantServiceError.CannotCreateMerchant.BadRequest.UserDoesNotExist");
         } 
     });
+
 
     test("Should NOT be able to create a new Merchant instance for user that is already a merchant", async() => {
         const uuid = faker.random.uuid();
@@ -125,6 +126,7 @@ describe("MerchantManagement", function MerchantManagement() {
         } 
     });
 
+
     test("Should be able to find a merchant by id", async() => {
         const testMerchantData = {
             name: faker.company.companyName(),
@@ -152,6 +154,7 @@ describe("MerchantManagement", function MerchantManagement() {
         expect(record.id === testMerchantId).toBe(true);
         expect(fakeRecord === undefined).toBe(true);
     });
+
 
     test("Should be able to update an existing plan for a merchant", async() => {
         const testMerchantData = {
@@ -188,6 +191,7 @@ describe("MerchantManagement", function MerchantManagement() {
         expect(record._data.plan.status[0] === "suspended").toBe(true);
     });
 
+
     test("Should be able to cancel an existing plan for a merchant", async() => {
         const testMerchantData = {
             name: faker.company.companyName(),
@@ -217,6 +221,7 @@ describe("MerchantManagement", function MerchantManagement() {
         expect(record._data.plan.status[0] === "cancelled").toBe(true);
     });
 
+
     test("Should be able to archive an existing merchant", async() => {
         const testMerchantData = {
             name: faker.company.companyName(),
@@ -245,6 +250,7 @@ describe("MerchantManagement", function MerchantManagement() {
 
         expect(record._data.status[0] === "archived").toBe(true);
     });
+
 
     test("Should NOT be able to update existing merchants who have been archived", async() => {
         const testMerchantData = {
@@ -277,7 +283,9 @@ describe("MerchantManagement", function MerchantManagement() {
 
         expect(testMerchant._data.plan.planType[0] === "smallBusiness").toBe(true);
     });
+});
 
+describe("ObjectRepresentation", function ObjectRepresentation() {
     test("Should return JSON object representation of a Merchant", async() => {
         const testMerchant = await testMerchantService.createMerchant({
             name: faker.company.companyName(),
