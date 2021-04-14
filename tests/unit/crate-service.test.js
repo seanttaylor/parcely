@@ -45,6 +45,7 @@ describe("CrateManagement", function CrateManagement() {
         expect(Object.keys(result[0]).includes("_data")).toBe(true);
     });
 
+
     test("Should be able to get a specified Crate instance", async() => {
         const testCrateData = {
         size: ["S"]
@@ -58,7 +59,7 @@ describe("CrateManagement", function CrateManagement() {
     });
 
 
-    test("Should be able to delete crate", async() => {
+    test("Should be able to delete a crate", async() => {
         const result = await testCrateService.deleteCrate("crateId");
         expect(result == undefined).toBe(true);
     });
@@ -135,6 +136,7 @@ describe("CrateManagement", function CrateManagement() {
         
         expect(crateStatus === "pendingReturn").toBe(true);
     });
+
 
     test("Should ONLY be able to set crate status to pendingReturn if current crate status is 'delivered'", async() => {
         const originAddress = {
@@ -268,7 +270,7 @@ describe("CrateManagement", function CrateManagement() {
 });
 
 describe("ShipmentManagement", function ShipmentManagement() {
-    test("Should be able to create a new CrateTrip instance", async() => {
+    test("Should be able to create a new CrateShipment instance", async() => {
         const testCrateData = {
             size: ["M"]
         };
@@ -279,7 +281,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
     });
 
 
-    test("Should be able to get a list of crate trips for a specified crate", async() => {
+    test("Should be able to get a list of crate shipments for a specified crate", async() => {
         const testCrate = await testCrateService.createCrate({
         size: ["S"]
         });
@@ -291,7 +293,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
     });
 
 
-    test("Should be able to get a specified trip for a specified crate", async() => {
+    test("Should be able to get a specified shipment for a specified crate", async() => {
         const testCrateShipmentId = "d54cc57f-c32c-454a-a295-6481f126eb8b";
         const testCrate = await testCrateService.createCrate({
         size: ["S"]
@@ -304,7 +306,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
     });
 
 
-    test("Should be able to create a new trip for an existing crate", async() => {
+    test("Should be able to create a new shipment for an existing crate", async() => {
         const originAddress = {
             street: faker.address.streetName(),
             apartmentNumber: "7",
@@ -338,7 +340,8 @@ describe("ShipmentManagement", function ShipmentManagement() {
         expect(testCrate._data.status[0] === "inTransit");
     });
 
-    test("Should be able to push telemetry data the software-defined crate", async() => {
+
+    test("Should be able to push the hardware crate telemetry data to the platform", async() => {
         const testCrate = await testCrateService.createCrate({
         size: ["S"],
         merchantId: faker.random.uuid(),
@@ -402,7 +405,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
         expect(testCrate._data.telemetry.location.zip === fakeTelemetryData.location.zip).toBe(true);
     });
 
-    test("Pushing crate telemetry should add a waypoint to the associated CrateTrip", async() => {
+    test("Pushing crate telemetry should add a waypoint to the associated CrateShipment", async() => {
         const originAddress = {
             street: faker.address.streetName(),
             apartmentNumber: "7",
@@ -466,7 +469,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
     });
 
 
-    test("Current trip data should be available on single Crate entities retrieved from the database", async() => {
+    test("Current shipment data should be available on single Crate entities retrieved from the database", async() => {
         const originAddress = {
             street: faker.address.streetName(),
             apartmentNumber: "7",
@@ -526,7 +529,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
     });
 
 
-    test("Completing an existing crate trip should remove the attached recipient and trip ids", async() => {
+    test("Completing an existing crate shipment should remove the attached recipient and shipment ids", async() => {
         const originAddress = {
             street: faker.address.streetName(),
             apartmentNumber: "7",
@@ -589,6 +592,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
         expect(returnedCrate._data.recipientId === null).toBe(true);
         expect(returnedCrate._data.shipmentId === null).toBe(true);
     });
+
 
     test("Should NOT be able to add waypoints to a CrateShipment with a 'completed' status", async() => {
         const originAddress = {
@@ -654,6 +658,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
         expect(testCrate.currentTrip.waypoints.length === 1).toBe(true);
     });
 
+
     test("Should throw an error when CrateShipment is initialized without a merchantId assigned to the associated crate", async() => {
         const originAddress = {
             street: faker.address.streetName(),
@@ -684,7 +689,8 @@ describe("ShipmentManagement", function ShipmentManagement() {
         }
     });
 
-    test("Should throw an error when CrateTrip is initialized without a recipientId assigned to the associated Crate", async() => {
+
+    test("Should throw an error when CrateShipment is initialized without a recipientId assigned to the associated Crate", async() => {
         const originAddress = {
             street: faker.address.streetName(),
             apartmentNumber: "7",
@@ -714,6 +720,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
             expect(e.message).toMatch("CrateError.CannotStartShipment.missingRecipientId");
         }
     });
+
 
     test("CrateShipment waypoints should be read-only", async() => {
         const testCrate = await testCrateService.createCrate({
@@ -779,7 +786,8 @@ describe("ShipmentManagement", function ShipmentManagement() {
         
     });
 
-    test("Should ONLY be able to associate (1) recipient with (1) crate on a single trip.", async() => {
+
+    test("Should ONLY be able to associate (1) recipient with (1) crate on a single shipment.", async() => {
         const firstUserId = faker.random.uuid();
         const secondUserId = faker.random.uuid();
         const testCrate = await testCrateService.createCrate({
@@ -799,7 +807,8 @@ describe("ShipmentManagement", function ShipmentManagement() {
         
     });
 
-    test("Should return JSON object representation of a CrateTrip", async() => {
+
+    test("Should return JSON object representation of a CrateShipment", async() => {
       const originAddress = {
         street: faker.address.streetName(),
         apartmentNumber: "7",

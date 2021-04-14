@@ -13,9 +13,8 @@ const IUserRepository = require("../../src/interfaces/user-repository");
 const testUserRepo = new IUserRepository(new UserRepository(testDbConnector));
 const testUserService = new UserService(testUserRepo);
 
-/**Tests**/
 afterAll(()=> {
-    //testSqlDbConnector.end();
+    
 });
 
 describe("UserManagement", function UserManagement() {
@@ -77,6 +76,7 @@ describe("UserManagement", function UserManagement() {
         const userId = await testUser.save();
         expect(uuid.validate(userId)).toBe(true);
     });
+
 
     test("Should be able to update a user first name", async() => {
         const testFirstnameEdit = "Brucie";
@@ -153,7 +153,8 @@ describe("UserManagement", function UserManagement() {
         expect(mockImpl.repo._repo.calledMethods.createUserPasswordCalled).toBe(true);
     });
 
-    test("Should be able to determine a match between a provided password the hashed password of an existing User instance", async() => {
+
+    test("Should be able to determine a match between a provided password and the hashed password of an existing User instance", async() => {
         const testUserData = {
             emailAddress: faker.internet.email(),
             firstName: faker.name.firstName(),
@@ -167,6 +168,7 @@ describe("UserManagement", function UserManagement() {
     
         expect(passwordMatches).toBe(true);
     });
+
 
     test("Should be able to get a specified User instance with an email", async() => {
         const testUserEmail = faker.internet.email();
@@ -186,6 +188,7 @@ describe("UserManagement", function UserManagement() {
         expect(testUser.id === matchedUser.id).toBe(true);
     });
 
+
     test("Should return true when a User instance already exists", async() => {
         const testUserEmail = faker.internet.email();
         const testUserData = {
@@ -203,6 +206,7 @@ describe("UserManagement", function UserManagement() {
 
         expect(result).toBe(true);
     });
+
 
     test("Should be able to reset an existing user's password", async ()=> {
         const testUserPassword = "brandNewPassword";
@@ -228,7 +232,8 @@ describe("UserManagement", function UserManagement() {
 });
    
 describe("ExceptionManagement", function ExceptionManagement() {
-    test("Should be able to detect a mismatch between a provided password and an existing User's hashed password ", async() => {
+    
+    test("Should be able to detect a mismatch between a provided password and an existing user's hashed password ", async() => {
         const testUserData = {
             emailAddress: faker.internet.email(),
             firstName: faker.name.firstName(),
@@ -243,6 +248,7 @@ describe("ExceptionManagement", function ExceptionManagement() {
         expect(passwordMatches).toBe(false);
     });
 
+
     test("Should be able to detect attempts to create User instances with invalid data", async() => {
         try {
             await testUserService.createUser();
@@ -251,6 +257,7 @@ describe("ExceptionManagement", function ExceptionManagement() {
             expect(e.message).toMatch("UserDataEmpty");
         }
     });
+
 
     test("Should throw an exception when email address is missing", async() => {
         try {
@@ -265,6 +272,7 @@ describe("ExceptionManagement", function ExceptionManagement() {
         }
     });
 
+
     test("Should throw an exception when first name is missing", async() => {
     try {
         await testUserService.createUser({
@@ -277,6 +285,7 @@ describe("ExceptionManagement", function ExceptionManagement() {
         expect(e.message).toMatch("MissingOrInvalidFirstName");
     }
     });
+
 
     test("Should throw an exception when last name is missing", async() => {
     try {
@@ -291,6 +300,7 @@ describe("ExceptionManagement", function ExceptionManagement() {
     }
     });
 
+
     test("Should throw exception when phone number is missing", async() => {
     try {
         await testUserService.createUser({
@@ -303,6 +313,7 @@ describe("ExceptionManagement", function ExceptionManagement() {
         expect(e.message).toMatch("MissingOrInvalidPhone");
     }
     });
+
 
     test("Should not be able to create a new User instance with an email address that already exists on the platform", async() => {
     try {
@@ -328,6 +339,7 @@ describe("ExceptionManagement", function ExceptionManagement() {
     }
     });
 
+    
     test("Should throw exception when creating user with invalid email address", async() => {
     try {
         const testUserNo1 = await testUserService.createUser({

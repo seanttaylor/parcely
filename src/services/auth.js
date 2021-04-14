@@ -46,4 +46,4 @@ function UserAuthService({cacheService, userService}) {
     }
 }
 
-module.exports = UserAuthService;
+module.exports = { UserAuthService };

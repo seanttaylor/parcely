@@ -52,6 +52,7 @@ describe("Authorization", function Authorization() {
             .expect(200);
         });
 
+
         test("Platform users should NOT be able to access other users' data", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
             .send({
@@ -82,6 +83,7 @@ describe("Authorization", function Authorization() {
             .expect(200);
         });
 
+
         test("Platform users should NOT be able to edit other users' account  data", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
             .send({
@@ -99,7 +101,6 @@ describe("Authorization", function Authorization() {
             })
             .expect(403);
         });
-        
     }); 
     
     describe("Admin Auth", function AdminAuth() {
@@ -127,6 +128,7 @@ describe("Authorization", function Authorization() {
 
             expect(res3["body"]["entries"][0]["data"]["emailAddress"] === thorEmailAddress).toBe(true);
         });
+
 
         test("Admin users should be able to edit ANY user account data", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
@@ -176,6 +178,7 @@ describe("UserAccountManagement", function UserAccountManagement() {
         expect(res2["body"]["entries"][0]["data"]["firstName"] === "Anthony").toBe(true);
     });
 
+
     test("Platform users should be able to edit the phone number on their account", async() => {
         const fakePhoneNumber = faker.phone.phoneNumber();
 
@@ -195,6 +198,7 @@ describe("UserAccountManagement", function UserAccountManagement() {
         })
         .expect(200);
     });
+
 
     test("Platform users should be able to update the email address on their account", async() => {
         const fakeEmail = faker.internet.email();
@@ -217,6 +221,7 @@ describe("UserAccountManagement", function UserAccountManagement() {
 
         expect(res2["body"]["entries"][0]["data"]["emailAddress"] === fakeEmail).toBe(true);
     });
+
 
     test("Platform should be able to determine if a specified email address already exists in the datastore", async() => {
         const fakeEmail = faker.internet.email();
@@ -241,6 +246,7 @@ describe("UserAccountManagement", function UserAccountManagement() {
         .expect(200);
     });
 
+    
     test("Platform should be able to reset a specified user password", async() => {
         const updatedPassword = "brandNewPassword";
         const testUserEmail = faker.internet.email();

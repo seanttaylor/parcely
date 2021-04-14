@@ -17,8 +17,8 @@ const superSecretPassword = "superSecretPassword";
 
 describe("CrateAccess", function CrateAccess() {
 
-    describe("UserAccess", function Users() {
-        test("Platform users should be able to get a list of shipments associated with a user account", async() => {
+    describe("UserAccess", function UserAccess() {
+        test("Platform users should be able to get a list of shipments associated with their account", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
             .send({
                 emailAddress: thorEmailAddress,
@@ -37,7 +37,8 @@ describe("CrateAccess", function CrateAccess() {
             expect(res2.body.count === 1).toBe(true);
         });
 
-        test("Platform users should be able to get a filtered list of shipments associated with a user account based on trip status", async() => {
+
+        test("Platform users should be able to get a filtered list of shipments associated with their user account based on shipment status", async() => {
         const res1 = await request.post(`/api/v1/users/token`)
         .send({
             emailAddress: thorEmailAddress,
@@ -56,6 +57,7 @@ describe("CrateAccess", function CrateAccess() {
         expect(res2.body.count === 0).toBe(true);
     
         });
+
 
         test("Platform users should be able to find geolocation data for all crates associated with their own account", async() => {
         const res1 = await request.post(`/api/v1/users/token`)
@@ -78,6 +80,7 @@ describe("CrateAccess", function CrateAccess() {
 
         expect(Object.keys(res2["body"]["entries"][0]["data"]).includes("telemetry")).toBe(true);
         });
+
 
         test("Platform users should be able to get a summarized list of real-time telemetry data points for a specified crate shipment", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
@@ -174,7 +177,7 @@ describe("CrateAccess", function CrateAccess() {
         });
     });
 
-    describe("AdminAccess", function Admins() {
+    describe("AdminAccess", function AdminsAccess() {
         test("Admins should be able to access ALL crates", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
             .send({
@@ -194,6 +197,7 @@ describe("CrateAccess", function CrateAccess() {
             expect(typeof(res2.body.count) === "number").toBe(true);
             expect(Object.keys(res2["body"]["entries"][0]).includes("data")).toBe(true);
         });
+
 
         test("Platform users should NOT be able to access ALL crates", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
@@ -232,6 +236,7 @@ describe("CrateManagement", function CrateManagement() {
         .expect(401);
     });
 
+
     test("Admins should be able to create new crates", async() => {
         const res1 = await request.post(`/api/v1/users/token`)
             .send({
@@ -253,6 +258,7 @@ describe("CrateManagement", function CrateManagement() {
             expect(Object.keys(res2["body"]["entries"][0]).includes("id"));
             expect(res2["body"]["entries"][0]["data"]["size"][0] === "L");
     });
+
 
     test("Admins should be able to set the recipient of an existing crate", async() => {
         const res1 = await request.post(`/api/v1/users/token`)
@@ -290,6 +296,7 @@ describe("CrateManagement", function CrateManagement() {
             expect(res4["body"]["entries"][0]["data"]["recipientId"] === fakeRecipientId).toBe(true);
     });
 
+
     test("Admins should be able to delete an existing crate", async() => {
         const res1 = await request.post(`/api/v1/users/token`)
         .send({
@@ -319,6 +326,7 @@ describe("CrateManagement", function CrateManagement() {
         .send()
         .expect(404);
     });
+
 
     test("Platform users should NOT be able to delete an existing crate", async() => {
         const res1 = await request.post(`/api/v1/users/token`)
@@ -358,6 +366,7 @@ describe("CrateManagement", function CrateManagement() {
         .send()
         .expect(200);
     });
+
 
     test("Platform should be able to set a crate to pendingReturn", async() => {
         const res1 = await request.post(`/api/v1/users/token`)
@@ -452,8 +461,6 @@ describe("CrateManagement", function CrateManagement() {
         
         expect(res10["body"]["entries"][0]["data"]["status"][0] === "pendingReturn").toBe(true);
     });
-
-    
 });
 
 describe("ShipmentManagement", function ShipmentManagement() {

@@ -4,15 +4,16 @@ const {MerchantDTO} = require("../lib/repository/merchant/dto");
 
 
 /**
-* @typedef {Object} Merchant
-* @property {String} id - the uuid of the merchant
-* @property {Object} _data - the merchant data
-* @property {Object} _repo - the repository instance associated with this merchant
-*/
+ * @typedef {Object} Merchant
+ * @property {String} id - the uuid of the merchant
+ * @property {Object} _data - the merchant data
+ * @property {Object} _repo - the repository instance associated with this entity
+ */
 
+ 
 /**
  * 
- * @param {Object} repo - the repo associated with this user
+ * @param {Object} repo - the repo associated with this entity
  * @param {MerchantDTO} merchantDTO - an instance of the MerchantDTO
  */
 
@@ -40,9 +41,10 @@ function Merchant(repo, merchantDTO) {
         };
     }
 
+
     /**
-    Saves a new merchant to the data store
-    @returns {String} - a uuid for the new merchant
+     * Saves a new merchant to the data store
+     * @returns {String} - a uuid for the new merchant
     */
     this.save = async function() {
         const merchantDTO = new MerchantDTO(this._data);
@@ -51,9 +53,10 @@ function Merchant(repo, merchantDTO) {
         return merchant.id;
     }
 
+
     /**
-    Updates an existing plan for a merchant
-    @param {Object} plan - valid Parcely plan
+     * Updates an existing plan for a merchant
+     * @param {Object} plan - valid Parcely plan
     */
     this.updatePlan = async function(plan) {
         if (this._data.status[0] === "archived") {
@@ -69,9 +72,10 @@ function Merchant(repo, merchantDTO) {
         this._data.plan = updatedPlan;
     }
 
+
     /**
-    Cancels an existing plan for a merchant
-    @returns
+     * Cancels an existing plan for a merchant
+     * @returns
     */
     this.cancelPlan = async function() {
         const cancelledPlan = Object.assign({}, this._data.plan, {
@@ -86,14 +90,14 @@ function Merchant(repo, merchantDTO) {
         
         this._data.plan = cancelledPlan;
     }
-
 }
 
 
 /**
-* @typedef {Object} MerchantService
-* @property {Object} _repo - the repository associated with this service
-*/
+ * @typedef {Object} MerchantService
+ * @property {Object} _repo - the repository associated with this service
+ */
+
 
 /**
  * 
@@ -126,6 +130,7 @@ function MerchantService(repo, userService) {
         throw new Error("MerchantServiceError.CannotCreateMerchant.BadRequest.UserIsAlreadyMerchant => Merchant account cannot be created for user already assigned a merchant account");  
     }
 
+
     /**
      * @param {String} id - a uuid for a merchant
      */
@@ -139,12 +144,14 @@ function MerchantService(repo, userService) {
         return new Merchant(this._repo, new MerchantDTO(merchantData));
     }
 
+
     /*
     this.getAllMerchants = async function() {
         const crates = await this._repo.crate.getAllCrates();
         return crates.map((c) => new Crate(this._repo.crate, new CrateDTO(c)));
     }
     */
+
 
     /**
      * @param {Merchant} merchant - an instance of a Merchant
@@ -158,6 +165,7 @@ function MerchantService(repo, userService) {
        
         merchant._data.status = ["archived"];
     }
+
 
     /**
      * @param {String} id - a uuid of a User

@@ -38,7 +38,7 @@ const EmailTemplate = require("../mailer/email-templates");
 
 function MailService({console, eventEmitter}) {
 
-    eventEmitter.on("userService.newUserCreated", sendWelcomeEmail.bind(this));
+    eventEmitter.on("UserService.newUserCreated", sendWelcomeEmail.bind(this));
 
     async function sendWelcomeEmail(user) {
         await this.send({
