@@ -102,7 +102,7 @@ describe("Authorization", function Authorization() {
         
     }); 
     
-    describe("Admin Auth", function Admins() {
+    describe("Admin Auth", function AdminAuth() {
         test("Admin users should be able to access ANY user account data", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
             .send({
@@ -238,6 +238,49 @@ describe("UserAccountManagement", function UserAccountManagement() {
         const res3 = await request.get(`/api/v1/users/email_exists/${furyEmailAddress}`)
         .set("authorization", `Bearer ${furyAccessToken}`)
         .send()
+        .expect(200);
+    });
+
+    test("Platform should be able to reset a specified user password", async() => {
+        const updatedPassword = "brandNewPassword";
+        const testUserEmail = faker.internet.email();
+        const testUserPassword = faker.internet.password();
+        
+        const res1 = await request.post(`/api/v1/users`)
+        .send({
+            handle: faker.internet.userName(),
+            emailAddress: testUserEmail,
+            firstName: faker.name.firstName(),
+            lastName: faker.name.lastName(),
+            phoneNumber: faker.phone.phoneNumber(),
+            password: testUserPassword
+        })
+        .expect(200);
+
+        const testUserId = res1.body.userId;
+        const testUserAccessToken = res1.body.accessToken;
+
+        const res2 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: testUserEmail,
+            password: testUserPassword
+        })
+        .expect(200);
+
+
+        const res3 = await request.put(`/api/v1/users/${testUserId}/password`)
+        .set("authorization", `Bearer ${testUserAccessToken}`)
+        .send({
+            password: updatedPassword
+        })
+        .expect(204);
+
+        const res4 = await request.post(`/api/v1/users/token`)
+        .set("authorization", `Bearer ${testUserAccessToken}`)
+        .send({
+            emailAddress: testUserEmail,
+            password: updatedPassword
+        })
         .expect(200);
     });
 });
