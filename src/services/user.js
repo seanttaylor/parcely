@@ -1,4 +1,4 @@
-const config = require("../../config");
+const config = require("../config");
 const bcrypt = require("bcryptjs");
 const {UserDTO, UserRoleDTO, UserCredentialsDTO} = require("../lib/repository/user/dto");
 const uuid = require("uuid");
