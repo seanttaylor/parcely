@@ -1,0 +1,23 @@
+version: "3.1"
+
+services:
+  parcely:
+    build: .
+    container_name: parcely
+    environment:
+      - JWT_SECRET=superSecret
+      - COMMIT_HASH=13626a216c8a4b38079d91a3750fa6c435adb0dd
+    volumes:
+      - ./:/src
+  localstack:
+    container_name: localstack
+    image: localstack/localstack:latest
+    environment:
+      - AWS_DEFAULT_REGION=us-east-1
+      - EDGE_PORT=4566
+      - SERVICES=lambda,s3
+    ports:
+      - "4566:4566"
+    volumes:
+      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
