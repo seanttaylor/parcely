@@ -29,6 +29,11 @@ const ICache = require("./src/interfaces/cache");
 const CacheService = require("./src/lib/cache");
 const cacheService = new ICache(new CacheService());
 
+/**QueueService**/
+const IQueue = require("./src/interfaces/queue");
+const QueueService = require("./src/lib/queue");
+const queueService = new IQueue(new QueueService());
+
 /**AuthService**/
 const { UserAuthService } = require("./src/services/auth");
 const authService = new UserAuthService({cacheService, userService});
@@ -41,7 +46,7 @@ const ICrateShipmentRepository = require("./src/interfaces/shipment-repository")
 const ICrateRepository = require("./src/interfaces/crate-repository");
 const crateRepo = new ICrateRepository(new CrateRepository(asiagoDatabaseConnector));
 const crateShipmentRepo = new ICrateShipmentRepository(new CrateShipmentRepository(asiagoDatabaseConnector));
-const crateService = new CrateService({crateRepo, crateShipmentRepo});
+const crateService = new CrateService({crateRepo, crateShipmentRepo, queueService, eventEmitter});
 
 /**MerchantService**/
 const { MerchantService } = require("./src/services/merchant");
@@ -87,6 +92,7 @@ app.use("/api/v1/users", UserAPI({
 app.use("/api/v1/crates", CrateAPI({
     authService,
     crateService,
+    queueService,
     eventEmitter
 }));
 

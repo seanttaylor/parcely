@@ -9,10 +9,11 @@ const {
 /**
  * @param {CrateService} crateService - an instance of the CrateService
  * @param {EventEmitter} eventEmitter - an instance of EventEmitter
+ * @param {QueueService} queueService - an instance of QueueService
  * @returns router - an instance of an Express router
  */
 
- function CrateRouter({crateService, eventEmitter}) {
+ function CrateRouter({crateService, queueService, eventEmitter}) {
 
    /****** GET *******/
 
@@ -75,12 +76,14 @@ const {
         }
     });
 
-    router.get("/:id/shipments/:shipmentId", validateJWT, authorizeRequest({actionId: "readOwn:crates", allowResourceOwnerOnly: false}), async function getCrateShipmentTelemetry(req, res, next) {
+    router.get("/:id/shipments/:shipmentId", validateJWT, authorizeRequest({actionId: "readOwn:crates", allowResourceOwnerOnly: false}), async function getCrateShipmentById(req, res, next) {
         const crateId = req.params.id;
         const shipmentId = req.params.shipmentId;
-
+        const {includeWaypoints} = req.query;
+        const boolMap = {"true": true, "false": false};
+        
         try {
-            const shipment = await crateService.getCrateShipmentById(shipmentId);
+            const shipment = await crateService.getCrateShipmentById(shipmentId, {includeWaypoints: boolMap[includeWaypoints]});
             res.set("content-type", "application/json");
             
             res.status(200);
@@ -153,6 +156,21 @@ const {
             });
         }
         catch (e) {
+            next(e);
+        }
+    });
+
+    router.post("/telemetry/rt-updates", validateJWT, authorizeRequest({actionId: "updateAny:crates"}), async function receiveRealtimeUpdate(req, res, next) {
+        const {crateId, telemetry } = req.body;
+      
+        try {
+            res.set("content-type", "application/json");
+            await queueService.enqueue({crateId, telemetry});
+            eventEmitter.emit("CrateAPI.QueueService.TelemetryUpdateReceived");
+            res.status(201);
+            res.send();
+        }
+        catch(e) {
             next(e);
         }
     });

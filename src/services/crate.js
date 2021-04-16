@@ -268,13 +268,22 @@ function CrateShipment(repo, crateShipmentDTO) {
  */
 
 /**
- * @param {Object} repo - the repos associated with this service
+ * @param {Object} crateRepo - the crates repository
+ * @param {Object} crateShipmentRepo - the crate_shipments repository
+ * @param {QueueService} queueService - an instance of QueueService
+ * @param {EventEmitter} eventEmitter - an instance of EventEmitter
  */
-function CrateService({crateRepo, crateShipmentRepo}) {
+function CrateService({crateRepo, crateShipmentRepo, queueService, eventEmitter}) {
     this._repo = {
         crate: crateRepo,
         crateShipment: crateShipmentRepo
-     }
+    }
+
+    eventEmitter.on("CrateAPI.QueueService.TelemetryUpdateReceived", async() => {
+        const {crateId, telemetry} = await queueService.dequeue();
+        const crate = await this.getCrateById(crateId);
+        await crate.currentTrip.addWaypoint({telemetry});
+    });
     
     /**
      * @param {Object} doc - object representing valid crate data
@@ -308,7 +317,6 @@ function CrateService({crateRepo, crateShipmentRepo}) {
        
         return crate;
     }
-
     
     this.getAllCrates = async function() { 
         const crates = await this._repo.crate.getAllCrates();

@@ -3,6 +3,7 @@ const uuid = require("uuid");
 const Ajv = require("ajv");
 const ajv = new Ajv();
 const faker = require("faker");
+const events = require("events");
 const crateSchema = require("../../src/schemas/crate.json");
 const { CrateService } = require("../../src/services/crate");
 const CrateRepository = require("../../src/lib/repository/crate");
@@ -15,7 +16,8 @@ const testCrateRepo = new ICrateRepository(new CrateRepository(testDbConnector))
 const testCrateShipmentRepo = new ICrateShipmentRepository(new CrateShipmentRepository(testDbConnector));
 const testCrateService = new CrateService({
     crateRepo: testCrateRepo,
-    crateShipmentRepo: testCrateShipmentRepo
+    crateShipmentRepo: testCrateShipmentRepo,
+    eventEmitter: new events.EventEmitter()
 });
 const starkMerchantId = "dd8b20dd-1637-4396-bba5-bcd6d65e2d5d";
 

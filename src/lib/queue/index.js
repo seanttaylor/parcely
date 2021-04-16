@@ -16,14 +16,14 @@ function Queue() {
     /**
      * @returns {Integer} the size of the current queue
      */
-    this.enqueue = function(entry) {
+    this.enqueue = async function(entry) {
         return currentQueue.unshift(entry);
     }
 
     /**
      * @returns {Object} - the queue entry
      */
-    this.dequeue = function(key) {
+    this.dequeue = async function(key) {
         return currentQueue.pop();
     }
 
@@ -31,8 +31,8 @@ function Queue() {
      * @returns {Integer} - the size of the queue 
      */
 
-    this.size = function() {
-        memoryQueue.clear();
+    this.size = async function() {
+        return currentQueue.length;
     }
 
     /**
