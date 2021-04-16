@@ -137,7 +137,6 @@ describe("CrateAccess", function CrateAccess() {
                 trackingNumber: faker.random.uuid()
             }).expect(201);
 
-            //STILL need to add a waypoint via API endpoint here
             const shipmentId = res5["body"]["entries"][0]["data"]["shipmentId"];
 
             const res6 = await request.post(`/api/v1/crates/${crateId}/shipments/${shipmentId}/waypoints`)
@@ -176,6 +175,7 @@ describe("CrateAccess", function CrateAccess() {
             expect(res7["body"]["count"] === 1).toBe(true);
         });
     });
+
 
     describe("AdminAccess", function AdminsAccess() {
         test("Admins should be able to access ALL crates", async() => {
@@ -526,6 +526,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
         expect(res5["body"]["entries"][0]["data"]["status"][0] === "inTransit").toBe(true);
     });
 
+
     test("Platform should be able to get a list of all shipments for a specified crate", async() => {
         const res1 = await request.post(`/api/v1/users/token`)
         .send({
@@ -583,6 +584,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
         expect(res5["body"]["count"] === 1).toBe(true);
         expect(res5["body"]["entries"][0]["data"]["status"][0] === "inProgress").toBe(true);
     });
+
 
     test("Platform should be able to complete shipment of a specified crate", async() => {
         const res1 = await request.post(`/api/v1/users/token`)
@@ -664,6 +666,103 @@ describe("ShipmentManagement", function ShipmentManagement() {
         .expect(200);
 
         expect(res8["body"]["entries"][0]["data"]["status"][0] === "complete").toBe(true);
+    });
+
+    
+    test("Platform should be able to ingest real-time updates from hardware crates", async() => {
+        const res1 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: furyEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
+
+        const res2 = await request.post(`/api/v1/users/token`)
+        .send({
+            emailAddress: thorEmailAddress,
+            password: superSecretPassword
+        })
+        .expect(200);
+
+        const furyAccessToken = res1.body.accessToken;
+        const thorAccessToken = res2.body.accessToken;
+
+        const res3 = await request.post(`/api/v1/crates`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send({
+            size: ["L"],
+            merchantId: faker.random.uuid()
+        })
+        .expect(201);
+
+        const crateId = res3["body"]["entries"][0]["id"];
+
+        const res4 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send({
+            recipientId: thorUserId
+        })
+        .expect(204);
+
+        const res5 = await request.post(`/api/v1/crates/${crateId}/shipments`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send({ 
+            originAddress: {
+                street: faker.address.streetName(),
+                apartmentNumber: "7",
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            destinationAddress: {
+                street: faker.address.streetName(),
+                apartmentNumber: "7",
+                city: faker.address.city(),
+                state: faker.address.stateAbbr(),
+                zip: faker.address.zipCode()
+            },
+            trackingNumber: faker.random.uuid()
+        }).expect(201);
+
+        const shipmentId = res5["body"]["entries"][0]["data"]["shipmentId"];
+
+        const res6 = await request.post(`/api/v1/crates/telemetry/rt-updates`)
+        .set("authorization", `Bearer ${furyAccessToken}`)
+        .send({
+            crateId,
+            telemetry: {
+                temp: {
+                    degreesFahrenheit: String(faker.random.float())
+                },
+                location: {
+                    coords: {
+                        lat: faker.address.latitude(),
+                        long: faker.address.longitude()
+                    },
+                    zip: faker.address.zipCode()
+                },
+                sensors: {
+                    moisture: {
+                        thresholdExceeded: false
+                    },
+                    thermometer: {
+                        thresholdExceeded: false
+                    },
+                    photometer: {
+                        thresholdExceeded: false
+                    }
+                }
+            }
+        })
+        .expect(201);
+
+        const res7 = await request.get(`/api/v1/crates/${crateId}/shipments/${shipmentId}?includeWaypoints=true`)
+        .set("authorization", `Bearer ${thorAccessToken}`)
+        .send()
+
+        expect(Array.isArray(res7["body"]["entries"])).toBe(true);
+        expect(res7["body"]["entries"][0]["data"]["waypoints"]["length"] === 1).toBe(true);
+        expect(res7["body"]["count"] === 1).toBe(true);
     });
 });
 
