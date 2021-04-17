@@ -31,8 +31,8 @@ const cacheService = new ICache(new CacheService());
 
 /**QueueService**/
 const IQueue = require("./src/interfaces/queue");
-const QueueService = require("./src/lib/queue");
-const queueService = new IQueue(new QueueService());
+const {InMemoryQueue} = require("./src/lib/queue");
+const queueService = new IQueue(new InMemoryQueue());
 
 /**AuthService**/
 const { UserAuthService } = require("./src/services/auth");
