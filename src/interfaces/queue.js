@@ -6,7 +6,6 @@
 * @property {Function} enqueue - introduce a new entry into the queue
 * @property {Function} dequeue - pull an entry from the queue
 * @property {Function} size - get the number of entries currently in the queue
-* @property {Function} contains - checks for the presence of an item in the queue
 */
 
 /** Interface for managing queue entries
@@ -23,8 +22,6 @@ function IQueue(myImpl) {
     this.dequeue = myImpl.dequeue || required;
 
     this.size = myImpl.size || required;
-
-    this.contains = myImpl.contains || required;
 
 }
 

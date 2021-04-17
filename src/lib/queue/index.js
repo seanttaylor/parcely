@@ -1,3 +1,5 @@
+const SQSQueue = require("./sqs");
+
 /* Implements the IQueue interface 
 * See interfaces/queue for method documentation
 * Manages queue entries
@@ -21,10 +23,10 @@ function Queue() {
     }
 
     /**
-     * @returns {Object} - the queue entry
+     * @returns {Array} - a list containing a queue entry or entries
      */
     this.dequeue = async function(key) {
-        return currentQueue.pop();
+        return [currentQueue.pop()];
     }
 
     /**
@@ -34,17 +36,10 @@ function Queue() {
     this.size = async function() {
         return currentQueue.length;
     }
-
-    /**
-     * @param {Function} fn - a predicate function which takes the currentQueue to determine whether 
-     * a specific entry exists in the queue
-     * @returns {Boolean} boolean indicating whether key exists in queue
-     */
-
-    this.contains = function(fn) {
-        return fn(currentQueue);
-    }
 }
 
 
-module.exports = Queue;
+module.exports = {
+    InMemoryQueue: Queue,
+    SQSQueue
+};

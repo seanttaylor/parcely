@@ -100,3 +100,7 @@ google-service-account-key.json
 
 # DS_Store
 .DS_Store
+
+# Terraform Configuration
+.terraform/
+.terraform*

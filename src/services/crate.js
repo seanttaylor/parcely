@@ -280,9 +280,12 @@ function CrateService({crateRepo, crateShipmentRepo, queueService, eventEmitter}
     }
 
     eventEmitter.on("CrateAPI.QueueService.TelemetryUpdateReceived", async() => {
-        const {crateId, telemetry} = await queueService.dequeue();
-        const crate = await this.getCrateById(crateId);
-        await crate.currentTrip.addWaypoint({telemetry});
+        const messageList = await queueService.dequeue();
+
+        messageList.map(async ({crateId, telemetry})=> {
+            const crate = await this.getCrateById(crateId);
+            await crate.currentTrip.addWaypoint({telemetry});
+        });
     });
     
     /**
