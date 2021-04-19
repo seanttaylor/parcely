@@ -20,8 +20,8 @@ jobs:
 
       - name: "[STEP] Setup pipeline environment variables"
         run: |
-          echo "::set-output name=MY_GIT_SHA::$(git rev-parse --short "$GITHUB_SHA")"
-          echo "::set-output name=MY_IMAGE_TAG::${GITHUB_REF#refs/*/}"
+          echo "$MY_GIT_SHA=${(git rev-parse --short "$GITHUB_SHA")}" >> $MY_GIT_SHA
+          echo "$MY_IMAGE_TAG = ${GITHUB_REF#refs/*/}"
 
       - name: "[STEP] Set Node.js version"
         uses: actions/setup-node@v1
@@ -47,7 +47,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
         id: login-ecr
       
-      - name: "[STEP] Build Docker image/push to AED ECR"
+      - name: "[STEP] Build Docker image/push to AWS ECR"
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: parcely/core
