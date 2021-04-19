@@ -1,6 +1,9 @@
 name: Parcely Core Pipeline
 
-on:  
+on: 
+  push:
+    branches:
+      - issno-* 
   pull_request:
     branches:
       - master
