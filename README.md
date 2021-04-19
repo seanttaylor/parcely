@@ -49,3 +49,5 @@ Find additional documentation in the `/docs` folder.
 * [Parcely Object Graph](https://sketchboard.me/pCA3XiCjQkUY)
 * [Parcely Crate State Diagram](https://sketchboard.me/jCCKOLBJEod) 
 * [LocalStack Documentation](https://github.com/localstack/localstack)
+* [AWS v2 CLI Documentation](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/index.html)
+* [AWS v2 SDK Documentation](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS.html)
