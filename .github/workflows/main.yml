@@ -47,12 +47,12 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
         id: login-ecr
       
-      - name: "[STEP] Build Docker image and push to Amazon ECR"
+      - name: "[STEP] Build Docker image/push to AED ECR"
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: parcely/core
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          echo "::set-env name=ECR_REGISTRY::$ECR_REGISTRY"
+          echo "ECR_REGISTRY=$ECR_REGISTRY" >> $ECR_REGISTRY
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$MY_GIT_SHA .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:"$MY_GIT_SHA"
