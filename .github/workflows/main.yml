@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - issno-* 
+      - tf-*
   pull_request:
     branches:
       - master
