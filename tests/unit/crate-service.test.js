@@ -94,7 +94,7 @@ describe("CrateManagement", function CrateManagement() {
 
         const fakeTelemetryData = {
             "temp": {
-                "degreesFahrenheit": String(faker.random.float())
+                "degreesFahrenheit": String(faker.datatype.float())
             },
             "location": {
                 "coords": {
@@ -118,15 +118,15 @@ describe("CrateManagement", function CrateManagement() {
 
         const testCrate = await testCrateService.createCrate({
         size: ["S"],
-            merchantId: faker.random.uuid(),
-            recipientId: faker.random.uuid()
+            merchantId: faker.datatype.uuid(),
+            recipientId: faker.datatype.uuid()
         });
         
         const testCrateId = await testCrate.save();
         const testCrateTripId = await testCrate.startShipment({
             originAddress, 
             destinationAddress, 
-            trackingNumber: faker.random.uuid()
+            trackingNumber: faker.datatype.uuid()
         });
 
         await testCrate.pushTelemetry(fakeTelemetryData);
@@ -157,7 +157,7 @@ describe("CrateManagement", function CrateManagement() {
 
         const fakeTelemetryData = {
             "temp": {
-                "degreesFahrenheit": String(faker.random.float())
+                "degreesFahrenheit": String(faker.datatype.float())
             },
             "location": {
                 "coords": {
@@ -181,15 +181,15 @@ describe("CrateManagement", function CrateManagement() {
 
         const testCrate = await testCrateService.createCrate({
         size: ["S"],
-            merchantId: faker.random.uuid(),
-            recipientId: faker.random.uuid()
+            merchantId: faker.datatype.uuid(),
+            recipientId: faker.datatype.uuid()
         });
         
         const testCrateId = await testCrate.save();
         const testCrateTripId = await testCrate.startShipment({
             originAddress, 
             destinationAddress, 
-            trackingNumber: faker.random.uuid()
+            trackingNumber: faker.datatype.uuid()
         });
 
         await testCrate.pushTelemetry(fakeTelemetryData);
@@ -218,7 +218,7 @@ describe("CrateManagement", function CrateManagement() {
         const thorUserId = "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09";
         const testCrate = await testCrateService.createCrate({
         size: ["S"],
-        merchantId: faker.random.uuid()
+        merchantId: faker.datatype.uuid()
         });
         
         await testCrate.save();
@@ -324,15 +324,15 @@ describe("ShipmentManagement", function ShipmentManagement() {
         };
         const testCrate = await testCrateService.createCrate({
         size: ["S"],
-        merchantId: faker.random.uuid(),
-        recipientId: faker.random.uuid()
+        merchantId: faker.datatype.uuid(),
+        recipientId: faker.datatype.uuid()
         });
         
         const testCrateId = await testCrate.save();
         const testCrateShipmentId = await testCrate.startShipment({
             originAddress, 
             destinationAddress, 
-            trackingNumber: faker.random.uuid()
+            trackingNumber: faker.datatype.uuid()
         });
         const [crateShipment] = await testCrateService.getCrateShipments(testCrate);
         const crateDbRecord = await testCrateService.getCrateById(testCrateId);
@@ -346,8 +346,8 @@ describe("ShipmentManagement", function ShipmentManagement() {
     test("Should be able to push the hardware crate telemetry data to the platform", async() => {
         const testCrate = await testCrateService.createCrate({
         size: ["S"],
-        merchantId: faker.random.uuid(),
-        recipientId: faker.random.uuid()
+        merchantId: faker.datatype.uuid(),
+        recipientId: faker.datatype.uuid()
         });
         const originAddress = {
             street: faker.address.streetName(),
@@ -364,7 +364,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
         };
         const fakeTelemetryData = {
             "temp": {
-                "degreesFahrenheit": String(faker.random.float())
+                "degreesFahrenheit": String(faker.datatype.float())
             },
             "location": {
                 "coords": {
@@ -390,7 +390,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
         const testCrateTripId = await testCrate.startShipment({
             originAddress, 
             destinationAddress, 
-            trackingNumber: faker.random.uuid()
+            trackingNumber: faker.datatype.uuid()
         });
         
         await testCrate.pushTelemetry(fakeTelemetryData);
@@ -424,7 +424,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
 
         const fakeTelemetryData = {
             "temp": {
-                "degreesFahrenheit": String(faker.random.float())
+                "degreesFahrenheit": String(faker.datatype.float())
             },
             "location": {
                 "coords": {
@@ -448,15 +448,15 @@ describe("ShipmentManagement", function ShipmentManagement() {
 
         const testCrate = await testCrateService.createCrate({
         size: ["S"],
-        merchantId: faker.random.uuid(),
-        recipientId: faker.random.uuid()
+        merchantId: faker.datatype.uuid(),
+        recipientId: faker.datatype.uuid()
         });
         
         const testCrateId = await testCrate.save();
         const testCrateShipmentId = await testCrate.startShipment({
             originAddress, 
             destinationAddress, 
-            trackingNumber: faker.random.uuid()
+            trackingNumber: faker.datatype.uuid()
         });
 
         await testCrate.pushTelemetry(fakeTelemetryData);
@@ -488,7 +488,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
 
         const fakeTelemetryData = {
             "temp": {
-                "degreesFahrenheit": String(faker.random.float())
+                "degreesFahrenheit": String(faker.datatype.float())
             },
             "location": {
                 "coords": {
@@ -512,15 +512,15 @@ describe("ShipmentManagement", function ShipmentManagement() {
 
         const testCrate = await testCrateService.createCrate({
         size: ["S"],
-        merchantId: faker.random.uuid(),
-        recipientId: faker.random.uuid()
+        merchantId: faker.datatype.uuid(),
+        recipientId: faker.datatype.uuid()
         });
         
         const testCrateId = await testCrate.save();
         const testCrateTripId = await testCrate.startShipment({
             originAddress, 
             destinationAddress, 
-            trackingNumber: faker.random.uuid()
+            trackingNumber: faker.datatype.uuid()
         });
 
         await testCrate.pushTelemetry(fakeTelemetryData);
@@ -548,7 +548,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
 
         const fakeTelemetryData = {
             "temp": {
-                "degreesFahrenheit": String(faker.random.float())
+                "degreesFahrenheit": String(faker.datatype.float())
             },
             "location": {
                 "coords": {
@@ -572,15 +572,15 @@ describe("ShipmentManagement", function ShipmentManagement() {
 
         const testCrate = await testCrateService.createCrate({
         size: ["S"],
-            merchantId: faker.random.uuid(),
-            recipientId: faker.random.uuid()
+            merchantId: faker.datatype.uuid(),
+            recipientId: faker.datatype.uuid()
         });
         
         const testCrateId = await testCrate.save();
         const testCrateShipmentId = await testCrate.startShipment({
             originAddress, 
             destinationAddress, 
-            trackingNumber: faker.random.uuid()
+            trackingNumber: faker.datatype.uuid()
         });
 
         await testCrate.pushTelemetry(fakeTelemetryData);
@@ -612,7 +612,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
         };
         const fakeTelemetryData = {
             "temp": {
-                "degreesFahrenheit": String(faker.random.float())
+                "degreesFahrenheit": String(faker.datatype.float())
             },
             "location": {
                 "coords": {
@@ -635,15 +635,15 @@ describe("ShipmentManagement", function ShipmentManagement() {
         };
         const testCrate = await testCrateService.createCrate({
         size: ["S"],
-        merchantId: faker.random.uuid(),
-        recipientId: faker.random.uuid()
+        merchantId: faker.datatype.uuid(),
+        recipientId: faker.datatype.uuid()
         });
         
         await testCrate.save();
         const testCrateShipmentId = await testCrate.startShipment({
             originAddress, 
             destinationAddress, 
-            trackingNumber: faker.random.uuid()
+            trackingNumber: faker.datatype.uuid()
         });
         await testCrate.pushTelemetry(fakeTelemetryData);
         await testCrate.completeShipment();
@@ -684,7 +684,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
             await testCrate.startShipment({
                 originAddress,
                 destinationAddress,
-                trackingNumber: faker.random.uuid()       
+                trackingNumber: faker.datatype.uuid()       
             });   
         } catch(e) {
             expect(e.message).toMatch("CrateError.CannotStartShipment.missingMerchantId");
@@ -708,7 +708,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
         };
         const testCrate = await testCrateService.createCrate({
         size: ["S"],
-        merchantId: faker.random.uuid()
+        merchantId: faker.datatype.uuid()
         });
         await testCrate.save();
 
@@ -716,7 +716,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
             await testCrate.startShipment({
                 originAddress,
                 destinationAddress,
-                trackingNumber: faker.random.uuid()       
+                trackingNumber: faker.datatype.uuid()       
             });   
         } catch(e) {
             expect(e.message).toMatch("CrateError.CannotStartShipment.missingRecipientId");
@@ -727,8 +727,8 @@ describe("ShipmentManagement", function ShipmentManagement() {
     test("CrateShipment waypoints should be read-only", async() => {
         const testCrate = await testCrateService.createCrate({
             size: ["S"],
-            merchantId: faker.random.uuid(),
-            recipientId: faker.random.uuid()
+            merchantId: faker.datatype.uuid(),
+            recipientId: faker.datatype.uuid()
         });
         const originAddress = {
             street: faker.address.streetName(),
@@ -745,7 +745,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
         };
         const fakeTelemetryData = {
             "temp": {
-                "degreesFahrenheit": String(faker.random.float())
+                "degreesFahrenheit": String(faker.datatype.float())
             },
             "location": {
                 "coords": {
@@ -771,7 +771,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
         const testCrateTripId = await testCrate.startShipment({
             originAddress, 
             destinationAddress, 
-            trackingNumber: faker.random.uuid()
+            trackingNumber: faker.datatype.uuid()
         });
         
         await testCrate.pushTelemetry(fakeTelemetryData);
@@ -790,11 +790,11 @@ describe("ShipmentManagement", function ShipmentManagement() {
 
 
     test("Should ONLY be able to associate (1) recipient with (1) crate on a single shipment.", async() => {
-        const firstUserId = faker.random.uuid();
-        const secondUserId = faker.random.uuid();
+        const firstUserId = faker.datatype.uuid();
+        const secondUserId = faker.datatype.uuid();
         const testCrate = await testCrateService.createCrate({
         size: ["S"],
-        merchantId: faker.random.uuid()
+        merchantId: faker.datatype.uuid()
         });
         
         await testCrate.save();
@@ -826,15 +826,15 @@ describe("ShipmentManagement", function ShipmentManagement() {
     };
     const testCrate = await testCrateService.createCrate({
       size: ["S"],
-      merchantId: faker.random.uuid(),
-      recipientId: faker.random.uuid()
+      merchantId: faker.datatype.uuid(),
+      recipientId: faker.datatype.uuid()
     });
     
     await testCrate.save();
     const testCrateShipmentId = await testCrate.startShipment({
         originAddress, 
         destinationAddress, 
-        trackingNumber: faker.random.uuid()
+        trackingNumber: faker.datatype.uuid()
     });
     const [crateShipmentNoWaypoints] = await testCrateService.getCrateShipments(testCrate);
         
