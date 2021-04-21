@@ -43,10 +43,6 @@ variable "TFC_CONFIGURATION_VERSION_GIT_COMMIT_SHA" {
   default = ""
 }
 
-data "aws_ssm_parameter" "last_commit_sha" {
-  name = "/dev/parcely/core/ops/last-commit-sha"
-}
-
 data "aws_ssm_parameter" "platform_outbound_email_username" {
   depends_on = [aws_ssm_parameter.platform_outbound_email_username]
   name = "/dev/parcely-core/credentials/mailer/outbound-email-username"
@@ -116,6 +112,9 @@ resource "aws_ecs_task_definition" "parcely_core" {
         "name": "NODE_ENV",
         "value": "dev"
       },
+      {
+        "name": "COMMIT_HASH",
+        "value": "${substr(var.TFC_CONFIGURATION_VERSION_GIT_COMMIT_SHA, 0, 7)}"
       {
         "name": "PLATFORM_OUTBOUND_EMAIL_USERNAME",
         "value": "${data.aws_ssm_parameter.platform_outbound_email_username.value}"
