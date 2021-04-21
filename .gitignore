@@ -103,4 +103,4 @@ google-service-account-key.json
 
 # Terraform Configuration
 .terraform/
-.terraform*
+.terraform.lock.hcl

@@ -1,6 +1,10 @@
-name: Run Unit & Integration Tests
+name: Parcely Core Pipeline
 
-on:  
+on: 
+  push:
+    branches:
+      - issno-* 
+      - tf-*
   pull_request:
     branches:
       - master
@@ -17,8 +21,7 @@ jobs:
 
       - name: "[STEP] Setup pipeline environment variables"
         run: |
-          echo "::set-output name=MY_GIT_SHA::$(git rev-parse --short "$GITHUB_SHA")"
-          echo "::set-output name=MY_IMAGE_TAG::${GITHUB_REF#refs/*/}"
+          echo "GIT_SHA_SHORT=$(echo "$(git rev-parse --short "$GITHUB_SHA")")" >> $GITHUB_ENV
 
       - name: "[STEP] Set Node.js version"
         uses: actions/setup-node@v1
@@ -28,9 +31,27 @@ jobs:
       - name: "[STEP] Install app dependencies"
         run: npm install
 
-      - name: "[STEP] Run Integration Tests"
+      - name: "[STEP] Run Unit/Integration Tests"
         run: npm test
         env:
           JWT_SECRET: superSecret
-          PLATFORM_OUTBOUND_EMAIL_USERNAME: jayde.anderson@ethereal.email
-          PLATFORM_OUTBOUND_EMAIL_PASSWORD: N4kJ5KKtTcTSH4AsUT
+      
+      - name: "[STEP] Configure AWS Credentials"
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: "[STEP] Login to Amazon ECR"
+        uses: aws-actions/amazon-ecr-login@v1
+        id: login-ecr
+      
+      - name: "[STEP] Build Docker image/push to AWS ECR"
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: parcely/core
+        run: |
+          echo "ECR_REGISTRY=$ECR_REGISTRY" >> $ECR_REGISTRY
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ env.GIT_SHA_SHORT }} .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:"${{ env.GIT_SHA_SHORT }}"

@@ -104,7 +104,7 @@ describe("CrateAccess", function CrateAccess() {
             .set("authorization", `Bearer ${furyAccessToken}`)
             .send({
                 size: ["L"],
-                merchantId: faker.random.uuid()
+                merchantId: faker.datatype.uuid()
             })
             .expect(201);
 
@@ -134,7 +134,7 @@ describe("CrateAccess", function CrateAccess() {
                     state: faker.address.stateAbbr(),
                     zip: faker.address.zipCode()
                 },
-                trackingNumber: faker.random.uuid()
+                trackingNumber: faker.datatype.uuid()
             }).expect(201);
 
             const shipmentId = res5["body"]["entries"][0]["data"]["shipmentId"];
@@ -143,7 +143,7 @@ describe("CrateAccess", function CrateAccess() {
             .set("authorization", `Bearer ${furyAccessToken}`)
             .send({
                 "temp": {
-                    "degreesFahrenheit": String(faker.random.float())
+                    "degreesFahrenheit": String(faker.datatype.float())
                 },
                 "location": {
                     "coords": {
@@ -279,7 +279,7 @@ describe("CrateManagement", function CrateManagement() {
 
 
             const crateId = res2["body"]["entries"][0]["id"];
-            const fakeRecipientId = faker.random.uuid();
+            const fakeRecipientId = faker.datatype.uuid();
             
             const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
             .set("authorization", `Bearer ${furyAccessToken}`)
@@ -377,7 +377,7 @@ describe("CrateManagement", function CrateManagement() {
         .expect(200);
 
         const furyAccessToken = res1.body.accessToken;
-        const fakeMerchantId = faker.random.uuid();
+        const fakeMerchantId = faker.datatype.uuid();
 
         const res2 = await request.post(`/api/v1/crates`)
         .set("authorization", `Bearer ${furyAccessToken}`)
@@ -392,7 +392,7 @@ describe("CrateManagement", function CrateManagement() {
         const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
         .set("authorization", `Bearer ${furyAccessToken}`)
         .send({
-            recipientId: faker.random.uuid()
+            recipientId: faker.datatype.uuid()
         })
         .expect(204);
 
@@ -413,7 +413,7 @@ describe("CrateManagement", function CrateManagement() {
                 state: faker.address.stateAbbr(),
                 zip: faker.address.zipCode()
             },
-            trackingNumber: faker.random.uuid()
+            trackingNumber: faker.datatype.uuid()
         })
         .expect(201);
 
@@ -473,7 +473,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
         .expect(200);
 
         const furyAccessToken = res1.body.accessToken;
-        const fakeMerchantId = faker.random.uuid();
+        const fakeMerchantId = faker.datatype.uuid();
 
         const res2 = await request.post(`/api/v1/crates`)
         .set("authorization", `Bearer ${furyAccessToken}`)
@@ -488,7 +488,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
         const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
         .set("authorization", `Bearer ${furyAccessToken}`)
         .send({
-            recipientId: faker.random.uuid()
+            recipientId: faker.datatype.uuid()
         })
         .expect(204);
 
@@ -509,7 +509,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
                 state: faker.address.stateAbbr(),
                 zip: faker.address.zipCode()
             },
-            trackingNumber: faker.random.uuid()
+            trackingNumber: faker.datatype.uuid()
         })
         .expect(201);
 
@@ -536,7 +536,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
         .expect(200);
 
         const furyAccessToken = res1.body.accessToken;
-        const fakeMerchantId = faker.random.uuid();
+        const fakeMerchantId = faker.datatype.uuid();
 
         const res2 = await request.post(`/api/v1/crates`)
         .set("authorization", `Bearer ${furyAccessToken}`)
@@ -551,7 +551,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
         const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
         .set("authorization", `Bearer ${furyAccessToken}`)
         .send({
-            recipientId: faker.random.uuid()
+            recipientId: faker.datatype.uuid()
         })
         .expect(204);
 
@@ -572,7 +572,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
                 state: faker.address.stateAbbr(),
                 zip: faker.address.zipCode()
             },
-            trackingNumber: faker.random.uuid()
+            trackingNumber: faker.datatype.uuid()
         })
         .expect(201);
 
@@ -595,7 +595,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
         .expect(200);
 
         const furyAccessToken = res1.body.accessToken;
-        const fakeMerchantId = faker.random.uuid();
+        const fakeMerchantId = faker.datatype.uuid();
 
         const res2 = await request.post(`/api/v1/crates`)
         .set("authorization", `Bearer ${furyAccessToken}`)
@@ -610,7 +610,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
         const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
         .set("authorization", `Bearer ${furyAccessToken}`)
         .send({
-            recipientId: faker.random.uuid()
+            recipientId: faker.datatype.uuid()
         })
         .expect(204);
 
@@ -631,7 +631,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
                 state: faker.address.stateAbbr(),
                 zip: faker.address.zipCode()
             },
-            trackingNumber: faker.random.uuid()
+            trackingNumber: faker.datatype.uuid()
         })
         .expect(201);
 
@@ -691,7 +691,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
         .set("authorization", `Bearer ${furyAccessToken}`)
         .send({
             size: ["L"],
-            merchantId: faker.random.uuid()
+            merchantId: faker.datatype.uuid()
         })
         .expect(201);
 
@@ -721,7 +721,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
                 state: faker.address.stateAbbr(),
                 zip: faker.address.zipCode()
             },
-            trackingNumber: faker.random.uuid()
+            trackingNumber: faker.datatype.uuid()
         }).expect(201);
 
         const shipmentId = res5["body"]["entries"][0]["data"]["shipmentId"];
@@ -732,7 +732,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
             crateId,
             telemetry: {
                 temp: {
-                    degreesFahrenheit: String(faker.random.float())
+                    degreesFahrenheit: String(faker.datatype.float())
                 },
                 location: {
                     coords: {
