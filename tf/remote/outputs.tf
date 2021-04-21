@@ -3,7 +3,7 @@ output "git_branch_name" {
 }
 
 output "git_commit_sha" {
-  value = var.TFC_CONFIGURATION_VERSION_GIT_COMMIT_SHA
+  value = "${substr(var.TFC_CONFIGURATION_VERSION_GIT_COMMIT_SHA, 0, 7)}"
 }
 
 output "vpc_id" {
