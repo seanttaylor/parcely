@@ -11,7 +11,7 @@ const faker = require("faker");
 
 describe("Authorization", function Authz() {
 
-    test("Plaform should reject API requests that do not contain an authorization token", async() => {
+    test("Platform should reject API requests that do not contain an authorization token", async() => {
         const res1 = await request.get("/api/v1/users/e98417a8-d912-44e0-8d37-abe712ca840f")
         .send()
         .expect(401);
