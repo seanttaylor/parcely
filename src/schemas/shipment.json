@@ -217,7 +217,6 @@
             ],
             "title": "The waypoints schema",
             "type": "array",
-            "additionalItems": true,
             "items": {
                 "$id": "#/properties/waypoints/items",
                 "allOf": [

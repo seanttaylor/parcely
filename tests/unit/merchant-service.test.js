@@ -39,7 +39,7 @@ describe("MerchantManagement", function MerchantManagement() {
     test("Should be able to create a new Merchant instance", async() => {
         const testMerchantData = {
             name: faker.company.companyName(),
-            userId: faker.random.uuid(),
+            userId: faker.datatype.uuid(),
             address: {
                 street: faker.address.streetName(),
                 city: faker.address.city(),
@@ -66,7 +66,7 @@ describe("MerchantManagement", function MerchantManagement() {
         });
         const testMerchantData = {
             name: faker.company.companyName(),
-            userId: faker.random.uuid(),
+            userId: faker.datatype.uuid(),
             address: {
                 street: faker.address.streetName(),
                 city: faker.address.city(),
@@ -87,7 +87,7 @@ describe("MerchantManagement", function MerchantManagement() {
 
 
     test("Should NOT be able to create a new Merchant instance for user that is already a merchant", async() => {
-        const uuid = faker.random.uuid();
+        const uuid = faker.datatype.uuid();
         const testMerchantData = {
             name: faker.company.companyName(),
             userId: uuid,
@@ -130,7 +130,7 @@ describe("MerchantManagement", function MerchantManagement() {
     test("Should be able to find a merchant by id", async() => {
         const testMerchantData = {
             name: faker.company.companyName(),
-            userId: faker.random.uuid(),
+            userId: faker.datatype.uuid(),
             address: {
                 street: faker.address.streetName(),
                 city: faker.address.city(),
@@ -149,7 +149,7 @@ describe("MerchantManagement", function MerchantManagement() {
 
         const record = await testMerchantService.getMerchantById(testMerchantId);
 
-        const fakeRecord = await testMerchantService.getMerchantById(faker.random.uuid());
+        const fakeRecord = await testMerchantService.getMerchantById(faker.datatype.uuid());
         
         expect(record.id === testMerchantId).toBe(true);
         expect(fakeRecord === undefined).toBe(true);
@@ -159,7 +159,7 @@ describe("MerchantManagement", function MerchantManagement() {
     test("Should be able to update an existing plan for a merchant", async() => {
         const testMerchantData = {
             name: faker.company.companyName(),
-            userId: faker.random.uuid(),
+            userId: faker.datatype.uuid(),
             address: {
                 street: faker.address.streetName(),
                 city: faker.address.city(),
@@ -195,7 +195,7 @@ describe("MerchantManagement", function MerchantManagement() {
     test("Should be able to cancel an existing plan for a merchant", async() => {
         const testMerchantData = {
             name: faker.company.companyName(),
-            userId: faker.random.uuid(),
+            userId: faker.datatype.uuid(),
             address: {
                 street: faker.address.streetName(),
                 city: faker.address.city(),
@@ -225,7 +225,7 @@ describe("MerchantManagement", function MerchantManagement() {
     test("Should be able to archive an existing merchant", async() => {
         const testMerchantData = {
             name: faker.company.companyName(),
-            userId: faker.random.uuid(),
+            userId: faker.datatype.uuid(),
             address: {
                 street: faker.address.streetName(),
                 city: faker.address.city(),
@@ -255,7 +255,7 @@ describe("MerchantManagement", function MerchantManagement() {
     test("Should NOT be able to update existing merchants who have been archived", async() => {
         const testMerchantData = {
             name: faker.company.companyName(),
-            userId: faker.random.uuid(),
+            userId: faker.datatype.uuid(),
             address: {
                 street: faker.address.streetName(),
                 city: faker.address.city(),
@@ -289,7 +289,7 @@ describe("ObjectRepresentation", function ObjectRepresentation() {
     test("Should return JSON object representation of a Merchant", async() => {
         const testMerchant = await testMerchantService.createMerchant({
             name: faker.company.companyName(),
-            userId: faker.random.uuid(),
+            userId: faker.datatype.uuid(),
             address: {
                 street: faker.address.streetName(),
                 city: faker.address.city(),
