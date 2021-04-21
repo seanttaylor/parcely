@@ -53,6 +53,11 @@ data "aws_ssm_parameter" "platform_outbound_email_password" {
   name = "/dev/parcely-core/credentials/mailer/outbound-email-password"
 }
 
+data "aws_ssm_parameter" "jwt_secret" {
+  name = "/dev/parcely-core/ops/jwt-secret"
+}
+
+
 resource "aws_ecs_cluster" "parcely_core" {
   name = "parcely-core"
 }
@@ -115,6 +120,10 @@ resource "aws_ecs_task_definition" "parcely_core" {
       {
         "name": "COMMIT_HASH",
         "value": "${substr(var.TFC_CONFIGURATION_VERSION_GIT_COMMIT_SHA, 0, 7)}"
+      },
+      {
+        "name": "JWT_SECRET",
+        "value": "${data.aws_ssm_parameter.jwt_secret.value}"
       },
       {
         "name": "PLATFORM_OUTBOUND_EMAIL_USERNAME",
