@@ -147,7 +147,7 @@ describe("MerchantManagement", function MerchantManagement() {
 
         const testMerchantData = {
             name: faker.company.companyName(),
-            userId: faker.random.uuid(),
+            userId: faker.datatype.uuid(),
             address: {
                 street: faker.address.streetName(),
                 city: faker.address.city(),
