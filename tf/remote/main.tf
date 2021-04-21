@@ -115,6 +115,7 @@ resource "aws_ecs_task_definition" "parcely_core" {
       {
         "name": "COMMIT_HASH",
         "value": "${substr(var.TFC_CONFIGURATION_VERSION_GIT_COMMIT_SHA, 0, 7)}"
+      },
       {
         "name": "PLATFORM_OUTBOUND_EMAIL_USERNAME",
         "value": "${data.aws_ssm_parameter.platform_outbound_email_username.value}"
