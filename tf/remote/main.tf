@@ -49,12 +49,12 @@ data "aws_ssm_parameter" "last_commit_sha" {
 
 data "aws_ssm_parameter" "platform_outbound_email_username" {
   depends_on = [aws_ssm_parameter.platform_outbound_email_username]
-  name = "/dev/parcely-core/credentials/platform/outbound-email-username"
+  name = "/dev/parcely-core/credentials/mailer/outbound-email-username"
 }
 
 data "aws_ssm_parameter" "platform_outbound_email_password" {
   depends_on = [aws_ssm_parameter.platform_outbound_email_password]
-  name = "/dev/parcely-core/credentials/platform/outbound-email-password"
+  name = "/dev/parcely-core/credentials/mailer/outbound-email-password"
 }
 
 resource "aws_ecs_cluster" "parcely_core" {
