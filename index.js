@@ -13,6 +13,7 @@ const events = require("events");
 const eventEmitter = new events.EventEmitter();
 const fetch = require("node-fetch");
 const DatabaseConnector = require("./src/lib/database/connectors/memory"); 
+const config = require("./src/config");
 const asiagoDatabaseConnector = new DatabaseConnector({ console });
 const serverPort = process.env.SERVER_PORT || 3000;
 
@@ -72,10 +73,11 @@ app.use(cors());
 
 /*
 app.use(helmet());
-app.use(morgan(globalConfig.application.morgan.verbosity, {
-    skip: globalConfig.application.morgan.requestLoggingBehavior
-}));
 */
+app.use(morgan(config.application.logger.verbosity, {
+    skip: config.application.logger.behavior
+}));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
