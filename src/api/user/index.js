@@ -23,7 +23,7 @@ const {
             res.status(404);
             res.json({
                 data: [],
-                errors: [],
+                error: "resource not found",
                 entries: 0
             });
             return; 
@@ -65,6 +65,7 @@ const {
             res.status(200);
             res.json({
                 entries: crateList.map(c => c.toJSON()),
+                error: null,
                 count: crateList.length
             });
         }
@@ -83,6 +84,7 @@ const {
             res.status(200);
             res.json({
                 entries: userList.map(u => u.toJSON()),
+                error: null,
                 count: userList.length
             });
         }
@@ -103,6 +105,7 @@ const {
             res.status(200);
             res.json({
                 entries: shipmentList.map(t => t.toJSON()),
+                error: null,
                 count: shipmentList.length
             });
         }
@@ -143,7 +146,10 @@ const {
         if (!result) {
             res.status(401);
             res.json({
-                error: "Email address and/or password do not match"
+                entries: [],
+                error: "Email address and/or password do not match",
+                count: 0
+
             });
             return;
         }
@@ -211,6 +217,7 @@ const {
             res.status(200);
             res.json({
                 entries: [user],
+                error: null,
                 count: 1
             });
         }
@@ -231,6 +238,7 @@ const {
             res.status(200);
             res.json({
                 entries: [user],
+                error: null,
                 count: 1
             });
         }
