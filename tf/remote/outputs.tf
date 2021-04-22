@@ -14,6 +14,10 @@ output "public_subnet_id" {
   value = "${aws_subnet.subnet_us_east_1a_pub.id}"
 }
 
+output "private_subnet_id" {
+  value = "${aws_subnet.subnet_us_east_1b_priv.id}"
+}
+
 output "parcely_core_public_alb_url" {
   value = "http://${aws_alb.parcely_core.dns_name}"
 }

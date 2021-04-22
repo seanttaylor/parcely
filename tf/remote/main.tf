@@ -84,7 +84,7 @@ resource "aws_ecs_service" "parcely_core" {
     ]
 
     subnets = [
-      "${aws_subnet.subnet_us_east_1a_pub.id}"
+      "${aws_subnet.subnet_us_east_1b_priv.id}"
     ]
   }
 
@@ -181,7 +181,8 @@ resource "aws_alb" "parcely_core" {
   load_balancer_type = "application"
 
   subnets = [
-    "${aws_subnet.subnet_us_east_1a_pub.id}"
+    "${aws_subnet.subnet_us_east_1a_pub.id}",
+    "${aws_subnet.subnet_us_east_1b_priv.id}",
   ]
 
   security_groups = [
