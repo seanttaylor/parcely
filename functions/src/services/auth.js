@@ -1,4 +1,6 @@
-var jwt = require("jsonwebtoken");
+const functions = require("firebase-functions");
+const jwt = require("jsonwebtoken");
+
 /**
  * Manages creation and lifecycle of auth credentials
  * @param {CacheService} cacheService - an instance of the CacheService
@@ -20,7 +22,7 @@ function UserAuthService({cacheService, userService}) {
             exp: expiresInOneHour,
             sub: user.id,
             role: [role]
-        }, process.env.JWT_SECRET);
+        }, functions.config().env.jwt_secret);
         
         cacheService.set({key: user.id, value: token, ttl: expiresInOneHour});
         return token;
