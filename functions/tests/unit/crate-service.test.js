@@ -1,3 +1,8 @@
+/**********************************************/
+//ENSURE NODE_ENV is hardcoded to "ci/cd/test"//
+/**********************************************/
+process.env.NODE_ENV = "ci/cd/test";
+
 const { mockImpl } = require("../../src/lib/utils/mocks");
 const uuid = require("uuid");
 const Ajv = require("ajv");

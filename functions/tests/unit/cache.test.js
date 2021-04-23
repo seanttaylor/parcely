@@ -1,3 +1,8 @@
+/**********************************************/
+//ENSURE NODE_ENV is hardcoded to "ci/cd/test"//
+/**********************************************/
+process.env.NODE_ENV = "ci/cd/test";
+
 const ICache = require("../../src/interfaces/cache");
 const CacheService = require("../../src/lib/cache");
 const testCacheService = new ICache(new CacheService());

@@ -1,3 +1,8 @@
+/**********************************************/
+//ENSURE NODE_ENV is hardcoded to "ci/cd/test"//
+/**********************************************/
+process.env.NODE_ENV = "ci/cd/test";
+
 const IQueue = require("../../src/interfaces/queue");
 const {InMemoryQueue} = require("../../src/lib/queue");
 

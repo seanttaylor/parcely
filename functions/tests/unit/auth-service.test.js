@@ -1,3 +1,8 @@
+/**********************************************/
+//ENSURE NODE_ENV is hardcoded to "ci/cd/test"//
+/**********************************************/
+process.env.NODE_ENV = "ci/cd/test";
+
 const mocks = require("../../src/lib/utils/mocks");
 const config = require("../../src/config");
 const mockUserService = mocks.mockImpl.userService;

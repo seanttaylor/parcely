@@ -1,3 +1,8 @@
+/**********************************************/
+//ENSURE NODE_ENV is hardcoded to "ci/cd/test"//
+/**********************************************/
+process.env.NODE_ENV = "ci/cd/test";
+
 const uuid = require("uuid");
 const events = require("events");
 const faker = require("faker");
