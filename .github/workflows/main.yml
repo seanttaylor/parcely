@@ -24,7 +24,7 @@ jobs:
           node-version: 12.x
 
       - name: "[STEP] Install app dependencies"
-        run: npm install
+        run: cd ./functions && npm install
 
       - name: "[STEP] Run Unit/Integration Tests"
         run: cd ./functions && npm test
