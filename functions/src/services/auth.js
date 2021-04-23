@@ -5,9 +5,10 @@ const jwt = require("jsonwebtoken");
  * Manages creation and lifecycle of auth credentials
  * @param {CacheService} cacheService - an instance of the CacheService
  * @param {UserService} userService - an instance of the UserService
+ * @param {Object} config - application configuration
  */
 
-function UserAuthService({cacheService, userService}) {
+function UserAuthService({cacheService, userService, config}) {
     /**
      * Issues a new authorization credential for a specified user
      * @param {User} user - an instance of the User class
@@ -22,7 +23,7 @@ function UserAuthService({cacheService, userService}) {
             exp: expiresInOneHour,
             sub: user.id,
             role: [role]
-        }, functions.config().env.jwt_secret);
+        }, config.environment.get("JWT_SECRET"));
         
         cacheService.set({key: user.id, value: token, ttl: expiresInOneHour});
         return token;

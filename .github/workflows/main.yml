@@ -27,7 +27,7 @@ jobs:
         run: npm install
 
       - name: "[STEP] Run Unit/Integration Tests"
-        run: npm test
+        run: cd ./functions && npm test
         env:
           JWT_SECRET: superSecret
       

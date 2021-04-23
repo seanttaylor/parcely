@@ -1,9 +1,14 @@
 const mocks = require("../../src/lib/utils/mocks");
+const config = require("../../src/config");
 const mockUserService = mocks.mockImpl.userService;
 const mockCacheService = mocks.mockImpl.cache;
 /*AuthService*/
 const { UserAuthService } = require("../../src/services/auth");
-const testAuthService = new UserAuthService({cacheService: mockCacheService, userService: mockUserService});
+const testAuthService = new UserAuthService({
+    cacheService: mockCacheService, 
+    userService: mockUserService,
+    config
+});
 
 /**Tests**/
 

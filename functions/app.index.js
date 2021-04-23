@@ -37,7 +37,7 @@ const queueService = new IQueue(new InMemoryQueue());
 
 /**AuthService**/
 const { UserAuthService } = require("./src/services/auth");
-const authService = new UserAuthService({cacheService, userService});
+const authService = new UserAuthService({cacheService, userService, config});
 
 /**CrateService**/
 const { CrateService } = require("./src/services/crate");
