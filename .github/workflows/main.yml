@@ -30,6 +30,8 @@ jobs:
         run: cd ./functions && npm test
         env:
           JWT_SECRET: superSecret
+          GCLOUD_PROJECT: fakeProjectId
+          FIREBASE_CONFIG: "{\"projectId\":\"fakeProjectId\",\"storageBucket\":\"fakeProjectId.appspot.com\"}"
       
       #- name: "[STEP] Configure AWS Credentials"
       #  uses: aws-actions/configure-aws-credentials@v1
