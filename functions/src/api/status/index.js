@@ -4,19 +4,19 @@ const express = require("express");
 const router = new express.Router();
 
 /**
- * 
+ * @param {Object} config - application config object
  * @returns router - an instance of an Express router
  */
 
 
-function StatusRouter() {
+function StatusRouter(config) {
     router.get("/", async(req, res, next) => {
         
         res.set("content-type", "application/json");
         res.status(200);
         res.json({
             status: "OK",
-            commitHash: process.env.COMMIT_HASH
+            commitHash: config.environment.get("COMMIT_HASH")
         });
     });
 

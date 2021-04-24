@@ -104,7 +104,7 @@ app.use("/api/v1/merchants", MerchantAPI({
     eventEmitter
 }));
 
-app.use("/status", StatusAPI());
+app.use("/status", StatusAPI(config));
 
 app.use((req, res, next) => {
     //console.error(`Error 404 on ${req.url}.`);
