@@ -32,6 +32,14 @@ jobs:
           JWT_SECRET: superSecret
           GCLOUD_PROJECT: fakeProjectId
           FIREBASE_CONFIG: "{\"projectId\":\"fakeProjectId\",\"storageBucket\":\"fakeProjectId.appspot.com\"}"
+
+      - name: "[STEP] Deploy to Firebase"
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          COMMIT_HASH: ${{ env.GIT_SHA_SHORT }}
       
       #- name: "[STEP] Configure AWS Credentials"
       #  uses: aws-actions/configure-aws-credentials@v1
