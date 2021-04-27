@@ -24,7 +24,7 @@ describe("CrateAccess", function CrateAccess() {
                 emailAddress: thorEmailAddress,
                 password: superSecretPassword
             })
-            .expect(200);
+            .expect(201);
 
             const thorAccessToken = res1.body.accessToken;
 
@@ -44,7 +44,7 @@ describe("CrateAccess", function CrateAccess() {
             emailAddress: thorEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const thorAccessToken = res1.body.accessToken;
 
@@ -65,7 +65,7 @@ describe("CrateAccess", function CrateAccess() {
             emailAddress: thorEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const thorAccessToken = res1.body.accessToken;
 
@@ -88,14 +88,14 @@ describe("CrateAccess", function CrateAccess() {
                 emailAddress: furyEmailAddress,
                 password: superSecretPassword
             })
-            .expect(200);
+            .expect(201);
 
             const res2 = await request.post(`/api/v1/users/token`)
             .send({
                 emailAddress: thorEmailAddress,
                 password: superSecretPassword
             })
-            .expect(200);
+            .expect(201);
 
             const furyAccessToken = res1.body.accessToken;
             const thorAccessToken = res2.body.accessToken;
@@ -184,7 +184,7 @@ describe("CrateAccess", function CrateAccess() {
                 emailAddress: furyEmailAddress,
                 password: superSecretPassword
             })
-            .expect(200);
+            .expect(201);
 
             const furyAccessToken = res1.body.accessToken;
 
@@ -205,7 +205,7 @@ describe("CrateAccess", function CrateAccess() {
                 emailAddress: starkEmailAddress,
                 password: superSecretPassword
             })
-            .expect(200);
+            .expect(201);
 
             const starkAccessToken = res1.body.accessToken;
 
@@ -224,7 +224,7 @@ describe("CrateManagement", function CrateManagement() {
             emailAddress: starkEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const starkAccessToken = res1.body.accessToken;
 
@@ -243,7 +243,7 @@ describe("CrateManagement", function CrateManagement() {
                 emailAddress: furyEmailAddress,
                 password: superSecretPassword
             })
-            .expect(200);
+            .expect(201);
 
             const furyAccessToken = res1.body.accessToken;
 
@@ -266,7 +266,7 @@ describe("CrateManagement", function CrateManagement() {
                 emailAddress: furyEmailAddress,
                 password: superSecretPassword
             })
-            .expect(200);
+            .expect(201);
 
             const furyAccessToken = res1.body.accessToken;
 
@@ -303,7 +303,7 @@ describe("CrateManagement", function CrateManagement() {
             emailAddress: furyEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const furyAccessToken = res1.body.accessToken;
 
@@ -334,7 +334,7 @@ describe("CrateManagement", function CrateManagement() {
             emailAddress: furyEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const furyAccessToken = res1.body.accessToken;
 
@@ -343,7 +343,7 @@ describe("CrateManagement", function CrateManagement() {
             emailAddress: starkEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const starkAccessToken = res2.body.accessToken;
 
@@ -374,7 +374,7 @@ describe("CrateManagement", function CrateManagement() {
             emailAddress: furyEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const furyAccessToken = res1.body.accessToken;
         const fakeMerchantId = faker.datatype.uuid();
@@ -470,7 +470,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
             emailAddress: furyEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const furyAccessToken = res1.body.accessToken;
         const fakeMerchantId = faker.datatype.uuid();
@@ -533,7 +533,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
             emailAddress: furyEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const furyAccessToken = res1.body.accessToken;
         const fakeMerchantId = faker.datatype.uuid();
@@ -592,7 +592,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
             emailAddress: furyEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const furyAccessToken = res1.body.accessToken;
         const fakeMerchantId = faker.datatype.uuid();
@@ -675,14 +675,14 @@ describe("ShipmentManagement", function ShipmentManagement() {
             emailAddress: furyEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const res2 = await request.post(`/api/v1/users/token`)
         .send({
             emailAddress: thorEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const furyAccessToken = res1.body.accessToken;
         const thorAccessToken = res2.body.accessToken;

@@ -42,14 +42,14 @@ describe("Authorization", function Authorization() {
                 emailAddress: starkEmailAddress,
                 password: superSecretPassword
             })
-            .expect(200);
+            .expect(201);
 
             const starkAccessToken = res1.body.accessToken;
 
             const res2 = await request.get(`/api/v1/users/${starkUserId}`)
             .set("authorization", `Bearer ${starkAccessToken}`)
             .send()
-            .expect(201);
+            .expect(200);
         });
 
 
@@ -59,7 +59,7 @@ describe("Authorization", function Authorization() {
                 emailAddress: starkEmailAddress,
                 password: superSecretPassword
             })
-            .expect(200);
+            .expect(201);
 
             const starkAccessToken = res1.body.accessToken;
 
@@ -73,7 +73,7 @@ describe("Authorization", function Authorization() {
                 emailAddress: thorEmailAddress,
                 password: superSecretPassword
             })
-            .expect(200);
+            .expect(201);
 
             const thorAccessToken = res3.body.accessToken;
 
@@ -90,7 +90,7 @@ describe("Authorization", function Authorization() {
                 emailAddress: thorEmailAddress,
                 password: superSecretPassword
             })
-            .expect(200);
+            .expect(201);
 
             const thorAccessToken = res1.body.accessToken;
 
@@ -110,7 +110,7 @@ describe("Authorization", function Authorization() {
                 emailAddress: furyEmailAddress,
                 password: superSecretPassword
             })
-            .expect(200);
+            .expect(201);
 
             const furyAccessToken = res1.body.accessToken;
 
@@ -136,7 +136,7 @@ describe("Authorization", function Authorization() {
                 emailAddress: furyEmailAddress,
                 password: superSecretPassword
             })
-            .expect(200);
+            .expect(201);
 
             const furyAccessToken = res1.body.accessToken;
 
@@ -164,7 +164,7 @@ describe("UserAccountManagement", function UserAccountManagement() {
             emailAddress: starkEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const starkAccessToken = res1.body.accessToken;
 
@@ -187,7 +187,7 @@ describe("UserAccountManagement", function UserAccountManagement() {
             emailAddress: starkEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const starkAccessToken = res1.body.accessToken;
 
@@ -208,7 +208,7 @@ describe("UserAccountManagement", function UserAccountManagement() {
             emailAddress: starkEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const starkAccessToken = res1.body.accessToken;
 
@@ -231,7 +231,7 @@ describe("UserAccountManagement", function UserAccountManagement() {
             emailAddress: furyEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const furyAccessToken = res1.body.accessToken;
 
@@ -271,7 +271,7 @@ describe("UserAccountManagement", function UserAccountManagement() {
             emailAddress: testUserEmail,
             password: testUserPassword
         })
-        .expect(200);
+        .expect(201);
 
 
         const res3 = await request.put(`/api/v1/users/${testUserId}/password`)
@@ -287,7 +287,7 @@ describe("UserAccountManagement", function UserAccountManagement() {
             emailAddress: testUserEmail,
             password: updatedPassword
         })
-        .expect(200);
+        .expect(201);
     });
 });
 

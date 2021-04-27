@@ -33,7 +33,7 @@ describe("MerchantManagement", function MerchantManagement() {
             emailAddress: furyEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const furyAccessToken = res1.body.accessToken;
 
@@ -83,7 +83,7 @@ describe("MerchantManagement", function MerchantManagement() {
             emailAddress: furyEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const furyAccessToken = res1.body.accessToken;
         const fakeAccessToken = res.body.accessToken;
@@ -141,7 +141,7 @@ describe("MerchantManagement", function MerchantManagement() {
             emailAddress: furyEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const furyAccessToken = res1.body.accessToken;
 
@@ -177,7 +177,7 @@ describe("MerchantManagement", function MerchantManagement() {
             emailAddress: furyEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const furyAccessToken = res1.body.accessToken;
 
@@ -228,7 +228,7 @@ describe("MerchantManagement", function MerchantManagement() {
             emailAddress: furyEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const furyAccessToken = res1.body.accessToken;
         const fakeAccessToken = res.body.accessToken;
@@ -295,7 +295,7 @@ describe("MerchantManagement", function MerchantManagement() {
             emailAddress: furyEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const furyAccessToken = res1.body.accessToken;
         const fakeAccessToken = res.body.accessToken;
@@ -359,7 +359,7 @@ describe("MerchantManagement", function MerchantManagement() {
             emailAddress: furyEmailAddress,
             password: superSecretPassword
         })
-        .expect(200);
+        .expect(201);
 
         const furyAccessToken = res1.body.accessToken;
         const fakeAccessToken = res.body.accessToken;
