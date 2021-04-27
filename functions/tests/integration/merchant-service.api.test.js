@@ -74,7 +74,7 @@ describe("MerchantManagement", function MerchantManagement() {
             phoneNumber: faker.phone.phoneNumber(),
             password: fakePassword
         })
-        .expect(200);
+        .expect(201);
 
         const fakeUserId = res.body.userId;
 
@@ -219,7 +219,7 @@ describe("MerchantManagement", function MerchantManagement() {
             phoneNumber: faker.phone.phoneNumber(),
             password: fakePassword
         })
-        .expect(200);
+        .expect(201);
 
         const fakeUserId = res.body.userId;
 
@@ -286,7 +286,7 @@ describe("MerchantManagement", function MerchantManagement() {
             phoneNumber: faker.phone.phoneNumber(),
             password: fakePassword
         })
-        .expect(200);
+        .expect(201);
 
         const fakeUserId = res.body.userId;
 
@@ -321,7 +321,7 @@ describe("MerchantManagement", function MerchantManagement() {
         
         const merchantId = res3["body"]["entries"][0]["id"];
 
-        const res4 = await request.post(`/api/v1/merchants/${merchantId}/status/archive`)
+        const res4 = await request.post(`/api/v1/merchants/${merchantId}/status/archived`)
         .set("authorization", `Bearer ${furyAccessToken}`)
         .send()
         .expect(204);
@@ -350,7 +350,7 @@ describe("MerchantManagement", function MerchantManagement() {
             phoneNumber: faker.phone.phoneNumber(),
             password: fakePassword
         })
-        .expect(200);
+        .expect(201);
 
         const fakeUserId = res.body.userId;
 
@@ -385,7 +385,7 @@ describe("MerchantManagement", function MerchantManagement() {
         
         const merchantId = res3["body"]["entries"][0]["id"];
 
-        const res4 = await request.post(`/api/v1/merchants/${merchantId}/status/archive`)
+        const res4 = await request.post(`/api/v1/merchants/${merchantId}/status/archived`)
         .set("authorization", `Bearer ${furyAccessToken}`)
         .send()
         .expect(204);

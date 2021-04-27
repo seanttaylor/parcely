@@ -26,7 +26,7 @@ test("Should be able to get a userId and access credential when a new User insta
         phoneNumber: faker.phone.phoneNumber(),
         password: fakePassword
     })
-    .expect(200);
+    .expect(201);
 
     expect(Object.keys(res1.body).includes("accessToken")).toBe(true);
     expect(Object.keys(res1.body).includes("userId")).toBe(true);
@@ -49,7 +49,7 @@ describe("Authorization", function Authorization() {
             const res2 = await request.get(`/api/v1/users/${starkUserId}`)
             .set("authorization", `Bearer ${starkAccessToken}`)
             .send()
-            .expect(200);
+            .expect(201);
         });
 
 
@@ -84,7 +84,7 @@ describe("Authorization", function Authorization() {
         });
 
 
-        test("Platform users should NOT be able to edit other users' account  data", async() => {
+        test("Platform users should NOT be able to edit other users' account data", async() => {
             const res1 = await request.post(`/api/v1/users/token`)
             .send({
                 emailAddress: thorEmailAddress,
@@ -261,7 +261,7 @@ describe("UserAccountManagement", function UserAccountManagement() {
             phoneNumber: faker.phone.phoneNumber(),
             password: testUserPassword
         })
-        .expect(200);
+        .expect(201);
 
         const testUserId = res1.body.userId;
         const testUserAccessToken = res1.body.accessToken;

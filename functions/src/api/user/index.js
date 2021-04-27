@@ -155,7 +155,7 @@ const {
         }
         
         const accessToken = await authService.issueAuthCredential(user, role);
-        res.status(200);
+        res.status(201);
         res.json({
             accessToken,
             userId: user.id
@@ -173,7 +173,7 @@ const {
             eventEmitter.emit("userService.newUserCreated", user);
 
             res.set("content-type", "application/json");
-            res.status(200);
+            res.status(201);
             res.json({
                 accessToken: token,
                 userId: user.id,

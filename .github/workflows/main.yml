@@ -33,7 +33,7 @@ jobs:
           GCLOUD_PROJECT: fakeProjectId
           FIREBASE_CONFIG: "{\"projectId\":\"fakeProjectId\",\"storageBucket\":\"fakeProjectId.appspot.com\"}"
       
-      - name: "[STEP] Set Function deployment environment variables"
+      - name: "[STEP] Set deployment environment variables"
         uses: w9jds/firebase-action@master
         with:
           args: functions:config:set env.commit_hash=${{ env.GIT_SHA_SHORT }}

@@ -37,6 +37,7 @@ function MerchantRouter({merchantService, crateService, eventEmitter}) {
             res.status(201);
             res.json({
                 entries: [merchant],
+                error: null,
                 count: 1
             });
 
@@ -86,7 +87,7 @@ function MerchantRouter({merchantService, crateService, eventEmitter}) {
 
     });
 
-    router.post("/:id/status/archive", validateJWT, authorizeRequest({
+    router.post("/:id/status/archived", validateJWT, authorizeRequest({
         actionId: "updateAny:merchants",
     }), async function archiveMerchant(req, res, next) {
         const merchantId = req.params.id;
@@ -120,6 +121,7 @@ function MerchantRouter({merchantService, crateService, eventEmitter}) {
             res.status(200);
             res.json({
                 entries: [merchant],
+                error: null,
                 count: 1
             });
 
@@ -142,6 +144,7 @@ function MerchantRouter({merchantService, crateService, eventEmitter}) {
             res.status(200);
             res.json({
                 entries: crateList,
+                error: null,
                 count: crateList.length
             });
 

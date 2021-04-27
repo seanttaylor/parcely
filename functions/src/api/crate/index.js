@@ -25,6 +25,7 @@ const {
             res.status(200);
             res.json({
                 entries: crateList.map(c => c.toJSON()),
+                error: null,
                 count: crateList.length
             });
         }
@@ -49,6 +50,7 @@ const {
             res.status(200);
             res.json({
                 entries: [crate.toJSON()],
+                error: null,
                 count: 1
             });
         }
@@ -68,6 +70,7 @@ const {
             res.status(200);
             res.json({
                 entries: shipmentList.map((s) => s.toJSON()),
+                error: null,
                 count: shipmentList.length
             });
         }
@@ -89,6 +92,7 @@ const {
             res.status(200);
             res.json({
                 entries: [shipment],
+                error: null,
                 count: 1
             });
         }
@@ -110,6 +114,7 @@ const {
             res.status(201);
             res.json({
                 entries: [crate.toJSON()],
+                error: null,
                 count: 1
             });
         }
@@ -133,6 +138,7 @@ const {
             res.status(201);
             res.json({
                 entries: [crate.toJSON()],
+                error: null,
                 count: 1
             });
         }
@@ -152,6 +158,7 @@ const {
             res.status(201);
             res.json({
                 entries: [crate.toJSON()],
+                error: null,
                 count: 1
             });
         }
@@ -167,10 +174,24 @@ const {
             res.set("content-type", "application/json");
             await queueService.enqueue({crateId, telemetry});
             eventEmitter.emit("CrateAPI.QueueService.TelemetryUpdateReceived");
-            res.status(201);
+            res.status(204);
             res.send();
         }
         catch(e) {
+            next(e);
+        }
+    });
+
+    router.post("/:id/shipments/:shipmentId/status/complete", validateJWT, authorizeRequest({actionId: "updateAny:crates"}), async function completeShipment(req, res, next) {
+        const crateId = req.params.id;
+
+        try {
+            const crate = await crateService.getCrateById(crateId);
+            await crate.completeShipment();
+            res.status(204);
+            res.send();
+        }
+        catch (e) {
             next(e);
         }
     });
@@ -187,20 +208,6 @@ const {
             await crate.setRecipient(recipientId);
 
             res.set("content-type", "application/json");
-            res.status(204);
-            res.send();
-        }
-        catch (e) {
-            next(e);
-        }
-    });
-
-    router.put("/:id/shipments/:shipmentId/status", validateJWT, authorizeRequest({actionId: "updateAny:crates"}), async function setShipmentStatus(req, res, next) {
-        const crateId = req.params.id;
-
-        try {
-            const crate = await crateService.getCrateById(crateId);
-            await crate.completeShipment();
             res.status(204);
             res.send();
         }

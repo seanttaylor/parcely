@@ -15,7 +15,7 @@ function logRequestsInNonTestEnvironmentsOnly (req, res) {
 function initializeEnvironment() {
     let envMap;
 
-    if (process.env.NODE_ENV ===  "ci/cd/test") {
+    if (process.env.NODE_ENV ===  "ci/cd/test" || process.env.NODE_ENV === "local") {
         envMap = process.env;
     } else {
         envMap = functions.config().env;
@@ -23,7 +23,7 @@ function initializeEnvironment() {
      
    return {
         get(keyName) {
-            if (process.env.NODE_ENV !== "ci/cd/test") {
+            if (process.env.NODE_ENV !== "ci/cd/test" && process.env.NODE_ENV !== "local") {
                 //Environment variables in firebase functions can only contain lowercase letters
                 return envMap[keyName.toLowerCase()];
             }

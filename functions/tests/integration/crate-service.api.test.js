@@ -368,7 +368,7 @@ describe("CrateManagement", function CrateManagement() {
     });
 
 
-    test("Platform should be able to set a crate to pendingReturn", async() => {
+    test("Admins should be able to set a crate to pendingReturn", async() => {
         const res1 = await request.post(`/api/v1/users/token`)
         .send({
             emailAddress: furyEmailAddress,
@@ -430,7 +430,7 @@ describe("CrateManagement", function CrateManagement() {
         
         expect(res5["body"]["entries"][0]["data"]["status"][0] === "inTransit").toBe(true);
 
-        const res6 = await request.put(`/api/v1/crates/${crateId}/shipments/${shipmentId}/status`)
+        const res6 = await request.post(`/api/v1/crates/${crateId}/shipments/${shipmentId}/status/complete`)
         .set("authorization", `Bearer ${furyAccessToken}`)
         .send()
         .expect(204);
@@ -464,7 +464,7 @@ describe("CrateManagement", function CrateManagement() {
 });
 
 describe("ShipmentManagement", function ShipmentManagement() {
-    test("Platform should be able to start shipment of a specified crate", async() => {
+    test("Admins should be able to start shipment of a specified crate", async() => {
         const res1 = await request.post(`/api/v1/users/token`)
         .send({
             emailAddress: furyEmailAddress,
@@ -527,7 +527,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
     });
 
 
-    test("Platform should be able to get a list of all shipments for a specified crate", async() => {
+    test("Admins should be able to get a list of all shipments for a specified crate", async() => {
         const res1 = await request.post(`/api/v1/users/token`)
         .send({
             emailAddress: furyEmailAddress,
@@ -586,7 +586,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
     });
 
 
-    test("Platform should be able to complete shipment of a specified crate", async() => {
+    test("Admins should be able to complete shipment of a specified crate", async() => {
         const res1 = await request.post(`/api/v1/users/token`)
         .send({
             emailAddress: furyEmailAddress,
@@ -648,7 +648,7 @@ describe("ShipmentManagement", function ShipmentManagement() {
         
         expect(res5["body"]["entries"][0]["data"]["status"][0] === "inTransit").toBe(true);
 
-        const res6 = await request.put(`/api/v1/crates/${crateId}/shipments/${shipmentId}/status`)
+        const res6 = await request.post(`/api/v1/crates/${crateId}/shipments/${shipmentId}/status/complete`)
         .set("authorization", `Bearer ${furyAccessToken}`)
         .send()
         .expect(204);
@@ -754,11 +754,11 @@ describe("ShipmentManagement", function ShipmentManagement() {
                 }
             }
         })
-        .expect(201);
+        .expect(204);
 
         const res7 = await request.get(`/api/v1/crates/${crateId}/shipments/${shipmentId}?includeWaypoints=true`)
         .set("authorization", `Bearer ${thorAccessToken}`)
-        .send()
+        .send();
 
         expect(Array.isArray(res7["body"]["entries"])).toBe(true);
         expect(res7["body"]["entries"][0]["data"]["waypoints"]["length"] === 1).toBe(true);
