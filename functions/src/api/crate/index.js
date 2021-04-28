@@ -1,9 +1,14 @@
 /* istanbul ignore file */
+const createCrateSchema = require("../../schemas/api/crate/crate.json");
+const startCrateShipmentSchema = require("../../schemas/api/crate/shipment.json");
+const addShipmentWaypointSchema = require("../../schemas/api/crate/waypoint.json");
+const setRecipientSchema = require("../../schemas/api/crate/recipient.json");
 const express = require("express");
 const router = new express.Router();
 const {
     authorizeRequest, 
     validateJWT,
+    validateRequest,
 } = require("../../lib/middleware");
 
 /**
@@ -104,7 +109,7 @@ const {
 
     /****** POST *******/
 
-    router.post("/", validateJWT, authorizeRequest({actionId: "createAny:crates"}), async function createCrate(req, res, next) {
+    router.post("/", validateRequest(createCrateSchema), validateJWT, authorizeRequest({actionId: "createAny:crates"}), async function createCrate(req, res, next) {
         const crateData = req.body;
 
         try {
@@ -123,7 +128,7 @@ const {
         }
     });
 
-    router.post("/:id/shipments", validateJWT, authorizeRequest({actionId: "createAny:crates"}), async function startCrateShipment(req, res, next) {
+    router.post("/:id/shipments", validateRequest(startCrateShipmentSchema), validateJWT, authorizeRequest({actionId: "createAny:crates"}), async function startCrateShipment(req, res, next) {
         const crateId = req.params.id;
         const {originAddress, destinationAddress, trackingNumber} = req.body;
 
@@ -147,7 +152,9 @@ const {
         }
     });
 
-    router.post("/:id/shipments/:shipmentId/waypoints", validateJWT, authorizeRequest({actionId: "createAny:crates"}), async function addShipmentWaypoint(req, res, next) {
+    //DEPRECATED
+    /*
+    router.post("/:id/shipments/:shipmentId/waypoints", validateRequest(addShipmentWaypointSchema), validateJWT, authorizeRequest({actionId: "createAny:crates"}), async function addShipmentWaypoint(req, res, next) {
         const crateId = req.params.id;
         const telemetry = req.body;
 
@@ -166,8 +173,9 @@ const {
             next(e);
         }
     });
+    */
 
-    router.post("/telemetry/rt-updates", validateJWT, authorizeRequest({actionId: "updateAny:crates"}), async function receiveRealtimeUpdate(req, res, next) {
+    router.post("/telemetry/rt-updates", validateRequest(addShipmentWaypointSchema), validateJWT, authorizeRequest({actionId: "updateAny:crates"}), async function receiveRealtimeUpdate(req, res, next) {
         const {crateId, telemetry } = req.body;
       
         try {
@@ -196,27 +204,7 @@ const {
         }
     });
 
-
-    /****** PUT *******/
-
-    router.put("/:id/recipient", validateJWT, authorizeRequest({actionId: "updateAny:crates"}), async function setRecipient(req, res, next) {
-        const crateId = req.params.id;
-        const recipientId = req.body.recipientId;
-
-        try {
-            const crate = await crateService.getCrateById(crateId);
-            await crate.setRecipient(recipientId);
-
-            res.set("content-type", "application/json");
-            res.status(204);
-            res.send();
-        }
-        catch (e) {
-            next(e);
-        }
-    });
-
-    router.put("/:id/status", validateJWT, authorizeRequest({actionId: "updateAny:crates"}), async function setCrateStatus(req, res, next) {
+    router.post("/:id/status/pending_return", validateJWT, authorizeRequest({actionId: "updateAny:crates"}), async function setCrateStatus(req, res, next) {
         const crateId = req.params.id;
 
         try {
@@ -232,6 +220,25 @@ const {
         }
     });
 
+
+    /****** PUT *******/
+
+    router.put("/:id/recipient", validateRequest(setRecipientSchema), validateJWT, authorizeRequest({actionId: "updateAny:crates"}), async function setRecipient(req, res, next) {
+        const crateId = req.params.id;
+        const recipientId = req.body.recipientId;
+
+        try {
+            const crate = await crateService.getCrateById(crateId);
+            await crate.setRecipient(recipientId);
+
+            res.set("content-type", "application/json");
+            res.status(204);
+            res.send();
+        }
+        catch (e) {
+            next(e);
+        }
+    });
 
     /****** DELETE *******/
 

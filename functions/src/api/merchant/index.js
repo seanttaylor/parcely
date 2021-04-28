@@ -1,9 +1,11 @@
 /* istanbul ignore file */
-
+const createMerchantSchema = require("../../schemas/api/merchant/merchant.json");
+const updateMerchantPlanSchema = require("../../schemas/api/merchant/plan.json");
 const express = require("express");
 const router = new express.Router();
 const {
-    authorizeRequest, 
+    authorizeRequest,
+    validateRequest, 
     validateJWT,
 } = require("../../lib/middleware");
 
@@ -25,8 +27,8 @@ function MerchantRouter({merchantService, crateService, eventEmitter}) {
         }
     }
     
-    /**POST**/
-    router.post("/", validateJWT, authorizeRequest({actionId: "createAny:merchants"}), async function createMerchant(req, res, next) {
+    /*****POST*****/
+    router.post("/", validateRequest(createMerchantSchema), validateJWT, authorizeRequest({actionId: "createAny:merchants"}), async function createMerchant(req, res, next) {
         const merchantData = req.body;
         res.set("content-type", "application/json"); 
 
@@ -42,8 +44,9 @@ function MerchantRouter({merchantService, crateService, eventEmitter}) {
             });
 
         } catch(e) {
-            const [errorMessage] = e.message.split(" =>")
-            if (errorMessage.includes( "MerchantServiceError.CannotCreateMerchant.BadRequest")) {
+            const [errorMessage] = e.message.split(" =>");
+            
+            if (errorMessage.includes("MerchantServiceError.CannotCreateMerchant.BadRequest")) {
                 res.status(400);
                 res.json({
                     entries: [],
@@ -107,7 +110,7 @@ function MerchantRouter({merchantService, crateService, eventEmitter}) {
 
     });
 
-    /**GET**/
+    /*****GET*******/
     router.get("/:id", validateJWT, authorizeRequest({
         actionId: "readOwn:merchants",
         authzOverride: merchantAuthzOverride(merchantService)
@@ -155,7 +158,7 @@ function MerchantRouter({merchantService, crateService, eventEmitter}) {
     });
 
     /**PUT**/
-    router.put("/:id/plan", validateJWT, authorizeRequest({
+    router.put("/:id/plan", validateRequest(updateMerchantPlanSchema), validateJWT, authorizeRequest({
         actionId: "updateOwn:merchants",
         authzOverride: merchantAuthzOverride(merchantService)
     }), async function updatePlan(req, res, next) {

@@ -1,0 +1,96 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://schemas.parcely.com/api/merchant/plan.json?version=0.0.1",
+    "type": "object",
+    "title": "The Merchant plan schema",
+    "description": "The API schema use for validating the update of new merchant plans",
+    "default": {},
+    "examples": [
+        {
+            "planType": [
+                "smallBusiness"
+            ],
+            "startDate": "01/01/2021",
+            "expiryDate": "01/01/2022",
+            "status": [
+                "active"
+            ],
+            "autoRenew": true
+        }
+    ],
+    "required": [
+        "planType",
+        "startDate",
+        "expiryDate",
+        "status",
+        "autoRenew"
+    ],
+    "properties": {
+        "planType": {
+            "$id": "#/properties/planType",
+            "type": "array",
+            "title": "The planType schema",
+            "description": "The type of plan associated with a specified merchant",
+            "default": [],
+            "examples": [
+                [
+                    "smallBusiness"
+                ]
+            ],
+            "items": {
+                "type": "string",
+                "enum": ["smallBusiness", "enterprise"],
+                "description": "The range of plans available for merchants",
+                "default": "",
+                "examples": [
+                    "smallBusiness"
+                ]
+            }
+        },
+        "startDate": {
+            "$id": "#/properties/startDate",
+            "type": "string",
+            "title": "The startDate schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "01/01/2021"
+            ]
+        },
+        "expiryDate": {
+            "$id": "#/properties/expiryDate",
+            "type": "string",
+            "title": "The expiryDate schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "01/01/2022"
+            ]
+        },
+        "status": {
+            "$id": "#/properties/plan/properties/status",
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": ["active", "suspended", "cancelled", "archived"]
+            },
+            "title": "The status schema",
+            "description": "The status of the current plan.",
+            "default": "",
+            "examples": [
+                "cancelled"
+            ]
+        },
+        "autoRenew": {
+            "$id": "#/properties/autoRenew",
+            "type": "boolean",
+            "title": "The autoRenew schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": false,
+            "examples": [
+                true
+            ]
+        }
+    },
+    "additionalProperties": true
+}

@@ -1,0 +1,29 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://schemas.parcely.com/api/recipient.json?version=0.0.1",
+    "type": "object",
+    "title": "The Recipient schema",
+    "description": "The API schema use for validating the association of new recipients with crates",
+    "default": {},
+    "examples": [
+        {
+            "recipientId": "1f3aaf85-539e-4a0b-9b6b-507ae10d1b9c"
+        }
+    ],
+    "required": [
+        "recipientId"
+    ],
+    "properties": {
+        "recipientId": {
+            "$id": "#/properties/recipientId",
+            "type": "string",
+            "title": "The recipientId schema",
+            "description": "The uuid of a recipient for a specified crate",
+            "default": "",
+            "examples": [
+                "1f3aaf85-539e-4a0b-9b6b-507ae10d1b9c"
+            ]
+        }
+    },
+    "additionalProperties": true
+}

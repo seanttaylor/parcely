@@ -1,0 +1,94 @@
+{   "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://schemas.parcely.com/api/start-crate-shipment.json?version=0.0.1",
+    "type": "object",
+    "title": "The Shipment schema",
+    "description": "The API schema usef for validating new crate shipments",
+    "default": {},
+    "required": [
+        "originAddress",
+        "destinationAddress",
+        "trackingNumber"
+    ],
+    "properties": {
+        "originAddress": {
+            "$ref": "#/definitions/address"
+        },
+        "destinationAddress": {
+            "$ref": "#/definitions/address" 
+        },
+        "trackingNumber": {
+            "$id": "#/properties/trackingNumber",
+            "default": "",
+            "description": "The package tracking number provided by the shipper.",
+            "examples": [
+                "1Z54F78A0450293517"
+            ],
+            "title": "The trackingNumber schema",
+            "type": "string"
+        }
+    },
+    "definitions": {
+        "address": {
+            "type": "object",
+            "required": [
+                "street",
+                "city",
+                "state",
+                "zip"
+            ],
+            "properties": {
+                "street": {
+                    "$id": "#/properties/street",
+                    "type": "string",
+                    "title": "The street schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "1159 Drury Lane"
+                    ]
+                },
+                "apartmentNumber": {
+                    "$id": "#/properties/apartmentNumber",
+                    "type": "string",
+                    "title": "The apartmentNumber schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "7"
+                    ]
+                },
+                "city": {
+                    "$id": "#/properties/city",
+                    "type": "string",
+                    "title": "The city schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "StoryBrooke"
+                    ]
+                },
+                "state": {
+                    "$id": "#/properties/state",
+                    "type": "string",
+                    "title": "The state schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "NY"
+                    ]
+                },
+                "zip": {
+                    "$id": "#/properties/zip",
+                    "type": "string",
+                    "title": "The zip schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "11111"
+                    ]
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}
