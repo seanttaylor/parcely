@@ -139,32 +139,35 @@ describe("CrateAccess", function CrateAccess() {
 
             const shipmentId = res5["body"]["entries"][0]["data"]["shipmentId"];
 
-            const res6 = await request.post(`/api/v1/crates/${crateId}/shipments/${shipmentId}/waypoints`)
+            const res6 = await request.post("/api/v1/crates/telemetry/rt-updates")
             .set("authorization", `Bearer ${furyAccessToken}`)
             .send({
-                "temp": {
-                    "degreesFahrenheit": String(faker.datatype.float())
-                },
-                "location": {
-                    "coords": {
-                        "lat": faker.address.latitude(),
-                        "long": faker.address.longitude()
+                crateId,
+                telemetry: {
+                    temp: {
+                        degreesFahrenheit: String(faker.datatype.float())
                     },
-                    "zip": faker.address.zipCode()
-                },
-                "sensors": {
-                    "moisture": {
-                        "thresholdExceeded": false
+                    location: {
+                        coords: {
+                            lat: faker.address.latitude(),
+                            long: faker.address.longitude()
+                        },
+                        zip: faker.address.zipCode()
                     },
-                    "thermometer": {
-                        "thresholdExceeded": false
-                    },
-                    "photometer": {
-                        "thresholdExceeded": false
+                    sensors: {
+                        moisture: {
+                            thresholdExceeded: false
+                        },
+                        thermometer: {
+                            thresholdExceeded: false
+                        },
+                        photometer: {
+                            thresholdExceeded: false
+                        }
                     }
                 }
             })
-            .expect(201);
+            .expect(204);
 
             const res7 = await request.get(`/api/v1/crates/${crateId}/shipments/${shipmentId}`)
             .set("authorization", `Bearer ${thorAccessToken}`)
@@ -449,7 +452,7 @@ describe("CrateManagement", function CrateManagement() {
 
         expect(res8["body"]["entries"][0]["data"]["status"][0] === "complete").toBe(true);
 
-        const res9 = await request.put(`/api/v1/crates/${crateId}/status`)
+        const res9 = await request.post(`/api/v1/crates/${crateId}/status/pending_return`)
         .set("authorization", `Bearer ${furyAccessToken}`)
         .send()
         .expect(204);
