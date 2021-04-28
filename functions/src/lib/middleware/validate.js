@@ -14,7 +14,6 @@ module.exports = function validateRequest(schema) {
         if (requestValidation(req.body)) {
             next();
         } else {
-            console.error(requestValidation.errors);
             res.status(400).send({
                 entries: [],
                 error: requestValidation.errors,

@@ -1,8 +1,8 @@
 /* istanbul ignore file */
-const createCrateSchema = require("../../schemas/api/crates/crate.json");
-const startCrateShipmentSchema = require("../../schemas/api/crates/shipment.json");
-const addShipmentWaypointSchema = require("../../schemas/api/crates/waypoint.json");
-const setRecipientSchema = require("../../schemas/api/crates/recipient.json");
+const createCrateSchema = require("../../schemas/api/crate/crate.json");
+const startCrateShipmentSchema = require("../../schemas/api/crate/shipment.json");
+const addShipmentWaypointSchema = require("../../schemas/api/crate/waypoint.json");
+const setRecipientSchema = require("../../schemas/api/crate/recipient.json");
 const express = require("express");
 const router = new express.Router();
 const {

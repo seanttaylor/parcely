@@ -19,7 +19,6 @@ test("Should be able to get a userId and access credential when a new User insta
     const fakePassword = faker.internet.password();
     const res1 = await request.post(`/api/v1/users`)
     .send({
-        handle: faker.internet.userName(),
         emailAddress: faker.internet.email(),
         firstName: "Bruce",
         lastName: "Banner",
@@ -32,6 +31,33 @@ test("Should be able to get a userId and access credential when a new User insta
     expect(Object.keys(res1.body).includes("userId")).toBe(true);
     expect(typeof(res1.body.accessToken) === "string").toBe(true);
     expect(typeof(res1.body.userId) === "string").toBe(true);
+});
+
+
+test("Should get a Bad Request on attempts to create users with invalid data", async()=> {
+    const fakePassword = faker.internet.password();
+    await request.post(`/api/v1/users`)
+    .send({
+        emailAddress: faker.internet.email(),
+        firstName: "Bruce",
+        lastName: "Banner",
+        phoneNumber: faker.phone.phoneNumber(),
+        password: fakePassword,
+        handle: "@poopyhead"
+    })
+    .expect(400);
+
+    
+    await request.post(`/api/v1/users`)
+    .send({})
+    .expect(400);
+
+    await request.post(`/api/v1/users`)
+    .send({
+        firstName: "Bruce"
+    })
+    .expect(400);
+
 });
 
 describe("Authorization", function Authorization() {
@@ -254,7 +280,6 @@ describe("UserAccountManagement", function UserAccountManagement() {
         
         const res1 = await request.post(`/api/v1/users`)
         .send({
-            handle: faker.internet.userName(),
             emailAddress: testUserEmail,
             firstName: faker.name.firstName(),
             lastName: faker.name.lastName(),

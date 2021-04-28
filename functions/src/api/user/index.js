@@ -1,8 +1,9 @@
 /* istanbul ignore file */
+const userSchema = require("../../schemas/api/user/user.json");
 const express = require("express");
 const router = new express.Router();
 const {
-    //validateRequestBodyWith, 
+    validateRequest, 
     authorizeRequest, 
     validateJWT,
 } = require("../../lib/middleware");
@@ -162,7 +163,7 @@ const {
         });
     });
 
-    router.post("/", async function createUser(req, res, next) {
+    router.post("/", validateRequest(userSchema), async function createUser(req, res, next) {
         const {password, ...requestBody} = req.body;
 
         try {
@@ -180,6 +181,17 @@ const {
             });
         }
         catch(e) {
+            const [errorMessage] = e.message.split(" =>");
+            
+            if (errorMessage.includes("BadRequest")) {
+                res.status(400);
+                res.json({
+                    entries: [],
+                    error: e.message,
+                    count: 0
+                });
+                return;
+            }
             next(e);
         }
     });
@@ -187,7 +199,7 @@ const {
     /*** PUT ***/
 
     
-    router.put("/:id/name", validateJWT, verifyUserExists, authorizeRequest({actionId: "updateOwn:users"}), async function editName(req, res, next) {
+    router.put("/:id/name", validateRequest(userSchema), validateJWT, verifyUserExists, authorizeRequest({actionId: "updateOwn:users"}), async function editName(req, res, next) {
         const userId = req.params.id;
 
         try {
@@ -206,7 +218,7 @@ const {
         }
     });
     
-    router.put("/:id/phone", validateJWT, verifyUserExists, authorizeRequest({actionId: "updateOwn:users"}), async function editPhoneNumber(req, res, next) {
+    router.put("/:id/phone", validateRequest(userSchema), validateJWT, verifyUserExists, authorizeRequest({actionId: "updateOwn:users"}), async function editPhoneNumber(req, res, next) {
         const userId = req.params.id;
         const phoneNumber = req.body.phoneNumber;
 
@@ -227,7 +239,7 @@ const {
     });
 
 
-    router.put("/:id/email", validateJWT, verifyUserExists, authorizeRequest({actionId: "updateOwn:users"}), async function editEmailAddress(req, res, next) {
+    router.put("/:id/email", validateRequest(userSchema), validateJWT, verifyUserExists, authorizeRequest({actionId: "updateOwn:users"}), async function editEmailAddress(req, res, next) {
         const userId = req.params.id;
         const emailAddress = req.body.emailAddress;
 

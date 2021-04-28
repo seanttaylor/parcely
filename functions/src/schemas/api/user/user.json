@@ -1,0 +1,70 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://schemas.parcely.com/api/user/user.json?version=0.0.1",
+    "type": "object",
+    "title": "The User schema",
+    "description": "The API schema use for validating updates to existing users",
+    "default": {},
+    "examples": [
+        {
+            "firstName": "Nick",
+            "lastName": "Fury",
+            "phoneNumber": "2125552424",
+            "emailAddress": "nfury@shield.gov",
+            "password": "superSecretPassword"
+        }
+    ],
+    "properties": {
+        "firstName": {
+            "$id": "#/properties/firstName",
+            "type": "string",
+            "title": "The firstName schema",
+            "description": "The user first name.",
+            "default": "",
+            "examples": [
+                "Nick"
+            ]
+        },
+        "lastName": {
+            "$id": "#/properties/lastName",
+            "type": "string",
+            "title": "The lastName schema",
+            "description": "The user last name.",
+            "default": "",
+            "examples": [
+                "Fury"
+            ]
+        },
+        "phoneNumber": {
+            "$id": "#/properties/phoneNumber",
+            "type": "string",
+            "title": "The phoneNumber schema",
+            "description": "The user phone number.",
+            "default": "",
+            "examples": [
+                "2125552424"
+            ]
+        },
+        "emailAddress": {
+            "$id": "#/properties/emailAddress",
+            "type": "string",
+            "title": "The emailAddress schema",
+            "description": "The user email address.",
+            "default": "",
+            "examples": [
+                "nfury@shield.gov"
+            ]
+        },
+        "password": {
+            "$id": "#/properties/password",
+            "type": "string",
+            "title": "The password schema",
+            "description": "The user password.",
+            "default": "",
+            "examples": [
+                "superSecretPassword"
+            ]
+        }
+    },
+    "additionalProperties": false
+}
