@@ -560,14 +560,14 @@
 											"response": []
 										},
 										{
-											"name": "getCrateShipmentById.addShipmentWaypoint",
+											"name": "getCrateShipmentById.adminPushRealtimeUpdates Copy",
 											"event": [
 												{
 													"listen": "test",
 													"script": {
 														"exec": [
-															"pm.test(\"Status code is 201\", function () {",
-															"    pm.response.to.have.status(201);",
+															"pm.test(\"Status code is 204\", function () {",
+															"    pm.response.to.have.status(204);",
 															"});"
 														],
 														"type": "text/javascript"
@@ -585,38 +585,14 @@
 												"header": [],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n    \"temp\": {\n        \"degreesFahrenheit\": \"{{$randomInt}}\"\n    },\n    \"location\": {\n        \"coords\": {\n            \"lat\": \"{{$randomLatitude}}\",\n            \"long\": \"{{$randomLongitude}}\"\n        },\n        \"zip\": \"00001\"\n    },\n    \"sensors\": {\n        \"moisture\": {\n            \"thresholdExceeded\": false\n        },\n        \"thermometer\": {\n            \"thresholdExceeded\": false\n        },\n        \"photometer\": {\n            \"thresholdExceeded\": false\n        }\n    }\n}",
+													"raw": "{\n    \"crateId\": \"{{currentCrateId}}\",\n    \"telemetry\": {\n        \"temp\": {\n            \"degreesFahrenheit\": \"{{$randomInt}}\"\n        },\n        \"location\": {\n            \"coords\": {\n                \"lat\": \"{{$randomLatitude}}\",\n                \"long\": \"{{$randomLongitude}}\"\n            },\n            \"zip\": \"00001\"\n        },\n        \"sensors\": {\n            \"moisture\": {\n                \"thresholdExceeded\": false\n            },\n            \"thermometer\": {\n                \"thresholdExceeded\": false\n            },\n            \"photometer\": {\n                \"thresholdExceeded\": false\n            }\n        }\n    }\n}",
 													"options": {
 														"raw": {
 															"language": "json"
 														}
 													}
 												},
-												"url": {
-													"raw": "{{url}}/api/v1/crates/:id/shipments/:shipmentId/waypoints",
-													"host": [
-														"{{url}}"
-													],
-													"path": [
-														"api",
-														"v1",
-														"crates",
-														":id",
-														"shipments",
-														":shipmentId",
-														"waypoints"
-													],
-													"variable": [
-														{
-															"key": "id",
-															"value": "{{currentCrateId}}"
-														},
-														{
-															"key": "shipmentId",
-															"value": "{{currentShipmentId}}"
-														}
-													]
-												}
+												"url": "{{url}}/api/v1/crates/telemetry/rt-updates"
 											},
 											"response": []
 										},
@@ -1340,7 +1316,7 @@
 							"description": "Admins should be able to delete an existing crate"
 						},
 						{
-							"name": "adminSetCrateStatus",
+							"name": "adminSetCratePendingReturn",
 							"item": [
 								{
 									"name": "adminSetCrateStatus.getAdminAccessToken",
@@ -1833,10 +1809,10 @@
 												"token": "{{currentAdminAccessToken}}"
 											}
 										},
-										"method": "PUT",
+										"method": "POST",
 										"header": [],
 										"url": {
-											"raw": "{{url}}/api/v1/crates/:id/status",
+											"raw": "{{url}}/api/v1/crates/:id/status/pending_return",
 											"host": [
 												"{{url}}"
 											],
@@ -1845,7 +1821,8 @@
 												"v1",
 												"crates",
 												":id",
-												"status"
+												"status",
+												"pending_return"
 											],
 											"variable": [
 												{
