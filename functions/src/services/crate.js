@@ -380,13 +380,19 @@ function CrateService({
   this.getShipmentHistoryOf = async function (user, { filterBy }) {
     const crateShipmentList = await this._repo.crateShipment.getCrateShipmentsByRecipientId(user.id);
 
-    return crateShipmentList.filter((t) => {
+    return crateShipmentList.filter((s) => {
       if (filterBy) {
-        return t.status[0] === filterBy;
+        return s.status[0] === filterBy;
       }
       return true;
     })
-      .map((t) => new CrateShipment(this._repo.crateShipment, new CrateShipmentDTO(t)));
+      .map((s) => {
+        const shipment = new CrateShipment(this._repo.crateShipment, new CrateShipmentDTO(s));
+
+        shipment._data.waypointsIncluded = false;
+        shipment._data.waypoints = [];
+        return shipment;
+      });
   };
 
   /**
