@@ -13,16 +13,15 @@
 */
 
 function IQueue(myImpl) {
-    function required() {
-        throw Error("Missing implementation");
-    }
+  function required() {
+    throw Error('Missing implementation');
+  }
 
-    this.enqueue = myImpl.enqueue || required;
+  this.enqueue = myImpl.enqueue || required;
 
-    this.dequeue = myImpl.dequeue || required;
+  this.dequeue = myImpl.dequeue || required;
 
-    this.size = myImpl.size || required;
-
+  this.size = myImpl.size || required;
 }
 
 module.exports = IQueue;

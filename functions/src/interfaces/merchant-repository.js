@@ -15,37 +15,36 @@
  */
 
 function IMerchantRepository(myImpl) {
-    function required() {
-        throw Error("Missing implementation");
-    }
+  function required() {
+    throw Error('Missing implementation');
+  }
 
-    /**
+  /**
     @param {Object} doc - object representing a valid entry
     @returns {String} - a uuid for the new merchant
     */
-    this.create = myImpl.create || required;
+  this.create = myImpl.create || required;
 
-    /**
+  /**
     @param {String} id - uuid of the merchant
     @returns {Merchant} - the requested Merchant instance
     */
-    this.getMerchantById = myImpl.getMerchantById || required;
+  this.getMerchantById = myImpl.getMerchantById || required;
 
-    /**
+  /**
     @returns {Array} - a list of all records in the data store
     */
-    this.getAllMerchants = myImpl.getAllMerchants || required;
+  this.getAllMerchants = myImpl.getAllMerchants || required;
 
-    /**
+  /**
     @param {MerchantDTO} Merchant - an instance of MerchantDTO
     */
-    this.archiveMerchant = myImpl.archiveMerchant || required;
+  this.archiveMerchant = myImpl.archiveMerchant || required;
 
-    /**
+  /**
     @param {MerchantDTO} Merchant - an instance of MerchantDTO
     */
-    this.updateMerchantPlan = myImpl.updateMerchantPlan || required;
-
+  this.updateMerchantPlan = myImpl.updateMerchantPlan || required;
 }
 
 module.exports = IMerchantRepository;

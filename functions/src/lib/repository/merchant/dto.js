@@ -1,13 +1,15 @@
 /* istanbul ignore file */
 
-const Ajv = require("ajv");
+const Ajv = require('ajv');
+
 const ajv = new Ajv();
-const merchantSchema = require("../../../schemas/merchant.json");
+const merchantSchema = require('../../../schemas/merchant.json');
+
 const merchantSchemaValidation = ajv.compile(merchantSchema);
 
 /**
  * @typedef {Object} MerchantDTO
- * @property {String} id 
+ * @property {String} id
  * @property {String} userId
  * @property {String} name
  * @property {Object} plan
@@ -18,7 +20,7 @@ const merchantSchemaValidation = ajv.compile(merchantSchema);
  * @property {String|null} lastModified
  */
 
- /**
+/**
   * @param {String} id - uuid for a merchant
   * @param {String} userId - userId for a merchant
   * @param {String} name - name of the merchant (e.g. the business name)
@@ -32,31 +34,31 @@ const merchantSchemaValidation = ajv.compile(merchantSchema);
   * @returns {MerchantDTO}
   */
 
-function MerchantDTO({id, userId, name, status=["active"], plan, address, emailAddress, createdDate=new Date().toISOString(), phoneNumber, lastModified=null }) {
-        
-    const merchantData = {
-      id,
-      userId,
-      name,
-      phoneNumber,
-      status,  
-      plan, 
-      address, 
-      emailAddress,
-      createdDate, 
-      lastModified
-    };
-  
-  if(!merchantSchemaValidation(merchantData)) {
+function MerchantDTO({
+  id, userId, name, status = ['active'], plan, address, emailAddress, createdDate = new Date().toISOString(), phoneNumber, lastModified = null,
+}) {
+  const merchantData = {
+    id,
+    userId,
+    name,
+    phoneNumber,
+    status,
+    plan,
+    address,
+    emailAddress,
+    createdDate,
+    lastModified,
+  };
+
+  if (!merchantSchemaValidation(merchantData)) {
     throw new Error(`MerchantDTOError/InvalidMerchantDTO => ${JSON.stringify(merchantSchemaValidation.errors, null, 2)}`);
   }
 
-  this.value = function() {
+  this.value = function () {
     return merchantData;
-  }
-
+  };
 }
 
 module.exports = {
-    MerchantDTO
+  MerchantDTO,
 };

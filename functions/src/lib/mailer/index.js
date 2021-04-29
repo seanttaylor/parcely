@@ -1,14 +1,15 @@
-const nodemailer = require("nodemailer");
+const nodemailer = require('nodemailer');
+
 const transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-        user: process.env.PLATFORM_OUTBOUND_EMAIL_USERNAME,
-        pass: process.env.PLATFORM_OUTBOUND_EMAIL_PASSWORD
-    }
+  host: 'smtp.ethereal.email',
+  port: 587,
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: process.env.PLATFORM_OUTBOUND_EMAIL_USERNAME,
+    pass: process.env.PLATFORM_OUTBOUND_EMAIL_PASSWORD,
+  },
 });
-const EmailTemplate = require("../mailer/email-templates");
+const EmailTemplate = require('./email-templates');
 
 /**
 * An configuration object for send emails via the Mailable interface
@@ -19,7 +20,6 @@ const EmailTemplate = require("../mailer/email-templates");
 * @property {Array} cc - List of email addresses to 'cc'
 * @property {String} subject - Subject of the email
 */
-
 
 /**
 * @typedef {Object} MailSService
@@ -36,41 +36,40 @@ const EmailTemplate = require("../mailer/email-templates");
  * @param {EventEmitter} eventEmitter - an instance of EventEmitter
  */
 
-function MailService({console, eventEmitter}) {
+function MailService({ console, eventEmitter }) {
+  eventEmitter.on('UserService.newUserCreated', sendWelcomeEmail.bind(this));
 
-    eventEmitter.on("UserService.newUserCreated", sendWelcomeEmail.bind(this));
+  async function sendWelcomeEmail(user) {
+    await this.send({
+      from: process.env.PLATFORM_OUTBOUND_EMAIL_USERNAME,
+      to: [user._data.emailAddress],
+      subject: 'Welcome to Nicely!',
+      html: await EmailTemplate.of({ templateName: 'welcomeEmail', data: user._data }),
+    });
+  }
 
-    async function sendWelcomeEmail(user) {
-        await this.send({
-            from: process.env.PLATFORM_OUTBOUND_EMAIL_USERNAME,
-            to: [user._data.emailAddress],
-            subject: "Welcome to Nicely!",
-            html: await EmailTemplate.of({templateName: "welcomeEmail", data: user._data})
-        });
-    }
-
-    /**
+  /**
     * Sends an email to specified recipients
-    * @param {EmailMessageConfiguration} 
+    * @param {EmailMessageConfiguration}
     */
 
-    this.send = async function({ from, to, bcc, subject, html}) {
-        const message = {
-            from,
-            to: to.join(', '), // Nodemailer API requires a single comma-separated string of addresses
-            bcc,
-            subject,
-            html
-        };
+  this.send = async function ({
+    from, to, bcc, subject, html,
+  }) {
+    const message = {
+      from,
+      to: to.join(', '), // Nodemailer API requires a single comma-separated string of addresses
+      bcc,
+      subject,
+      html,
+    };
 
-        const outboundMessage = await transporter.sendMail(message);
-        console.log({
-            messageId: outboundMessage.messageId,
-            messagePreviewURL: nodemailer.getTestMessageUrl(outboundMessage)
-        });
-    }
+    const outboundMessage = await transporter.sendMail(message);
+    console.log({
+      messageId: outboundMessage.messageId,
+      messagePreviewURL: nodemailer.getTestMessageUrl(outboundMessage),
+    });
+  };
 }
-
-
 
 module.exports = MailService;

@@ -15,46 +15,45 @@
  */
 
 function ICrateShipmentRepository(myImpl) {
-    function required() {
-        throw Error("Missing implementation");
-    }
+  function required() {
+    throw Error('Missing implementation');
+  }
 
-    /**
+  /**
     @param {Object} doc - object representing a valid entry
     @returns {String} - a uuid for the new user
     */
-    this.create = myImpl.create || required;
+  this.create = myImpl.create || required;
 
-    /**
+  /**
     @param {String} id - uuid of the crateTrip
     @returns {CrateShipment} - the requested crateTrip
     */
-    this.getCrateShipmentById = myImpl.getCrateShipmentById || required;
+  this.getCrateShipmentById = myImpl.getCrateShipmentById || required;
 
-    /**
+  /**
     @returns {Array} - a list of all records in the data store
     */
-    this.getAllCrateShipments = myImpl.getAllCrateShipments|| required;
+  this.getAllCrateShipments = myImpl.getAllCrateShipments || required;
 
-    /**
+  /**
     @returns {CrateShipment} - an instance of a specified CrateShipment
     */
-    this.getCrateShipmentById = myImpl.getCrateShipmentById || required;
+  this.getCrateShipmentById = myImpl.getCrateShipmentById || required;
 
-    /**
+  /**
     @returns {Array} - a list of CrateShipment instances
     */
-    this.getCrateShipmentsByCrateId = myImpl.getCrateShipmentsByCrateId || required;   
+  this.getCrateShipmentsByCrateId = myImpl.getCrateShipmentsByCrateId || required;
 
-    /**
+  /**
     @returns {Array} - a list of CrateShipment instances
     */
-    this.getCrateShipmentsByRecipientId = myImpl.getCrateShipmentsByRecipientId || required;   
-    
-    this.addTripWaypoint = myImpl.addTripWaypoint || required;   
+  this.getCrateShipmentsByRecipientId = myImpl.getCrateShipmentsByRecipientId || required;
 
-    this.completeCrateShipment= myImpl.completeCrateShipment || required;   
+  this.addTripWaypoint = myImpl.addTripWaypoint || required;
 
+  this.completeCrateShipment = myImpl.completeCrateShipment || required;
 }
 
 module.exports = ICrateShipmentRepository;
