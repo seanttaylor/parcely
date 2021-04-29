@@ -25,6 +25,9 @@ jobs:
 
       - name: "[STEP] Install app dependencies"
         run: cd ./functions && npm install
+      
+      - name: "[STEP] Lint codebase"
+        run: cd ./functions && npm run lint:fix
 
       - name: "[STEP] Run Unit/Integration Tests"
         run: cd ./functions && npm test
