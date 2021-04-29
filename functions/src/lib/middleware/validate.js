@@ -1,4 +1,5 @@
-const Ajv = require("ajv");
+const Ajv = require('ajv');
+
 const ajv = new Ajv();
 
 /**
@@ -7,18 +8,17 @@ const ajv = new Ajv();
 */
 
 module.exports = function validateRequest(schema) {
+  return function (req, res, next) {
+    const requestValidation = ajv.compile(schema);
 
-    return function(req, res, next) {
-        const requestValidation = ajv.compile(schema);
-
-        if (requestValidation(req.body)) {
-            next();
-        } else {
-            res.status(400).send({
-                entries: [],
-                error: requestValidation.errors,
-                count: 0
-            });
-        }
+    if (requestValidation(req.body)) {
+      next();
+    } else {
+      res.status(400).send({
+        entries: [],
+        error: requestValidation.errors,
+        count: 0,
+      });
     }
-}
+  };
+};

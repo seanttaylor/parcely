@@ -1,186 +1,172 @@
 /* istanbul ignore file */
-const createMerchantSchema = require("../../schemas/api/merchant/merchant.json");
-const updateMerchantPlanSchema = require("../../schemas/api/merchant/plan.json");
-const express = require("express");
+const express = require('express');
+const createMerchantSchema = require('../../schemas/api/merchant/merchant.json');
+const updateMerchantPlanSchema = require('../../schemas/api/merchant/plan.json');
+
 const router = new express.Router();
 const {
-    authorizeRequest,
-    validateRequest, 
-    validateJWT,
-} = require("../../lib/middleware");
+  authorizeRequest,
+  validateRequest,
+  validateJWT,
+} = require('../../lib/middleware');
 
 /**
  * @param {MerchantService} merchantService - an instance of MerchantService
  * @param {CrateService} crateService - an instance of CrateService
- * @param {EventEmitter} eventEmitter - an instance of EventEmitter
  * @returns router - an instance of an Express router
  */
 
+function MerchantRouter({ merchantService, crateService }) {
+  function merchantAuthzOverride(merchantService) {
+    return async function (decodedToken) {
+      const existingMerchant = await merchantService.merchantExists(decodedToken.sub);
 
-function MerchantRouter({merchantService, crateService, eventEmitter}) {
+      return existingMerchant.userId === decodedToken.sub;
+    };
+  }
 
-    function merchantAuthzOverride(mechantService) {
-        return async function(decodedToken) {
-            const existingMerchant = await merchantService.merchantExists(decodedToken.sub);
+  /** ***POST**** */
+  router.post('/', validateRequest(createMerchantSchema), validateJWT, authorizeRequest({ actionId: 'createAny:merchants' }), async (req, res, next) => {
+    const merchantData = req.body;
+    res.set('content-type', 'application/json');
 
-            return existingMerchant.userId === decodedToken.sub;
-        }
+    try {
+      const merchant = await merchantService.createMerchant(merchantData);
+      await merchant.save();
+
+      res.status(201);
+      res.json({
+        entries: [merchant],
+        error: null,
+        count: 1,
+      });
+    } catch (e) {
+      const [errorMessage] = e.message.split(' =>');
+
+      if (errorMessage.includes('MerchantServiceError.CannotCreateMerchant.BadRequest')) {
+        res.status(400);
+        res.json({
+          entries: [],
+          error: e.message,
+          count: 0,
+        });
+        return;
+      }
+      next(e);
     }
-    
-    /*****POST*****/
-    router.post("/", validateRequest(createMerchantSchema), validateJWT, authorizeRequest({actionId: "createAny:merchants"}), async function createMerchant(req, res, next) {
-        const merchantData = req.body;
-        res.set("content-type", "application/json"); 
+  });
 
-        try {
-            const merchant = await merchantService.createMerchant(merchantData);
-            await merchant.save();
+  router.post('/:id/plan/cancel', validateJWT, authorizeRequest({
+    actionId: 'updateOwn:merchants',
+    authzOverride: merchantAuthzOverride(merchantService),
+  }), async (req, res, next) => {
+    const merchantId = req.params.id;
+    res.set('content-type', 'application/json');
 
-            res.status(201);
-            res.json({
-                entries: [merchant],
-                error: null,
-                count: 1
-            });
+    try {
+      const merchant = await merchantService.getMerchantById(merchantId);
+      await merchant.cancelPlan();
+      res.status(204);
+      res.send();
+    } catch (e) {
+      const [errorMessage] = e.message.split(' =>');
 
-        } catch(e) {
-            const [errorMessage] = e.message.split(" =>");
-            
-            if (errorMessage.includes("MerchantServiceError.CannotCreateMerchant.BadRequest")) {
-                res.status(400);
-                res.json({
-                    entries: [],
-                    error: e.message,
-                    count: 0
-                });
-                return;
-            }
-            next(e);
-        }
+      if (errorMessage.includes('MerchantServiceError.CannotCreateMerchant.BadRequest')) {
+        res.status(400);
+        res.json({
+          entries: [],
+          error: e.message,
+          count: 0,
+        });
+        return;
+      }
+      next(e);
+    }
+  });
 
-    });
+  router.post('/:id/status/archived', validateJWT, authorizeRequest({
+    actionId: 'updateAny:merchants',
+  }), async (req, res, next) => {
+    const merchantId = req.params.id;
 
-    router.post("/:id/plan/cancel", validateJWT, authorizeRequest({
-        actionId: "updateOwn:merchants",
-        authzOverride: merchantAuthzOverride(merchantService)
-    }), async function cancelPlan(req, res, next) {
-        const merchantId = req.params.id;
-        res.set("content-type", "application/json"); 
+    res.set('content-type', 'application/json');
 
-        try {
-            const merchant = await merchantService.getMerchantById(merchantId);
-            await merchant.cancelPlan();
-            res.status(204);
-            res.send();
+    try {
+      const merchant = await merchantService.getMerchantById(merchantId);
+      await merchantService.archiveMerchant(merchant);
 
-        } catch(e) {
-            const [errorMessage] = e.message.split(" =>");
+      res.status(204);
+      res.send();
+    } catch (e) {
+      next(e);
+    }
+  });
 
-            if (errorMessage.includes( "MerchantServiceError.CannotCreateMerchant.BadRequest")) {
-                res.status(400);
-                res.json({
-                    entries: [],
-                    error: e.message,
-                    count: 0
-                });
-                return;
-            }
-            next(e);
-        }
+  /** ***GET****** */
+  router.get('/:id', validateJWT, authorizeRequest({
+    actionId: 'readOwn:merchants',
+    authzOverride: merchantAuthzOverride(merchantService),
+  }), async (req, res, next) => {
+    const merchantId = req.params.id;
+    res.set('content-type', 'application/json');
 
-    });
+    try {
+      const merchant = await merchantService.getMerchantById(merchantId);
 
-    router.post("/:id/status/archived", validateJWT, authorizeRequest({
-        actionId: "updateAny:merchants",
-    }), async function archiveMerchant(req, res, next) {
-        const merchantId = req.params.id;
+      res.status(200);
+      res.json({
+        entries: [merchant],
+        error: null,
+        count: 1,
+      });
+    } catch (e) {
+      next(e);
+    }
+  });
 
-        res.set("content-type", "application/json"); 
+  router.get('/:id/crates', validateJWT, authorizeRequest({
+    actionId: 'readOwn:merchants',
+    authzOverride: merchantAuthzOverride(merchantService),
+  }), async (req, res, next) => {
+    const merchantId = req.params.id;
+    res.set('content-type', 'application/json');
 
-        try {
-            const merchant = await merchantService.getMerchantById(merchantId);
-            await merchantService.archiveMerchant(merchant);
+    try {
+      const crateList = await crateService.getCratesByMerchantId(merchantId);
 
-            res.status(204);
-            res.send();
+      res.status(200);
+      res.json({
+        entries: crateList,
+        error: null,
+        count: crateList.length,
+      });
+    } catch (e) {
+      next(e);
+    }
+  });
 
-        } catch(e) {
-            next(e);
-        }
+  /** PUT* */
+  router.put('/:id/plan', validateRequest(updateMerchantPlanSchema), validateJWT, authorizeRequest({
+    actionId: 'updateOwn:merchants',
+    authzOverride: merchantAuthzOverride(merchantService),
+  }), async (req, res, next) => {
+    const merchantId = req.params.id;
+    const updatedPlan = req.body;
 
-    });
+    res.set('content-type', 'application/json');
 
-    /*****GET*******/
-    router.get("/:id", validateJWT, authorizeRequest({
-        actionId: "readOwn:merchants",
-        authzOverride: merchantAuthzOverride(merchantService)
-    }), async function getMerchantById(req, res, next) {
-        const merchantId = req.params.id;
-        res.set("content-type", "application/json"); 
+    try {
+      const merchant = await merchantService.getMerchantById(merchantId);
+      await merchant.updatePlan(updatedPlan);
 
-        try {
-            const merchant = await merchantService.getMerchantById(merchantId);
+      res.status(204);
+      res.send();
+    } catch (e) {
+      next(e);
+    }
+  });
 
-            res.status(200);
-            res.json({
-                entries: [merchant],
-                error: null,
-                count: 1
-            });
-
-        } catch(e) {
-            next(e);
-        }
-
-    });
-
-    router.get("/:id/crates", validateJWT, authorizeRequest({
-        actionId: "readOwn:merchants",
-        authzOverride: merchantAuthzOverride(merchantService)
-    }), async function getCratesByMerchant(req, res, next) {
-        const merchantId = req.params.id;
-        res.set("content-type", "application/json"); 
-
-        try {
-            const crateList = await crateService.getCratesByMerchantId(merchantId);
-
-            res.status(200);
-            res.json({
-                entries: crateList,
-                error: null,
-                count: crateList.length
-            });
-
-        } catch(e) {
-            next(e);
-        }
-
-    });
-
-    /**PUT**/
-    router.put("/:id/plan", validateRequest(updateMerchantPlanSchema), validateJWT, authorizeRequest({
-        actionId: "updateOwn:merchants",
-        authzOverride: merchantAuthzOverride(merchantService)
-    }), async function updatePlan(req, res, next) {
-        const merchantId = req.params.id;
-        const updatedPlan = req.body;
-
-        res.set("content-type", "application/json"); 
-
-        try {
-            const merchant = await merchantService.getMerchantById(merchantId);
-            await merchant.updatePlan(updatedPlan);
-
-            res.status(204);
-            res.send();
-
-        } catch(e) {
-            next(e);
-        }
-
-    });
-
-    return router;
+  return router;
 }
 
-module.exports =  MerchantRouter;
+module.exports = MerchantRouter;

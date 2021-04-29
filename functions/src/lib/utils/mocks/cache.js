@@ -5,20 +5,20 @@
  * See /src/interfaces/cache for documentation
  */
 const mockCacheImplementation = {
-    set() {
-        this.calledMethods.set = true;
-    },
-    del() {
-        this.calledMethods.del = true;
-    },
-    has() {
-        this.calledMethods.has = true;
-    },
-    calledMethods: {
-        set: false,
-        del: false,
-        has: false
-    }
+  set() {
+    this.calledMethods.set = true;
+  },
+  del() {
+    this.calledMethods.del = true;
+  },
+  has() {
+    this.calledMethods.has = true;
+  },
+  calledMethods: {
+    set: false,
+    del: false,
+    has: false,
+  },
 };
 
 module.exports = mockCacheImplementation;

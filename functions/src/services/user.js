@@ -1,8 +1,9 @@
-const config = require("../config");
-const bcrypt = require("bcryptjs");
-const {UserDTO, UserRoleDTO, UserCredentialsDTO} = require("../lib/repository/user/dto");
-const uuid = require("uuid");
-const {promisify} = require("util");
+const bcrypt = require('bcryptjs');
+const uuid = require('uuid');
+const { promisify } = require('util');
+const { UserDTO, UserRoleDTO, UserCredentialsDTO } = require('../lib/repository/user/dto');
+const config = require('../config');
+
 const SALT_ROUNDS = 10;
 const hash = promisify(bcrypt.hash);
 const passwordAndHashMatch = promisify(bcrypt.compare);
@@ -14,93 +15,87 @@ const passwordAndHashMatch = promisify(bcrypt.compare);
  * @property {Object} _repo - the repository instance associated with this entity
  */
 
-
 /**
  * @param {Object} repo - the repo associated with this entity
  * @param {UserDTO} userDTO - an instance of the UserDTO
  */
 
 function User(repo, userDTO) {
-    const dtoData = userDTO.value();
-    
-    this._data = dtoData;
-    this._repo = repo;
-    this.id = dtoData.id;
-    
-    this.toJSON = function() {
-        return {
-            id: this.id,
-            createdDate: this._data.createdDate,
-            lastModified: this._data.lastModified,
-            data: {
-                userId: this._data.id,
-                firstName: this._data.firstName,
-                lastName: this._data.lastName,
-                emailAddress: this._data.emailAddress,
-                isVerified: this._data.isVerified
-            }
-        };
-    }
+  const dtoData = userDTO.value();
 
+  this._data = dtoData;
+  this._repo = repo;
+  this.id = dtoData.id;
 
-    /**
+  this.toJSON = function () {
+    return {
+      id: this.id,
+      createdDate: this._data.createdDate,
+      lastModified: this._data.lastModified,
+      data: {
+        userId: this._data.id,
+        firstName: this._data.firstName,
+        lastName: this._data.lastName,
+        emailAddress: this._data.emailAddress,
+        isVerified: this._data.isVerified,
+      },
+    };
+  };
+
+  /**
      * Saves a new user to the data store
      * @returns {String} - a uuid for the new user
      */
-    this.save = async function() {
-        const userDTO = new UserDTO(this._data);
-        const userRoleDTO = new UserRoleDTO(this._data);
-        const user = await this._repo.create({userDTO, userRoleDTO});
-        
-        return user.id;
-    }
+  this.save = async function () {
+    const userDTO = new UserDTO(this._data);
+    const userRoleDTO = new UserRoleDTO(this._data);
+    const user = await this._repo.create({ userDTO, userRoleDTO });
 
+    return user.id;
+  };
 
-    /**
+  /**
      * Edit firstName and/or lastName on an existing user in the data store
      * @param {String} firstName - updated first name
      * @param {String} lastName - updated last name
      */
-    this.editName = async function(doc) {
-        const firstName =  doc.firstName || this._data.firstName;
-        const lastName = doc.lastName || this._data.lastName;
-        const userDTO = new UserDTO(Object.assign(this._data, {
-            firstName,
-            lastName
-        }));
+  this.editName = async function (doc) {
+    const firstName = doc.firstName || this._data.firstName;
+    const lastName = doc.lastName || this._data.lastName;
+    const userDTO = new UserDTO(Object.assign(this._data, {
+      firstName,
+      lastName,
+    }));
 
-        await this._repo.editName(userDTO);
-        this._data.firstName = firstName;
-        this._data.lastName = lastName;
-    }
+    await this._repo.editName(userDTO);
+    this._data.firstName = firstName;
+    this._data.lastName = lastName;
+  };
 
-
-    /**
+  /**
      * Edit emailAddress on an existing user in the data store
      * @param {String} emailAddress - updated emailAddress
      */
-    this.editEmailAddress = async function(emailAddress) {
-        const userDTO = new UserDTO(Object.assign(this._data, {
-            emailAddress
-        }));
+  this.editEmailAddress = async function (emailAddress) {
+    const userDTO = new UserDTO(Object.assign(this._data, {
+      emailAddress,
+    }));
 
-        await this._repo.editEmailAddress(userDTO);
-        this._data.emailAddress = emailAddress;
-    }
+    await this._repo.editEmailAddress(userDTO);
+    this._data.emailAddress = emailAddress;
+  };
 
-
-    /**
+  /**
      * Edit phoneNumber property of an existing user in the data store
      * @param {Integer} phoneNumber - a telephone number
      */
-    this.editPhoneNumber = async function(phoneNumber) {
-        const userDTO = new UserDTO(Object.assign(this._data, {phoneNumber}));
-        const {lastModified} = await this._repo.editPhoneNumber(userDTO);
-        this._data.phoneNumber = phoneNumber;
-        this._data.lastModified = lastModified;
-    }
+  this.editPhoneNumber = async function (phoneNumber) {
+    const userDTO = new UserDTO(Object.assign(this._data, { phoneNumber }));
+    const { lastModified } = await this._repo.editPhoneNumber(userDTO);
+    this._data.phoneNumber = phoneNumber;
+    this._data.lastModified = lastModified;
+  };
 }
-
 
 /**
  * @typedef {Object} UserService
@@ -110,121 +105,107 @@ function User(repo, userDTO) {
  */
 
 /**
- * 
+ *
  * @param {Object} repo - the repo associated with this service
  * @param {Object} validator - the validator used to validate a new user
  */
 
 function UserService(repo, validator = new UserValidator()) {
-    this._repo = repo;
+  this._repo = repo;
 
-    this.createUser = async function(doc) {
-        const id = uuid.v4();
-        const data = Object.assign({id}, doc);
-        await validator.validate(this, doc);
-        return new User(repo, new UserDTO(data)) ;
-    }
+  this.createUser = async function (doc) {
+    const id = uuid.v4();
+    const data = { id, ...doc };
+    await validator.validate(this, doc);
+    return new User(repo, new UserDTO(data));
+  };
 
+  this.findUserById = async function (id) {
+    const [user] = await this._repo.findOneById(id);
+    return [new User(repo, new UserDTO(user))];
+  };
 
-    this.findUserById = async function(id) {
-        const [user] = await this._repo.findOneById(id);
-        return [new User(repo, new UserDTO(user))];
-    }
+  this.findUserByEmail = async function (emailAddress) {
+    const userList = await this._repo.findOneByEmail(emailAddress);
+    return userList.map((u) => new User(this._repo, new UserDTO(u)));
+  };
 
+  this.findAllUsers = async function () {
+    const users = await this._repo.findAll();
+    return users.map((u) => new User(repo, new UserDTO(u)));
+  };
 
-    this.findUserByEmail = async function(emailAddress) {
-        const userList = await this._repo.findOneByEmail(emailAddress);
-        return userList.map((u) => new User(this._repo, new UserDTO(u)));
-    }
+  this.deleteUser = function (id) {
+    return this._repo.deleteUser(id);
+  };
 
+  this.userExists = async function (id) {
+    const result = await this._repo.findOneById(id);
+    return result.length === 1 && result[0].id === id;
+  };
 
-    this.findAllUsers = async function() {
-        const users = await this._repo.findAll();
-        return users.map((u) => new User(repo, new UserDTO(u)));
-    }
+  this.emailAddressExists = async function (emailAddress) {
+    const result = await this._repo.findOneByEmail(emailAddress);
+    return result.length === 1 && result[0].emailAddress === emailAddress;
+  };
 
+  this.createUserPassword = async function ({ password, user }) {
+    const passwordHash = await hash(password, SALT_ROUNDS);
+    await this._repo.createUserPassword(new UserCredentialsDTO({
+      password: passwordHash,
+      ...user._data,
+    }));
+  };
 
-    this.deleteUser = function(id) {
-        return this._repo.deleteUser(id);
-    }
+  this.isUserPasswordCorrect = async function ({ password, user }) {
+    const storedUserPasswordHash = await this._repo.getUserPassword(user._data.emailAddress);
+    const result = await passwordAndHashMatch(password, storedUserPasswordHash);
+    return result;
+  };
 
+  this.getUserRole = async function (user) {
+    const result = await this._repo.getUserRole(user.id);
+    return result.role;
+  };
 
-    this.userExists = async function(id) {
-        const result = await this._repo.findOneById(id);
-        return result.length === 1 && result[0]["id"] === id;
-    }
-
-
-    this.emailAddressExists = async function(emailAddress) {
-        const result = await this._repo.findOneByEmail(emailAddress);
-        return result.length === 1 && result[0]["emailAddress"] === emailAddress;
-    }
-
-
-    this.createUserPassword = async function({password, user}) {
-        const passwordHash = await hash(password, SALT_ROUNDS);
-        await this._repo.createUserPassword(new UserCredentialsDTO({
-            password: passwordHash,
-            ...user._data
-        }));
-    }
-    
-
-    this.isUserPasswordCorrect = async function({password, user}) {
-        const storedUserPasswordHash = await this._repo.getUserPassword(user._data.emailAddress);
-        const result = await passwordAndHashMatch(password, storedUserPasswordHash);        
-        return result;
-    } 
-    
-
-    this.getUserRole = async function(user) {
-        const result = await this._repo.getUserRole(user.id);
-        return result.role; 
-    }
-
-    this.resetUserPassword = async function({user, password}) {
-        await this.createUserPassword({user, password});
-    }
-
+  this.resetUserPassword = async function ({ user, password }) {
+    await this.createUserPassword({ user, password });
+  };
 }
 
-
 function UserValidator() {
-
-    this.validate = async function(userService, userData) {
-        if (userData === undefined || (Object.keys(userData).length === 0)) {
-            throw new Error("UserSerivceError.CannotCreateUser.BadRequest.UserDataEmpty => User data is missing or undefined");
-        }
-
-        if (!userData.emailAddress) {
-            throw new Error("UserServiceError.CannotCreateUser.BadRequest.MissingOrInvalidEmail.Missing")
-        }
-
-        if (!userData.phoneNumber) {
-            throw new Error("UserServiceError.CannoCreateUser.BadRequest.MissingOrInvalidPhone");
-        }
-
-        if (!userData.firstName) {
-            throw new Error("UserServiceError.CannotCreateUser.BadRequest.MissingOrInvalidFirstName");
-        }
-
-        if (!userData.lastName) {
-            throw new Error("UserServiceError.CannotCreateUser.BadRequest.MissingOrInvalidLastName");
-        }
-
-        const emailAddressRegex = new RegExp(config.users.emailAddressRegex);
-
-        if (emailAddressRegex.test(userData.emailAddress) === false) {
-            throw new Error("UserService.CannotCreateUser.BadRequest.MissingOrInvalidEmail.Format");
-        }
-
-        const emailAddressExists = await userService.emailAddressExists(userData.emailAddress);
-        if (emailAddressExists) {
-            throw new Error("UserService.CannotCreateUser.BadRequest.MissingOrInvalidEmail.EmailExists");
-        }
-
+  this.validate = async function (userService, userData) {
+    if (userData === undefined || (Object.keys(userData).length === 0)) {
+      throw new Error('UserSerivceError.CannotCreateUser.BadRequest.UserDataEmpty => User data is missing or undefined');
     }
 
+    if (!userData.emailAddress) {
+      throw new Error('UserServiceError.CannotCreateUser.BadRequest.MissingOrInvalidEmail.Missing');
+    }
+
+    if (!userData.phoneNumber) {
+      throw new Error('UserServiceError.CannoCreateUser.BadRequest.MissingOrInvalidPhone');
+    }
+
+    if (!userData.firstName) {
+      throw new Error('UserServiceError.CannotCreateUser.BadRequest.MissingOrInvalidFirstName');
+    }
+
+    if (!userData.lastName) {
+      throw new Error('UserServiceError.CannotCreateUser.BadRequest.MissingOrInvalidLastName');
+    }
+
+    const emailAddressRegex = new RegExp(config.users.emailAddressRegex);
+
+    if (emailAddressRegex.test(userData.emailAddress) === false) {
+      throw new Error('UserService.CannotCreateUser.BadRequest.MissingOrInvalidEmail.Format');
+    }
+
+    const emailAddressExists = await userService.emailAddressExists(userData.emailAddress);
+    if (emailAddressExists) {
+      throw new Error('UserService.CannotCreateUser.BadRequest.MissingOrInvalidEmail.EmailExists');
+    }
+  };
 }
 
 module.exports = { UserService };

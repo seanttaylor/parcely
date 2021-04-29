@@ -17,66 +17,64 @@
  */
 
 function IUserRepository(myImpl) {
-    function required() {
-        throw Error("Missing implementation");
-    }
+  function required() {
+    throw Error('Missing implementation');
+  }
 
-    /**
+  /**
     @returns {String} - a uuid for the new user
     */
-    this.create = myImpl.create || required;
+  this.create = myImpl.create || required;
 
-    /**
+  /**
     @returns {User} - the requested User instance
     */
-    this.findOneById = myImpl.findOneById || required;
+  this.findOneById = myImpl.findOneById || required;
 
-    /**
+  /**
     @returns {Array} - a list of all records in the data store
     */
-    this.findAll = myImpl.findAll || required;
+  this.findAll = myImpl.findAll || required;
 
-    /**
+  /**
     @returns {Array} - a list of all records in the data store
     */
-    this.findOneByEmail = myImpl.findOneByEmail || required;
+  this.findOneByEmail = myImpl.findOneByEmail || required;
 
-    /**
-    @returns 
-    */
-    this.editName = myImpl.editName || required;
-
-    /**
-    @returns 
-    */
-    this.editPhoneNumber = myImpl.editPhoneNumber || required;
-
-    /**
-    @returns 
-    */
-    this.editEmailAddress = myImpl.editEmailAddress|| required;
-
-    /**
+  /**
     @returns
     */
-    this.deleteUser = myImpl.deleteUser || required;
+  this.editName = myImpl.editName || required;
 
-    /**
-    @returns {String}
-    */
-    this.getUserRole = myImpl.getUserRole || required;
-
-    /**
+  /**
     @returns
     */
-    this.createUserPassword = myImpl.createUserPassword || required;
+  this.editPhoneNumber = myImpl.editPhoneNumber || required;
 
-    /**
+  /**
+    @returns
+    */
+  this.editEmailAddress = myImpl.editEmailAddress || required;
+
+  /**
+    @returns
+    */
+  this.deleteUser = myImpl.deleteUser || required;
+
+  /**
     @returns {String}
     */
-    this.getUserPassword = myImpl.getUserPassword || required;
+  this.getUserRole = myImpl.getUserRole || required;
 
+  /**
+    @returns
+    */
+  this.createUserPassword = myImpl.createUserPassword || required;
+
+  /**
+    @returns {String}
+    */
+  this.getUserPassword = myImpl.getUserPassword || required;
 }
-
 
 module.exports = IUserRepository;
