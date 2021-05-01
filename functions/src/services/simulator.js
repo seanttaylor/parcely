@@ -54,7 +54,7 @@ function ShipmentSimulatorService({ userService, merchantService, crateService }
 
     _merchantId = merchantSim.id;
 
-    for (let i = 0; i < instanceCount; i++) {
+    for (let i = 0; i < instanceCount; i += 1) {
       const crate = crateService.createCrate({
         merchantId: merchantSim.id,
         size: ['M'],
