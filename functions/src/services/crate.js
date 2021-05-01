@@ -285,7 +285,7 @@ function CrateService({
   /**
      * @param {Object} doc - object representing valid crate data
      */
-  this.createCrate = async function (doc) {
+  this.createCrate = function (doc) {
     const id = uuid.v4();
     const data = { id, ...doc };
     return new Crate(this._repo, new CrateDTO(data));
