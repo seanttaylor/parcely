@@ -6557,6 +6557,12 @@
 										}
 									],
 									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": {
+												"token": "{{currentAdminAccessToken}}"
+											}
+										},
 										"method": "POST",
 										"header": [],
 										"url": {
@@ -6879,6 +6885,164 @@
 									"response": []
 								}
 							]
+						}
+					]
+				},
+				{
+					"name": "simluation-non-admin-auth",
+					"item": [
+						{
+							"name": "nonAdmin.createSimulation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401\", function () {",
+											"    pm.response.to.have.status(401);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"instanceCount\": 6,\n    \"intervalMillis\": 15000\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "localhost:3000/api/v1/simulations"
+							},
+							"response": []
+						},
+						{
+							"name": "nonAdmin.getSimulationById",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401\", function () {",
+											"    pm.response.to.have.status(401);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/v1/simulations/:id",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"simulations",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{currentSimulationId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "nonAdmin.startSimulation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401\", function () {",
+											"    pm.response.to.have.status(401);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/v1/simulations/:id/start",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"simulations",
+										":id",
+										"start"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{currentSimulationId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "nonAdmin.endSimulation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401\", function () {",
+											"    pm.response.to.have.status(401);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/v1/simulations/:id/end",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"simulations",
+										":id",
+										"end"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{currentSimulationId}}"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}

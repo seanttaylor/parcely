@@ -3,6 +3,10 @@
 const express = require('express');
 
 const router = new express.Router();
+const {
+  authorizeRequest,
+  validateJWT,
+} = require('../../lib/middleware');
 /**
  *
  * @param {ShipmentSimulatorService} simulatorService - an instance of ShipmentSimulatorService
@@ -11,7 +15,7 @@ const router = new express.Router();
 
 function SimulatorRouter(simulatorService) {
   /** POST */
-  router.post('/', async (req, res, next) => {
+  router.post('/', validateJWT, authorizeRequest({ actionId: 'createAny:simulations' }), async (req, res, next) => {
     try {
       const { instanceCount, intervalMillis } = req.body;
       const simulation = await simulatorService.init({
@@ -31,7 +35,7 @@ function SimulatorRouter(simulatorService) {
     }
   });
 
-  router.post('/:id/start', async (req, res, next) => {
+  router.post('/:id/start', validateJWT, authorizeRequest({ actionId: 'updateAny:simulations' }), async (req, res, next) => {
     res.set('content-type', 'application/json');
     try {
       const [simulation] = simulatorService.getSimulations().filter((s) => s.id === req.params.id);
@@ -50,7 +54,7 @@ function SimulatorRouter(simulatorService) {
     }
   });
 
-  router.post('/:id/end', (req, res, next) => {
+  router.post('/:id/end', validateJWT, authorizeRequest({ actionId: 'updateAny:simulations' }), (req, res, next) => {
     res.set('content-type', 'application/json');
     try {
       const [simulation] = simulatorService.getSimulations().filter((s) => s.id === req.params.id);
@@ -70,7 +74,7 @@ function SimulatorRouter(simulatorService) {
   });
 
   /** GET */
-  router.get('/:id', async (req, res, next) => {
+  router.get('/:id', validateJWT, authorizeRequest({ actionId: 'readAny:simulations' }), async (req, res, next) => {
     res.set('content-type', 'application/json');
     try {
       const [simulation] = simulatorService.getSimulations().filter((s) => s.id === req.params.id);

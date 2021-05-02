@@ -3,37 +3,89 @@
     "grants": {
         "admin": {
             "crates": {
-                "create:any": ["*"],
-                "read:any": ["*"],
-                "update:any": ["*"],
-                "delete:any": ["*"]
+                "create:any": [
+                    "*"
+                ],
+                "read:any": [
+                    "*"
+                ],
+                "update:any": [
+                    "*"
+                ],
+                "delete:any": [
+                    "*"
+                ]
             },
             "users": {
-                "create:any": ["*"],
-                "read:any": ["*"],
-                "update:any": ["*"],
-                "delete:any": ["*"]
+                "create:any": [
+                    "*"
+                ],
+                "read:any": [
+                    "*"
+                ],
+                "update:any": [
+                    "*"
+                ],
+                "delete:any": [
+                    "*"
+                ]
             },
             "merchants": {
-                "create:any": ["*"],
-                "read:any": ["*"],
-                "update:any": ["*"],
-                "delete:any": ["*"]
+                "create:any": [
+                    "*"
+                ],
+                "read:any": [
+                    "*"
+                ],
+                "update:any": [
+                    "*"
+                ],
+                "delete:any": [
+                    "*"
+                ]
+            },
+            "simulations": {
+                "create:any": [
+                    "*"
+                ],
+                "read:any": [
+                    "*"
+                ],
+                "update:any": [
+                    "*"
+                ],
+                "delete:any": [
+                    "*"
+                ]
             }
         },
         "user": {
             "crates": {
-                "read:own": ["*"]
+                "read:own": [
+                    "*"
+                ]
             },
             "users": {
-                "create:own": ["*"],
-                "read:own": ["*"],
-                "update:own": ["*"],
-                "delete:own": ["*"]
+                "create:own": [
+                    "*"
+                ],
+                "read:own": [
+                    "*"
+                ],
+                "update:own": [
+                    "*"
+                ],
+                "delete:own": [
+                    "*"
+                ]
             },
             "merchants": {
-                "read:own": ["*"],
-                "update:own": ["*"]
+                "read:own": [
+                    "*"
+                ],
+                "update:own": [
+                    "*"
+                ]
             }
         }
     }
