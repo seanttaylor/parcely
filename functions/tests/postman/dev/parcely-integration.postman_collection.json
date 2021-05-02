@@ -6280,6 +6280,609 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "simluation-service",
+			"item": [
+				{
+					"name": "shipment-simulation",
+					"item": [
+						{
+							"name": "getUserAccessToken",
+							"item": [
+								{
+									"name": "getUserAccessToken.getAdminAccessToken",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201\", function () {",
+													"    pm.response.to.have.status(201);",
+													"});",
+													"",
+													"pm.test(\"Should set admin access token in environment\", function () {",
+													"    const responseData = pm.response.json();",
+													"    pm.environment.set(\"currentAdminAccessToken\", responseData.accessToken);",
+													"});",
+													"",
+													"pm.test(\"Should be able to get a userId and access credential when a new User instance is created\", function () {",
+													"    const responseData = pm.response.json();",
+													"    pm.expect(Object.keys(responseData).includes(\"accessToken\")).to.eql(true);",
+													"    pm.expect(Object.keys(responseData).includes(\"userId\")).to.eql(true);",
+													"    pm.expect(typeof(responseData.userId) === \"string\").to.eql(true);",
+													"    pm.expect(typeof(responseData.accessToken) === \"string\").to.eql(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"emailAddress\": \"{{furyEmailAddress}}\",\n    \"password\": \"{{globalUserPassword}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{url}}/api/v1/users/token"
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "createSimulation",
+							"item": [
+								{
+									"name": "createSimulation.create",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(201);",
+													"});",
+													"",
+													"pm.test(\"Set simulation id in the environment\", function () {",
+													"    const jsonData = pm.response.json();",
+													"    pm.environment.set(\"currentSimulationId\", jsonData.entries[0].id);",
+													"    pm.expect(jsonData.entries[0].status === \"notStarted\").to.eql(true);",
+													"    pm.expect(jsonData.entries[0].instanceCount === jsonData.entries[0].instances.length).to.eql(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": {
+												"token": "{{currentAdminAccessToken}}"
+											}
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"instanceCount\": 6,\n    \"intervalMillis\": 15000\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{url}}/api/v1/simulations"
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "getSimulationById",
+							"item": [
+								{
+									"name": "getSimulationById.createSimulation",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(201);",
+													"});",
+													"",
+													"pm.test(\"Set simulation id in the environment\", function () {",
+													"    const jsonData = pm.response.json();",
+													"    pm.environment.set(\"currentSimulationId\", jsonData.entries[0].id);",
+													"    pm.expect(jsonData.entries[0].status === \"notStarted\").to.eql(true);",
+													"    pm.expect(jsonData.entries[0].instanceCount === jsonData.entries[0].instances.length).to.eql(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": {
+												"token": "{{currentAdminAccessToken}}"
+											}
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"instanceCount\": 6,\n    \"intervalMillis\": 15000\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{url}}/api/v1/simulations"
+									},
+									"response": []
+								},
+								{
+									"name": "getSimulationById.getSimulation",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Should return a specified simulation\", function () {",
+													"    const jsonData = pm.response.json();",
+													"",
+													"    pm.expect(jsonData.entries[0].id === pm.environment.get(\"currentSimulationId\")).to.eql(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": {
+												"token": "{{currentAdminAccessToken}}"
+											}
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url}}/api/v1/simulations/:id",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"simulations",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{currentSimulationId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "startSimulation",
+							"item": [
+								{
+									"name": "startSimulation.createSimulation",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201\", function () {",
+													"    pm.response.to.have.status(201);",
+													"});",
+													"",
+													"pm.test(\"Set simulation id in the environment\", function () {",
+													"    const jsonData = pm.response.json();",
+													"    pm.environment.set(\"currentSimulationId\", jsonData.entries[0].id);",
+													"    pm.expect(jsonData.entries[0].status === \"notStarted\").to.eql(true);",
+													"    pm.expect(jsonData.entries[0].instanceCount === jsonData.entries[0].instances.length).to.eql(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": {
+												"token": "{{currentAdminAccessToken}}"
+											}
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"instanceCount\": 6,\n    \"intervalMillis\": 15000\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{url}}/api/v1/simulations"
+									},
+									"response": []
+								},
+								{
+									"name": "startSimulation.start",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", function () {",
+													"    pm.response.to.have.status(204);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "localhost:3000/api/v1/simulations/:id/start",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"v1",
+												"simulations",
+												":id",
+												"start"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{currentSimulationId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "startSimulation.getSimulationById",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Should return a specified simulation\", function () {",
+													"    const jsonData = pm.response.json();",
+													"    pm.expect(jsonData.entries[0].id === pm.environment.get(\"currentSimulationId\")).to.eql(true);",
+													"    pm.expect(jsonData.entries[0].status === \"running\").to.eql(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": {
+												"token": "{{currentAdminAccessToken}}"
+											}
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url}}/api/v1/simulations/:id",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"simulations",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{currentSimulationId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "endSimulation",
+							"item": [
+								{
+									"name": "endSimulation.createSimulation",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201\", function () {",
+													"    pm.response.to.have.status(201);",
+													"});",
+													"",
+													"pm.test(\"Set simulation id in the environment\", function () {",
+													"    const jsonData = pm.response.json();",
+													"    pm.environment.set(\"currentSimulationId\", jsonData.entries[0].id);",
+													"    pm.expect(jsonData.entries[0].status === \"notStarted\").to.eql(true);",
+													"    pm.expect(jsonData.entries[0].instanceCount === jsonData.entries[0].instances.length).to.eql(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": {
+												"token": "{{currentAdminAccessToken}}"
+											}
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"instanceCount\": 6,\n    \"intervalMillis\": 15000\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{url}}/api/v1/simulations"
+									},
+									"response": []
+								},
+								{
+									"name": "endSimulation.startSimulation",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", function () {",
+													"    pm.response.to.have.status(204);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": {
+												"token": "{{currentAdminAccessToken}}"
+											}
+										},
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "localhost:3000/api/v1/simulations/:id/start",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"v1",
+												"simulations",
+												":id",
+												"start"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{currentSimulationId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "startSimulation.getSimulationById[1]",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Should return a specified simulation\", function () {",
+													"    const jsonData = pm.response.json();",
+													"    pm.expect(jsonData.entries[0].id === pm.environment.get(\"currentSimulationId\")).to.eql(true);",
+													"    pm.expect(jsonData.entries[0].status === \"running\").to.eql(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": {
+												"token": "{{currentAdminAccessToken}}"
+											}
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url}}/api/v1/simulations/:id",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"simulations",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{currentSimulationId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "endSimulation.end",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", function () {",
+													"    pm.response.to.have.status(204);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": {
+												"token": "{{currentAdminAccessToken}}"
+											}
+										},
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "localhost:3000/api/v1/simulations/:id/end",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"v1",
+												"simulations",
+												":id",
+												"end"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{currentSimulationId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "startSimulation.getSimulationById[2]",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Should return a specified simulation\", function () {",
+													"    const jsonData = pm.response.json();",
+													"    pm.expect(jsonData.entries[0].id === pm.environment.get(\"currentSimulationId\")).to.eql(true);",
+													"    pm.expect(jsonData.entries[0].status === \"ended\").to.eql(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": {
+												"token": "{{currentAdminAccessToken}}"
+											}
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url}}/api/v1/simulations/:id",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"simulations",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{currentSimulationId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
 		}
 	]
 }
