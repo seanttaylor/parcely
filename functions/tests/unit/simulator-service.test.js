@@ -127,11 +127,25 @@ describe('ShipmentSimulation', () => {
         }, 5000);
         
     },10000);
+
+    test('Simulation should end when all instances are complete', async(done) => {
+        const simulation = await testSimulationService.init({instanceCount: 1});
+        await simulation.start();
+        
+        setTimeout(()=> {
+            expect(simulation.status === 'ended').toBe(true);
+            done();
+        }, 5000);
+        
+    },10000);
 });
 
 describe('Object Representation', () => {
     test('Should return all simulations', async(done) => {
-        const simulation = await testSimulationService.init({instanceCount: 5});
+        const simulation = await testSimulationService.init({
+            instanceCount: 1,
+            intervalMillis: 0
+        });
         await simulation.start();
         
         setTimeout(()=> {
@@ -146,12 +160,10 @@ describe('Object Representation', () => {
 
             const simulationList = testSimulationService.getSimulations();
 
-            console.log(simulationList)
-
             expect(Array.isArray(simulationList)).toBe(true);
 
             done();
-        }, 5000);
+        }, 0);
         
-    },10000);
+    });
 });

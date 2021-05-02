@@ -2,9 +2,21 @@ const faker = require('faker');
 const { from, zip, interval } = require('rxjs');
 const { routeConfig, onCoords } = require('../lib/simulator');
 
-function Simulation({ id, instances, merchantId }) {
+/**
+ * @param {String} id - the uuid assigned to this simulation
+ * @param {Array} instances - a list of Crate instances
+ * @param {String} merchantId - the merchant associated with all
+ * crates in the simulation
+ * @param {Number} intervalMillis - minimum interval between crate
+ * telemetry updates in milliseconds
+ */
+function Simulation({
+  id, instances, merchantId, intervalMillis,
+}) {
   this.id = id;
+  this.status = 'notStarted';
   this.merchantId = merchantId;
+  this.completedInstances = new Set();
   this.createdDate = new Date().toISOString();
   const _instances = [...instances];
   const _crateRouteMap = {};
@@ -14,16 +26,16 @@ function Simulation({ id, instances, merchantId }) {
    * Generates telemetry data to send to software-defined crates
    */
   function generateTelemetryUpdates() {
-    _instances.forEach((crate) => {
+    _instances.forEach((crate, idx) => {
       const routeId = _crateRouteMap[crate.id];
       const coordsList = routeConfig.routes[routeId].waypoints;
 
       _subscriptionList.push(
         zip(
           from(coordsList),
-          interval(this.intervalMillis),
+          interval((intervalMillis * Math.random()) * idx),
           (value) => value,
-        ).subscribe(onCoords(crate)),
+        ).subscribe(onCoords(crate, this)),
       );
     });
   }
@@ -54,16 +66,17 @@ function Simulation({ id, instances, merchantId }) {
     });
     await Promise.all(shipments);
 
-    generateTelemetryUpdates();
+    this.status = 'running';
+    generateTelemetryUpdates.call(this);
   };
 
   /**
    * Completes a run of the simulation
    */
   this.end = function () {
-    // _instances.length = 0;
     this.lastModified = new Date().toISOString();
     _subscriptionList.forEach((s) => s.unsubscribe());
+    this.status = 'ended';
   };
 
   /**
@@ -88,6 +101,7 @@ function Simulation({ id, instances, merchantId }) {
     return {
       id: this.id,
       merchantId: this.merchantId,
+      status: this.status,
       instanceCount: _instances.length,
       instances: _instances,
       crateIds: Object.keys(_crateRouteMap),
@@ -114,7 +128,6 @@ function ShipmentSimulatorService({ userService, merchantService, crateService }
    * simulated telemetry updates
    */
   this.init = async function ({ instanceCount, intervalMillis = 1000 }) {
-    this.intervalMillis = intervalMillis;
     const simUUID = faker.datatype.uuid();
     const userSim = await userService.createUser({
       emailAddress: faker.internet.email(),
@@ -165,6 +178,7 @@ function ShipmentSimulatorService({ userService, merchantService, crateService }
       id: simUUID,
       instances: _instances,
       merchantId: merchantSim.id,
+      intervalMillis,
     });
 
     simulationMap[simUUID] = simulation;
@@ -174,8 +188,7 @@ function ShipmentSimulatorService({ userService, merchantService, crateService }
   };
 
   this.getSimulations = function () {
-    console.log(simulationMap);
-    return Object.values(simulationMap).map((s) => s.toJSON());
+    return Object.values(simulationMap);
   };
 }
 

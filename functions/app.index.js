@@ -66,6 +66,15 @@ const IMerchantRepository = require('./src/interfaces/merchant-repository');
 const merchantRepo = new IMerchantRepository(new MerchantRepository(asiagoDatabaseConnector));
 const merchantService = new MerchantService(merchantRepo, userService);
 
+/** SimulationService* */
+const { ShipmentSimulatorService } = require('./src/services/simulator');
+
+const simulatorService = new ShipmentSimulatorService({
+  userService,
+  merchantService,
+  crateService,
+});
+
 /** *************************************************************************** */
 
 /** **********************************APIS************************************* */
@@ -74,6 +83,7 @@ const UserAPI = require('./src/api/user');
 const CrateAPI = require('./src/api/crate');
 const StatusAPI = require('./src/api/status');
 const MerchantAPI = require('./src/api/merchant');
+const SimulatorAPI = require('./src/api/simulator');
 
 /** *************************************************************************** */
 app.set('view engine', 'ejs');
@@ -111,6 +121,8 @@ app.use('/api/v1/merchants', MerchantAPI({
   crateService,
   eventEmitter,
 }));
+
+app.use('/api/v1/simulations', SimulatorAPI(simulatorService));
 
 app.use('/status', StatusAPI(config));
 
