@@ -126,6 +126,9 @@ app.use('/api/v1/simulations', SimulatorAPI(simulatorService));
 
 app.use('/status', StatusAPI(config));
 
+app.set('view engine', 'ejs');
+app.use(express.static('dist'));
+
 app.use((req, res) => {
   // console.error(`Error 404 on ${req.url}.`);
   res.status(404).send({ status: 404, error: 'NOT FOUND' });
