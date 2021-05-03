@@ -6,12 +6,15 @@ const routeConfig = require('./config/routes');
  * @param {Crate} crate - an instance of Crate
  * @param {Object} simulation - a reference to the simulation instance
  *  associated with this Observer
+ * @param {EventEmitter} eventEmitter - an instance of EventEmitter
  * @returns {Function}
  */
-function onCoords(crate, simulation) {
+function onCoords(crate, simulation, eventEmitter) {
   const observer = {
-    next(data) {
-      crate.pushTelemetry({
+    async next(data) {
+      // console.log(`Telemetry: (${crate.id}) | ${data.routeId} | ${data.lat} / ${data.lng}   | ${data.city}, ${data.state}`);
+
+      const telemetryUpdate = await crate.pushTelemetry({
         temp: {
           degreesFahrenheit: String(faker.datatype.float()),
         },
@@ -34,6 +37,13 @@ function onCoords(crate, simulation) {
           },
         },
       });
+      try {
+        const eventName = 'SSEPublisher.TelemetryUpdateReceived';
+        eventEmitter.emit(eventName, [eventName, telemetryUpdate]);
+      } catch (e) {
+        /* istanbul ignore next */
+        console.error(`TelemetryUpdateError: ${e.message}`);
+      }
     },
     complete() {
       simulation.completedInstances.add(crate.id);

@@ -16,10 +16,13 @@ const {
  * @param {CrateService} crateService - an instance of the CrateService
  * @param {EventEmitter} eventEmitter - an instance of EventEmitter
  * @param {QueueService} queueService - an instance of QueueService
+ * @param {PublishService} publishService - an instance of PublishService
  * @returns router - an instance of an Express router
  */
 
-function CrateRouter({ crateService, queueService, eventEmitter }) {
+function CrateRouter({
+  crateService, queueService, publishService, eventEmitter,
+}) {
   /** **** GET ****** */
 
   router.get('/', validateJWT, authorizeRequest({ actionId: 'readAny:crates' }), async (req, res, next) => {
@@ -165,6 +168,21 @@ function CrateRouter({ crateService, queueService, eventEmitter }) {
         }
     });
     */
+
+  router.get('/telemetry/rt-updates/subscribe', async (req, res) => {
+    res.status(200).set({
+      connection: 'keep-alive',
+      'cache-control': 'no-cache',
+      'content-type': 'text/event-stream',
+    });
+
+    // An initial OK response must be sent clients to establish a connection
+    res.write('data: CONNECTION_OK \n\n');
+    publishService.init(([eventName, eventData]) => {
+      res.write(eventData);
+      res.write(eventName);
+    });
+  });
 
   router.post('/telemetry/rt-updates', validateRequest(addShipmentWaypointSchema), validateJWT, authorizeRequest({ actionId: 'updateAny:crates' }), async (req, res, next) => {
     const { crateId, telemetry } = req.body;

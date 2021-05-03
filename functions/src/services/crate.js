@@ -75,7 +75,7 @@ function Crate(repo, crateDTO) {
     const [currentShipmentStatus] = this.currentTrip._data.status;
 
     if (currentShipmentStatus === 'complete') {
-      return;
+      return undefined;
     }
 
     const timestamp = new Date().toISOString();
@@ -87,6 +87,8 @@ function Crate(repo, crateDTO) {
     await this._repo.crate.updateCrateTelemetry(crateDTO);
     await this.currentTrip.addWaypoint({ timestamp, telemetry });
     this._data.telemetry = telemetry;
+
+    return { telemetry, timestamp };
   };
 
   /**
@@ -278,7 +280,8 @@ function CrateService({
 
     messageList.map(async ({ crateId, telemetry }) => {
       const crate = await this.getCrateById(crateId);
-      await crate.currentTrip.addWaypoint({ telemetry });
+      const telemetryUpdate = await crate.pushTelemetry(telemetry);
+      eventEmitter.emit('SSEPublisher.TelemetryUpdateReceived', telemetryUpdate);
     });
   });
 
