@@ -12,7 +12,7 @@ const routeConfig = require('./config/routes');
 function onCoords(crate, simulation, eventEmitter) {
   const observer = {
     async next(data) {
-      // console.log(`Telemetry: (${crate.id}) | ${data.routeId} | ${data.lat} / ${data.lng}   | ${data.city}, ${data.state}`);
+      // console.table({..data, crate: crate.id});
 
       const telemetryUpdate = await crate.pushTelemetry({
         temp: {
