@@ -41,7 +41,8 @@ const testMerchantService = new MerchantService(testMerchantRepo, testUserServic
 const testSimulationService = new ShipmentSimulatorService({
     userService: testUserService,
     merchantService: testMerchantService,
-    crateService: testCrateService
+    crateService: testCrateService,
+    eventEmitter
 });
 
 describe('ShipmentSimulation', () => {

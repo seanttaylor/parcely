@@ -9,9 +9,10 @@ const { routeConfig, onCoords } = require('../lib/simulator');
  * crates in the simulation
  * @param {Number} intervalMillis - minimum interval between crate
  * telemetry updates in milliseconds
+ * @param {EventEmitter} eventEmitter - an instance of EventEmitter
  */
 function Simulation({
-  id, instances, merchantId, intervalMillis,
+  id, instances, merchantId, intervalMillis, eventEmitter,
 }) {
   this.id = id;
   this.status = 'notStarted';
@@ -35,7 +36,7 @@ function Simulation({
           from(coordsList),
           interval((intervalMillis * Math.random()) * idx),
           (value) => value,
-        ).subscribe(onCoords(crate, this)),
+        ).subscribe(onCoords(crate, this, eventEmitter)),
       );
     });
   }
@@ -116,8 +117,11 @@ function Simulation({
  * @param {UserService} userService - an instance of UserService
  * @param {MerchantService} merchantService - an instance of MerchantService
  * @param {CrateService} crateService - an instance of CrateService
+ * @param {EventEmitter} eventEmitter - an instance of EventEmitter
  */
-function ShipmentSimulatorService({ userService, merchantService, crateService }) {
+function ShipmentSimulatorService({
+  userService, merchantService, crateService, eventEmitter,
+}) {
   const _instances = [];
   const simulationMap = {};
 
@@ -179,6 +183,7 @@ function ShipmentSimulatorService({ userService, merchantService, crateService }
       instances: _instances,
       merchantId: merchantSim.id,
       intervalMillis,
+      eventEmitter,
     });
 
     simulationMap[simUUID] = simulation;

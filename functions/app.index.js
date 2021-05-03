@@ -66,6 +66,12 @@ const IMerchantRepository = require('./src/interfaces/merchant-repository');
 const merchantRepo = new IMerchantRepository(new MerchantRepository(asiagoDatabaseConnector));
 const merchantService = new MerchantService(merchantRepo, userService);
 
+/** PublishService */
+const IPublisher = require('./src/interfaces/publisher');
+const SSEPublisher = require('./src/lib/publisher/sse');
+
+const ssePublishService = new IPublisher(new SSEPublisher(eventEmitter));
+
 /** SimulationService* */
 const { ShipmentSimulatorService } = require('./src/services/simulator');
 
@@ -73,8 +79,8 @@ const simulatorService = new ShipmentSimulatorService({
   userService,
   merchantService,
   crateService,
+  eventEmitter,
 });
-
 /** *************************************************************************** */
 
 /** **********************************APIS************************************* */
@@ -113,6 +119,7 @@ app.use('/api/v1/crates', CrateAPI({
   authService,
   crateService,
   queueService,
+  publishService: ssePublishService,
   eventEmitter,
 }));
 
