@@ -1,4 +1,5 @@
 const faker = require('faker');
+const nodePetName = require('node-petname');
 const { from, zip, interval } = require('rxjs');
 const { routeConfig, onCoords } = require('../lib/simulator');
 
@@ -15,6 +16,7 @@ function Simulation({
   id, instances, merchantId, intervalMillis, eventEmitter,
 }) {
   this.id = id;
+  this.name = nodePetName(2, '-');
   this.status = 'notStarted';
   this.merchantId = merchantId;
   this.completedInstances = new Set();
@@ -101,6 +103,7 @@ function Simulation({
   this.toJSON = function () {
     return {
       id: this.id,
+      name: this.name,
       merchantId: this.merchantId,
       status: this.status,
       instanceCount: _instances.length,
