@@ -70,6 +70,7 @@ describe('ShipmentSimulation', () => {
 
         expect(allCratesAssociatedWithCurrentMerchant).toBe(true);
         simulation.end();
+        expect(simulation.name).toBeTruthy();
     });
 
     test('Simulator should set a recipient for each created crate', async() => {
