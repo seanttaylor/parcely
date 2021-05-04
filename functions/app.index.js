@@ -2,7 +2,7 @@
 
 const http = require('http');
 const express = require('express');
-// const path = require('path');
+const path = require('path');
 // const helmet = require('helmet');
 // const fetch = require('node-fetch');
 const cookieParser = require('cookie-parser');
@@ -134,7 +134,13 @@ app.use('/api/v1/simulations', SimulatorAPI(simulatorService));
 app.use('/status', StatusAPI(config));
 
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '/dist/ejs'));
 app.use(express.static('dist'));
+
+app.use('/simulator', (req, res) => {
+  const simulations = simulatorService.getSimulations();
+  res.render('index', { data: { simulations } });
+});
 
 app.use((req, res) => {
   // console.error(`Error 404 on ${req.url}.`);
