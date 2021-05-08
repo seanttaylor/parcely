@@ -108,7 +108,7 @@ function Simulation({
       status: this.status,
       instanceCount: _instances.length,
       instances: _instances,
-      crateIds: Object.keys(_crateRouteMap),
+      crateIds: _instances.map((i) => i.id),
       routeAssignments: _crateRouteMap,
       createdDate: this.createdDate,
       lastModified: this.lastModified,

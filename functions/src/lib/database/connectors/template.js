@@ -90,7 +90,7 @@ module.exports = {
         location: {
           coords: {
             lat: null,
-            long: null,
+            lng: null,
           },
           zip: null,
         },
@@ -168,8 +168,8 @@ module.exports = {
             },
             location: {
               coords: {
-                lat: '40.7128 N',
-                long: '74.0060 W',
+                lat: 40.7128,
+                lng: 74.0060,
               },
               zip: '40508-0000',
             },

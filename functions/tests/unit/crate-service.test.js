@@ -103,8 +103,8 @@ describe('CrateManagement', () => {
       },
       location: {
         coords: {
-          lat: faker.address.latitude(),
-          long: faker.address.longitude(),
+          lat: Number(faker.address.latitude()),
+          lng: Number(faker.address.longitude()),
         },
         zip: faker.address.zipCode(),
       },
@@ -165,8 +165,8 @@ describe('CrateManagement', () => {
       },
       location: {
         coords: {
-          lat: faker.address.latitude(),
-          long: faker.address.longitude(),
+          lat: Number(faker.address.latitude()),
+          lng: Number(faker.address.longitude()),
         },
         zip: faker.address.zipCode(),
       },
@@ -362,8 +362,8 @@ describe('ShipmentManagement', () => {
       },
       location: {
         coords: {
-          lat: faker.address.latitude(),
-          long: faker.address.longitude(),
+          lat: Number(faker.address.latitude()),
+          lng: Number(faker.address.longitude()),
         },
         zip: faker.address.zipCode(),
       },
@@ -396,7 +396,7 @@ describe('ShipmentManagement', () => {
 
     expect(testCrate._data.telemetry.location.coords.lat === fakeTelemetryData.location.coords.lat).toBe(true);
 
-    expect(testCrate._data.telemetry.location.coords.long === fakeTelemetryData.location.coords.long).toBe(true);
+    expect(testCrate._data.telemetry.location.coords.lng === fakeTelemetryData.location.coords.lng).toBe(true);
 
     expect(testCrate._data.telemetry.location.zip === fakeTelemetryData.location.zip).toBe(true);
   });
@@ -422,8 +422,8 @@ describe('ShipmentManagement', () => {
       },
       location: {
         coords: {
-          lat: faker.address.latitude(),
-          long: faker.address.longitude(),
+          lat: Number(faker.address.latitude()),
+          lng: Number(faker.address.longitude()),
         },
         zip: faker.address.zipCode(),
       },
@@ -484,8 +484,8 @@ describe('ShipmentManagement', () => {
       },
       location: {
         coords: {
-          lat: faker.address.latitude(),
-          long: faker.address.longitude(),
+          lat: Number(faker.address.latitude()),
+          lng: Number(faker.address.longitude()),
         },
         zip: faker.address.zipCode(),
       },
@@ -543,8 +543,8 @@ describe('ShipmentManagement', () => {
       },
       location: {
         coords: {
-          lat: faker.address.latitude(),
-          long: faker.address.longitude(),
+          lat: Number(faker.address.latitude()),
+          lng: Number(faker.address.longitude()),
         },
         zip: faker.address.zipCode(),
       },
@@ -606,8 +606,8 @@ describe('ShipmentManagement', () => {
       },
       location: {
         coords: {
-          lat: faker.address.latitude(),
-          long: faker.address.longitude(),
+          lat: Number(faker.address.latitude()),
+          lng: Number(faker.address.longitude()),
         },
         zip: faker.address.zipCode(),
       },
@@ -736,8 +736,8 @@ describe('ShipmentManagement', () => {
       },
       location: {
         coords: {
-          lat: faker.address.latitude(),
-          long: faker.address.longitude(),
+          lat: Number(faker.address.latitude()),
+          lng: Number(faker.address.longitude()),
         },
         zip: faker.address.zipCode(),
       },

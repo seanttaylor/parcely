@@ -17,4 +17,11 @@ describe('Authorization', () => {
       .send()
       .expect(401);
   });
+
+  test('Platform accept API requests that contain a valid X-API-Key header', async () => {
+    const res1 = await request.get('/api/v1/users/e98417a8-d912-44e0-8d37-abe712ca840f')
+      .set('X-API-Key', 'fakeAPIKey')
+      .send()
+      .expect(200);
+  });
 });

@@ -148,8 +148,8 @@ describe('CrateAccess', () => {
             },
             location: {
               coords: {
-                lat: faker.address.latitude(),
-                long: faker.address.longitude(),
+                lat: Number(faker.address.latitude()),
+                lng: Number(faker.address.longitude()),
               },
               zip: faker.address.zipCode(),
             },
@@ -726,8 +726,8 @@ describe('ShipmentManagement', () => {
           },
           location: {
             coords: {
-              lat: faker.address.latitude(),
-              long: faker.address.longitude(),
+              lat: Number(faker.address.latitude()),
+              lng: Number(faker.address.longitude()),
             },
             zip: faker.address.zipCode(),
           },

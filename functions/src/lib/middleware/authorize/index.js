@@ -21,6 +21,13 @@ const ac = new AccessControl(accessGrants.grants);
 
 module.exports = function ({ actionId, authzOverride, allowResourceOwnerOnly = true }) {
   return async function authorizeRequest(req, res, next) {
+    /* Here we must validate the API key provided by the
+    * request. See the backlog item (https://github.com/seanttaylor/parcely/issues/225) for this task.
+    */
+    if (req.headers['x-api-key']) {
+      next();
+      return;
+    }
     const [action, resource] = actionId.split(':');
     const authToken = req.headers.authorization.split(' ')[1];
     const decodedToken = jwt.decode(authToken);
