@@ -3,6 +3,7 @@
       <title>Parcely | Simple real-time logistics</title>
       <link rel="stylesheet" href="./css/main.css">
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+      <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
    </head>
    <body id="parcely" style="margin: 0px;">
       <div class="header">
@@ -19,30 +20,26 @@
                      <label for="simulations">Simulation name:</label>
                      <br>
                      <select name="simulations" id="simulation-selector">
-                        <option value="---" selected >---</option>
+                        <option value="default" data-sim-id="default" data-sim-name="default" selected >---</option>
                         <% data.simulations.forEach((sim) => { %>
-                            <option value="<%=sim.name%>"><%=sim.name%></option>
+                            <option data-sim-id=<%=sim.id%> data-sim-name=<%=sim.name%> value="<%=sim.name%>"><%=sim.name%></option>
                         <%})%>  
                      </select>
                      <br><br>
                      <label for="simuluation-id">id:</label>
                      <br>
-                     <input type="text" id="simulation-id" value="n/a" name="simulation-id" style="width: 296px;" disabled>
+                     <input type="text" id="simulation-id" value="n/a" name="simulation-id" style="width: 305px;" disabled>
                      <br>
                      <br>
                      <label for="created-date">createdDate:</label>
                      <br>
-                     <input type="text" id="created-date" name="created-date" value="n/a" style="width: 296px;" disabled>
+                     <input type="text" id="created-date" name="created-date" value="n/a" style="width: 305px;" disabled>
                      <br>
                      <br>
                      <label for="crates">crates:</label>
                      <br>
-                     <select name="crates" id="crate-list" style="width: 296px;" disabled>
+                     <select name="crates" id="crate-list" style="width: 305px;" disabled>
                         <option value="---" selected >---</option>
-                        <!--<option value="volvo">16b81f36-537d-43d4-a56f-c224cbe5f2e1</option>
-                        <option value="saab">ef9e9900-4e31-4360-8b9f-5921ef85150b</option>
-                        <option value="mercedes">552fa7e5-d4f0-42a7-979d-aa28f90fcb0c</option>
-                        <option value="audi">04d4aa20-3dc7-4153-b37f-0ecb541b0bbd</option>-->
                      </select>
                      <br><br>
                      <label for="status">status:</label>
@@ -51,7 +48,13 @@
                      <label for="instance-count">instanceCount:</label>
                      <br>
                      <input type="text" value="0" id="instance-count" name="instance-count" style="width: 36px;" disabled>
-                     <br><br>
+                    <br>
+                    <br>
+                    <br>
+                    <div class="buttons has-addons is-centered " style="margin-left: -30px;">
+                        <button id="start-simulation-button" class="button" disabled>Start</button>
+                        <button id="stop-simulation-button" class="button" disabled>Stop</button>
+                    </div>
                   </form>
                </div>
                <!---#sidenav--->
@@ -62,7 +65,9 @@
                   <div class="block"></div>
                   <div class="box">
                      <div class="container">
-                        <section class="hero is-medium">
+                        <section id="simulation-viewer"></section>
+                        <div id="map"></div>
+                        <section id="empty-state" class="hero is-medium">
                            <div class="hero-body">
                               <div class="">
                                  <p class="title">
@@ -76,14 +81,53 @@
                         </section>
                      </div>
                   </div>
-                  <button class="button is-primary">Create a new simulation</button>
+                  <button id="create-sim-button" class="button is-primary">Create a new simulation</button>
                </div>
-               <!---#main--->
-            </div>
+               <div id="modal" class="modal">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <p class="modal-card-title">Create simulation</p>
+                    <button id="modal-close-button" class="delete" aria-label="close"></button>
+                  </header>
+                  <section class="modal-card-body">
+                    <form action="" id="simulation-config" style="margin: 15px;">
+                        <label for="instance-count">Instance count:</label>
+                        <br>
+                        <select name="instances" id="instance-selector">
+                           <option value="1" selected >1</option>
+                           <option value="2">2</option>
+                           <option value="3">3</option>
+                           <option value="4">4</option>
+                           <option value="5">5</option>
+                           <option value="6">6</option>
+                           <option value="7">7</option>
+                           <option value="8">8</option>
+                        </select>
+                        <br><br>
+                        <label for="interval-millis">Interval (milliseconds):</label>
+                        <br>
+                        <input type="text" id="interval-millis" value="15000" name="interval-millis" style="width: 60px;">
+                        <br>
+                        <br>
+                     </form>
+                  </section>
+                  <footer class="modal-card-foot">
+                    <button id="create-button" class="button is-success">Create</button>
+                  </footer>
+                </div>
+              </div><!--#modal-->
+             
+              
+            </div><!---#main--->
          </div>
          <!--- #columns --->
       </div>
       </div>
-      <script src="./js/index.js"></script>               
+    
+      <script type="application/json" id="data-block">
+          <%-JSON.stringify(data.simulations)%>
+      </script>
+      <script src="./js/index.js" type="module"></script>     
    </body>
 </html>

@@ -14,8 +14,8 @@
                 },
                 "location": {
                     "coords": {
-                        "lat": "40.7128 N",
-                        "long": "74.0060 W"
+                        "lat": 40.7128,
+                        "lng": 74.0060
                     },
                     "zip": "40508-0000"
                 },
@@ -33,7 +33,10 @@
             }
         }
     ],
-    "required": ["crateId", "telemetry"],
+    "required": [
+        "crateId",
+        "telemetry"
+    ],
     "properties": {
         "crateId": {
             "$id": "#/properties/crateId",
@@ -51,28 +54,29 @@
             "description": "A summary of all telemetry data gathered from the crate sensor array.",
             "examples": [
                 {
-                "temp": {
-                    "degreesFahrenheit": "68"
-                },
-                "location": {
-                    "coords": {
-                        "lat": "40.7128 N",
-                        "long": "74.0060 W"
+                    "temp": {
+                        "degreesFahrenheit": "68"
                     },
-                    "zip": "40508-0000"
-                },
-                "sensors": {
-                    "moisture": {
-                        "thresholdExceeded": true
+                    "location": {
+                        "coords": {
+                            "lat": 40.7128,
+                            "lng": 74.0060
+                        },
+                        "zip": "40508-0000"
                     },
-                    "thermometer": {
-                        "thresholdExceeded": false
-                    },
-                    "photometer": {
-                        "thresholdExceeded": false
+                    "sensors": {
+                        "moisture": {
+                            "thresholdExceeded": true
+                        },
+                        "thermometer": {
+                            "thresholdExceeded": false
+                        },
+                        "photometer": {
+                            "thresholdExceeded": false
+                        }
                     }
                 }
-            }],
+            ],
             "required": [
                 "temp",
                 "location",
@@ -118,8 +122,8 @@
                     "examples": [
                         {
                             "coords": {
-                                "lat": "40.7128 N",
-                                "long": "74.0060 W"
+                                "lat": 40.7128,
+                                "lng": 74.0060
                             },
                             "zip": "40508-0000"
                         }
@@ -137,33 +141,33 @@
                             "default": {},
                             "examples": [
                                 {
-                                    "lat": "40.7128 N",
-                                    "long": "74.0060 W"
+                                    "lat": 40.7128,
+                                    "lng": 74.0060
                                 }
                             ],
                             "required": [
                                 "lat",
-                                "long"
+                                "lng"
                             ],
                             "properties": {
                                 "lat": {
                                     "$id": "#/properties/telemetry/properties/location/properties/coords/properties/lat",
-                                    "type": "string",
+                                    "type": "number",
                                     "title": "The lat schema",
                                     "description": "The current lattitude of the crate.",
                                     "default": "",
                                     "examples": [
-                                        "40.7128 N"
+                                        40.7128
                                     ]
                                 },
-                                "long": {
-                                    "$id": "#/properties/telemetry/properties/location/properties/coords/properties/long",
-                                    "type": "string",
-                                    "title": "The long schema",
+                                "lng": {
+                                    "$id": "#/properties/telemetry/properties/location/properties/coords/properties/lng",
+                                    "type": "number",
+                                    "title": "The lng schema",
                                     "description": "The current longtitude of the crate.",
                                     "default": "",
                                     "examples": [
-                                        "74.0060 W"
+                                        74.0060
                                     ]
                                 }
                             },

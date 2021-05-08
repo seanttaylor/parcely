@@ -21,7 +21,7 @@ function onCoords(crate, simulation, eventEmitter) {
         location: {
           coords: {
             lat: data.lat,
-            long: data.lng,
+            lng: data.lng,
           },
           zip: faker.address.zipCode(),
         },

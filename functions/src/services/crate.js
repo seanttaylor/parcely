@@ -88,7 +88,7 @@ function Crate(repo, crateDTO) {
     await this.currentTrip.addWaypoint({ timestamp, telemetry });
     this._data.telemetry = telemetry;
 
-    return { telemetry, timestamp };
+    return { telemetry, timestamp, crateId: this.id };
   };
 
   /**

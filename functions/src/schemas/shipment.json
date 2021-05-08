@@ -16,7 +16,9 @@
             "arrivalZip": "40511-2345",
             "trackingNumber": "1Z54F78A0450293517",
             "tripLengthMiles": "706.4",
-            "status": ["inProgress"],
+            "status": [
+                "inProgress"
+            ],
             "createdDate": "2021-02-24T17:45:36.230152",
             "lastModified": "2021-02-24T17:45:36.230152",
             "waypoints": [
@@ -29,8 +31,8 @@
                         },
                         "location": {
                             "coords": {
-                                "lat": "40.7128 N",
-                                "long": "74.0060 W"
+                                "lat": 40.7128,
+                                "lng": 74.0060
                             },
                             "zip": "40508-0000"
                         },
@@ -106,7 +108,10 @@
         },
         "lastModified": {
             "$id": "#/properties/lastModified",
-            "type": ["string", "null"],
+            "type": [
+                "string",
+                "null"
+            ],
             "title": "The lastModified schema",
             "description": "The datetime the shipment data was last modified",
             "default": "",
@@ -142,7 +147,10 @@
                 null
             ],
             "title": "The arrivalTimestamp schema",
-            "type": ["string", "null"]
+            "type": [
+                "string",
+                "null"
+            ]
         },
         "arrivalZip": {
             "$id": "#/properties/arrivalZip",
@@ -172,13 +180,16 @@
                 "706.4"
             ],
             "title": "The tripLengthMiles schema",
-            "type": ["string", "null"]
+            "type": [
+                "string",
+                "null"
+            ]
         },
         "originAddress": {
             "$ref": "#/definitions/address"
         },
         "destinationAddress": {
-            "$ref": "#/definitions/address" 
+            "$ref": "#/definitions/address"
         },
         "waypoints": {
             "$id": "#/properties/waypoints",
@@ -195,8 +206,8 @@
                             },
                             "location": {
                                 "coords": {
-                                    "lat": "40.7128 N",
-                                    "long": "74.0060 W"
+                                    "lat": 40.7128,
+                                    "lng": 74.0060
                                 },
                                 "zip": "40508-0000"
                             },
@@ -235,8 +246,8 @@
                                     },
                                     "location": {
                                         "coords": {
-                                            "lat": "40.7128 N",
-                                            "long": "74.0060 W"
+                                            "lat": 40.7128,
+                                            "lng": 74.0060
                                         },
                                         "zip": "40508-0000"
                                     },
@@ -254,7 +265,10 @@
                                 }
                             }
                         ],
-                        "required": ["timestamp", "telemetry"],
+                        "required": [
+                            "timestamp",
+                            "telemetry"
+                        ],
                         "properties": {
                             "timestamp": {
                                 "$id": "#/properties/waypoints/items/allOf/0/properties/timestamp",
@@ -272,28 +286,29 @@
                                 "description": "A summary of all telemetry data gathered from the crate sensor array.",
                                 "examples": [
                                     {
-                                    "temp": {
-                                        "degreesFahrenheit": "68"
-                                    },
-                                    "location": {
-                                        "coords": {
-                                            "lat": "40.7128 N",
-                                            "long": "74.0060 W"
+                                        "temp": {
+                                            "degreesFahrenheit": "68"
                                         },
-                                        "zip": "40508-0000"
-                                    },
-                                    "sensors": {
-                                        "moisture": {
-                                            "thresholdExceeded": true
+                                        "location": {
+                                            "coords": {
+                                                "lat": 40.7128,
+                                                "lng": 74.0060
+                                            },
+                                            "zip": "40508-0000"
                                         },
-                                        "thermometer": {
-                                            "thresholdExceeded": false
-                                        },
-                                        "photometer": {
-                                            "thresholdExceeded": false
+                                        "sensors": {
+                                            "moisture": {
+                                                "thresholdExceeded": true
+                                            },
+                                            "thermometer": {
+                                                "thresholdExceeded": false
+                                            },
+                                            "photometer": {
+                                                "thresholdExceeded": false
+                                            }
                                         }
                                     }
-                                }],
+                                ],
                                 "required": [
                                     "temp",
                                     "location",
@@ -339,8 +354,8 @@
                                         "examples": [
                                             {
                                                 "coords": {
-                                                    "lat": "40.7128 N",
-                                                    "long": "74.0060 W"
+                                                    "lat": 40.7128,
+                                                    "lng": 74.0060
                                                 },
                                                 "zip": "40508-0000"
                                             }
@@ -358,29 +373,29 @@
                                                 "default": {},
                                                 "examples": [
                                                     {
-                                                        "lat": "40.7128 N",
-                                                        "long": "74.0060 W"
+                                                        "lat": 40.7128,
+                                                        "lng": 74.0060
                                                     }
                                                 ],
                                                 "required": [
                                                     "lat",
-                                                    "long"
+                                                    "lng"
                                                 ],
                                                 "properties": {
                                                     "lat": {
                                                         "$id": "#/properties/telemetry/properties/location/properties/coords/properties/lat",
-                                                        "type": "string",
+                                                        "type": "number",
                                                         "title": "The lat schema",
                                                         "description": "The current lattitude of the crate.",
                                                         "default": "",
                                                         "examples": [
-                                                            "40.7128 N"
+                                                            40.7128
                                                         ]
                                                     },
-                                                    "long": {
-                                                        "$id": "#/properties/telemetry/properties/location/properties/coords/properties/long",
-                                                        "type": "string",
-                                                        "title": "The long schema",
+                                                    "lng": {
+                                                        "$id": "#/properties/telemetry/properties/location/properties/coords/properties/lng",
+                                                        "type": "number",
+                                                        "title": "The lng schema",
                                                         "description": "The current longtitude of the crate.",
                                                         "default": "",
                                                         "examples": [
@@ -529,7 +544,11 @@
             "type": "array",
             "items": {
                 "type": "string",
-                "enum": ["inProgress", "complete", "cancelled"]
+                "enum": [
+                    "inProgress",
+                    "complete",
+                    "cancelled"
+                ]
             },
             "title": "The status schema",
             "description": "The status of a specified crate shipment.",
@@ -597,6 +616,26 @@
                     "default": "",
                     "examples": [
                         "11111"
+                    ]
+                },
+                "lat": {
+                    "$id": "#/properties/lat",
+                    "type": "number",
+                    "title": "The lat schema",
+                    "description": "The current lattitude of the crate.",
+                    "default": "",
+                    "examples": [
+                        74.0060
+                    ]
+                },
+                "lng": {
+                    "$id": "#/properties/lng",
+                    "type": "number",
+                    "title": "The lng schema",
+                    "description": "The current longtitude of the crate.",
+                    "default": "",
+                    "examples": [
+                        74.0060
                     ]
                 }
             },

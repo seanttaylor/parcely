@@ -58,7 +58,7 @@
   .sidenav {
     position: absolute;
     height: 100%;
-    width: 320px; /* Set the width of the sidebar */
+    width: 330px; /* Set the width of the sidebar */
     background-color: #f1f1f1; 
   }
   
@@ -80,6 +80,16 @@
   .main {
     /*margin-left: 160px; /* Same as the width of the sidebar */
     padding: 0px 10px;
+  }
+
+  #map {
+    height: 100%;
+    display: none;
+  }
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
   }
   
   /* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */

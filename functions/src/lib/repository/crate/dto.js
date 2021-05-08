@@ -13,7 +13,7 @@ const defaultTelemetry = {
   location: {
     coords: {
       lat: null,
-      long: null,
+      lng: null,
     },
     zip: null,
   },
