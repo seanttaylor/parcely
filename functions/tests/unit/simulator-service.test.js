@@ -14,26 +14,43 @@ const { UserService } = require('../../src/services/user');
 const { CrateService } = require('../../src/services/crate');
 const DatabaseConnector = require('../../src/lib/database/connectors/memory');
 const testDbConnector = new DatabaseConnector({ console: mockImpl.console });
-const IMerchantRepository = require('../../src/interfaces/merchant-repository');
+
+/** UserRepo */
 const IUserRepository = require('../../src/interfaces/user-repository');
-const ICrateRepository = require('../../src/interfaces/crate-repository');
-const ICrateShipmentRepository = require('../../src/interfaces/shipment-repository');
-const IQueue = require('../../src/interfaces/queue');
 const UserRepository = require('../../src/lib/repository/user');
+const testUserRepo = new IUserRepository(new UserRepository(testDbConnector));
+
+/** MerchantRepo */
+const IMerchantRepository = require('../../src/interfaces/merchant-repository');
 const MerchantRepository = require('../../src/lib/repository/merchant');
+const testMerchantRepo = new IMerchantRepository(new MerchantRepository(testDbConnector));
+
+/** CrateRepo */
+const ICrateRepository = require('../../src/interfaces/crate-repository');
 const CrateRepository = require('../../src/lib/repository/crate');
+const testCrateRepo = new ICrateRepository(new CrateRepository(testDbConnector));
+
+/** CrateShipmentRepo */
+const ICrateShipmentRepository = require('../../src/interfaces/shipment-repository');
 const CrateShipmentRepository = require('../../src/lib/repository/crate-shipment');
+const testCrateShipmentRepo = new ICrateShipmentRepository(new CrateShipmentRepository(testDbConnector));
+
+/** StorageBucketService */
+const IStorageBucket = require('../../src/interfaces/storage-bucket');
+const { InMemoryStorageBucket } = require('../../src/lib/storage');
+const testStorageBucketService = new IStorageBucket(new InMemoryStorageBucket());
+
+/** Queue */
+const IQueue = require('../../src/interfaces/queue');
 const { InMemoryQueue } = require('../../src/lib/queue');
 const testQueueService = new IQueue(new InMemoryQueue());
+
 const { ShipmentSimulatorService } = require('../../src/services/simulator');
-const testUserRepo = new IUserRepository(new UserRepository(testDbConnector));
-const testCrateRepo = new ICrateRepository(new CrateRepository(testDbConnector));
-const testCrateShipmentRepo = new ICrateShipmentRepository(new CrateShipmentRepository(testDbConnector));
-const testMerchantRepo = new IMerchantRepository(new MerchantRepository(testDbConnector));
 const testCrateService = new CrateService({
     crateRepo: testCrateRepo,
     crateShipmentRepo: testCrateShipmentRepo,
     queueService: testQueueService,
+    storageBucketService: testStorageBucketService,
     eventEmitter
 });
 const testUserService = new UserService(testUserRepo);

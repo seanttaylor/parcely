@@ -71,6 +71,18 @@ describe('Storage Bucket Management', () => {
     expect(typeof(bucketItem) === 'object').toBe(true);
    });
 
+   test('Should NOT be able to put a bucket item in a non-existing bucket', async () => {
+    try {
+      await testStorageBucketService.putBucket({
+          bucketName: 'bogus-bucket', 
+          item: {},
+          itemName: 'fake-item'
+        });
+    } catch(e) {
+        expect(e.message).toMatch('CannotPut.BadRequest.BucketNotFound');
+    }
+  });
+
    test('Should be able to delete a specified bucket item', async () => {
     const bucketName = petname(2, '-');
     await testStorageBucketService.create(bucketName);

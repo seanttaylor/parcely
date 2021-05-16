@@ -34,6 +34,12 @@ const CacheService = require('./src/lib/cache');
 
 const cacheService = new ICache(new CacheService());
 
+/** StorageBucketService* */
+const IStorageBucket = require('./src/interfaces/storage-bucket');
+const { InMemoryStorageBucket } = require('./src/lib/storage');
+
+const storageBucketService = new IStorageBucket(new InMemoryStorageBucket());
+
 /** QueueService* */
 const IQueue = require('./src/interfaces/queue');
 const { InMemoryQueue } = require('./src/lib/queue');
@@ -55,7 +61,11 @@ const ICrateRepository = require('./src/interfaces/crate-repository');
 const crateRepo = new ICrateRepository(new CrateRepository(asiagoDatabaseConnector));
 const crateShipmentRepo = new ICrateShipmentRepository(new CrateShipmentRepository(asiagoDatabaseConnector));
 const crateService = new CrateService({
-  crateRepo, crateShipmentRepo, queueService, eventEmitter,
+  crateRepo,
+  crateShipmentRepo,
+  queueService,
+  eventEmitter,
+  storageBucketService,
 });
 
 /** MerchantService* */
@@ -90,6 +100,7 @@ const CrateAPI = require('./src/api/crate');
 const StatusAPI = require('./src/api/status');
 const MerchantAPI = require('./src/api/merchant');
 const SimulatorAPI = require('./src/api/simulator');
+const StorageAPI = require('./src/api/storage');
 
 /** *************************************************************************** */
 app.set('view engine', 'ejs');
@@ -131,8 +142,6 @@ app.use('/api/v1/merchants', MerchantAPI({
 
 app.use('/api/v1/simulations', SimulatorAPI(simulatorService));
 
-app.use('/status', StatusAPI(config));
-
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/dist/ejs'));
 app.use(express.static('dist'));
@@ -141,6 +150,10 @@ app.use('/simulator', (req, res) => {
   const simulations = simulatorService.getSimulations();
   res.render('index', { data: { simulations } });
 });
+
+app.use('/storage', StorageAPI(storageBucketService));
+
+app.use('/status', StatusAPI(config));
 
 app.use((req, res) => {
   // console.error(`Error 404 on ${req.url}.`);

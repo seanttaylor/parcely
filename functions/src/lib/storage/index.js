@@ -78,6 +78,9 @@ function StorageBucket() {
      @returns
     */
   this.putBucket = async function ({ bucketName, itemName, item }) {
+    if (!buckets[bucketName]) {
+      throw Error(`CannotPut.BadRequest.BucketNotFound (${bucketName})`);
+    }
     buckets[bucketName][itemName] = item;
   };
 }

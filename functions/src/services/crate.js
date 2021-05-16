@@ -1,4 +1,5 @@
 const uuid = require('uuid');
+const QRCode = require('qrcode');
 const coreUtils = require('../lib/utils');
 const { CrateDTO } = require('../lib/repository/crate/dto');
 const { CrateShipmentDTO, CrateTelemetryDTO } = require('../lib/repository/crate-shipment/dto');
@@ -13,10 +14,11 @@ const { CrateShipmentDTO, CrateTelemetryDTO } = require('../lib/repository/crate
 /**
  *
  * @param {Object} repo - the repo associated with this entity
- * @param {crateDTO} crateDTO - an instance of the CrateDTO
+ * @param {CrateDTO} crateDTO - an instance of the CrateDTO,
+ * @param {EventEmitter} eventEmitter - an instance of EventEmitter
  */
 
-function Crate(repo, crateDTO) {
+function Crate(repo, crateDTO, eventEmitter) {
   const dtoData = crateDTO.value();
 
   this._data = dtoData;
@@ -48,7 +50,7 @@ function Crate(repo, crateDTO) {
   this.save = async function () {
     const crateDTO = new CrateDTO(this._data);
     const crate = await this._repo.crate.create(crateDTO);
-
+    eventEmitter.emit('Crate.StorageBucketService.NewCrate', crate.id);
     return crate.id;
   };
 
@@ -265,10 +267,15 @@ function CrateShipment(repo, crateShipmentDTO) {
  * @param {Object} crateRepo - the crates repository
  * @param {Object} crateShipmentRepo - the crate_shipments repository
  * @param {QueueService} queueService - an instance of QueueService
+ * @param {StorageBucketService} storageBucketService - an instance of StorageBucketService
  * @param {EventEmitter} eventEmitter - an instance of EventEmitter
  */
 function CrateService({
-  crateRepo, crateShipmentRepo, queueService, eventEmitter,
+  crateRepo,
+  crateShipmentRepo,
+  queueService,
+  storageBucketService,
+  eventEmitter,
 }) {
   this._repo = {
     crate: crateRepo,
@@ -285,13 +292,27 @@ function CrateService({
     });
   });
 
+  eventEmitter.on('Crate.StorageBucketService.NewCrate', async (crateId) => {
+    const dataURI = await QRCode.toDataURL(crateId);
+    const QRCodeImage = Buffer.from(dataURI.split(',')[1], 'base64');
+
+    await storageBucketService.putBucket({
+      bucketName: 'crate-qr-codes',
+      itemName: `${crateId}.png`,
+      item: QRCodeImage,
+    });
+  });
+
+  storageBucketService.create('crate-qr-codes');
+
   /**
      * @param {Object} doc - object representing valid crate data
      */
   this.createCrate = function (doc) {
     const id = uuid.v4();
     const data = { id, ...doc };
-    return new Crate(this._repo, new CrateDTO(data));
+
+    return new Crate(this._repo, new CrateDTO(data), eventEmitter);
   };
 
   /**

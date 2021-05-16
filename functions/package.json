@@ -51,6 +51,7 @@
         "node-fetch": "^2.6.1",
         "node-petname": "^1.0.1",
         "nodemailer": "^6.5.0",
+        "qrcode": "^1.4.4",
         "rxjs": "^7.0.0",
         "uuid": "^8.3.2"
     },
