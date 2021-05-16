@@ -22,12 +22,17 @@ const testDbConnector = new DatabaseConnector({ console: mockImpl.console });
 const ICrateRepository = require('../../src/interfaces/crate-repository');
 const ICrateShipmentRepository = require('../../src/interfaces/shipment-repository');
 
+const IStorageBucket = require('../../src/interfaces/storage-bucket');
+const {InMemoryStorageBucket} = require('../../src/lib/storage');
+const testStorageBucketService = new IStorageBucket(new InMemoryStorageBucket())
+
 const testCrateRepo = new ICrateRepository(new CrateRepository(testDbConnector));
 const testCrateShipmentRepo = new ICrateShipmentRepository(new CrateShipmentRepository(testDbConnector));
 const testCrateService = new CrateService({
   crateRepo: testCrateRepo,
   crateShipmentRepo: testCrateShipmentRepo,
   eventEmitter: new events.EventEmitter(),
+  storageBucketService: testStorageBucketService
 });
 const starkMerchantId = 'dd8b20dd-1637-4396-bba5-bcd6d65e2d5d';
 
