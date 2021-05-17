@@ -57,6 +57,20 @@
                 "delete:any": [
                     "*"
                 ]
+            },
+            "buckets": {
+                "create:any": [
+                    "*"
+                ],
+                "read:any": [
+                    "*"
+                ],
+                "update:any": [
+                    "*"
+                ],
+                "delete:any": [
+                    "*"
+                ]
             }
         },
         "user": {
