@@ -627,9 +627,14 @@ paths:
         - crates
       parameters:
         - $ref: '#/components/parameters/authorization'
-  '/crates/{crateId}/status/pending_return':
+  '/crates/{crateId}/status/pending-return':
     parameters:
-      - $ref: '#/components/parameters/crateId'
+      - name: crateId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The uuid for a crate
     put:
       summary: markCrateReturned
       tags:
@@ -676,7 +681,7 @@ paths:
       description: getUserById
       parameters:
         - $ref: '#/components/parameters/authorization'
-  '/users/email_exists/{emailAddress}':
+  '/users/email-exists/{emailAddress}':
     parameters:
       - schema:
           type: string
@@ -896,6 +901,74 @@ paths:
       description: Cancels an existing Merchant's plan
       parameters:
         - $ref: '#/components/parameters/authorization'
+  /storage/buckets:
+    get:
+      summary: getStorageBuckets
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        '500':
+          description: Internal Server Error
+      operationId: getStorageBuckets
+      description: Get a list of all storage buckets
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+  '/storage/buckets/{bucketId}':
+    parameters:
+      - $ref: '#/components/parameters/bucketId'
+    get:
+      summary: getStorageBucketById
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: getStorageBucketById
+      description: Get a specified storage bucket
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+  '/storage/{bucketId}/{bucketItemId}':
+    parameters:
+      - $ref: '#/components/parameters/bucketId'
+      - schema:
+          type: string
+        name: bucketItemId
+        in: path
+        required: true
+        description: The uuid for a storage bucket item
+    get:
+      summary: getStorageBucketItemById
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: getStorageBucketItemById
+      description: Get a specified storage bucket item
 components:
   schemas:
     crateId:
@@ -1148,4 +1221,11 @@ components:
       schema:
         type: string
       description: The uuid for a shipment
+    bucketId:
+      name: bucketId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The uuid for a storage bucket
   securitySchemes: {}
