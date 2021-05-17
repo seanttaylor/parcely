@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "a8b41d13-db9a-4bcd-b1ba-9cbd6cff680d",
 		"name": "parcely-integration",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -50,7 +50,18 @@
 														}
 													}
 												},
-												"url": "{{url}}/api/v1/users/token"
+												"url": {
+													"raw": "{{url}}/api/v1/users/token",
+													"host": [
+														"{{url}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"users",
+														"token"
+													]
+												}
 											},
 											"response": []
 										},
@@ -79,9 +90,13 @@
 											"request": {
 												"auth": {
 													"type": "bearer",
-													"bearer": {
-														"token": "{{currentUserAccessToken}}"
-													}
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{currentUserAccessToken}}",
+															"type": "string"
+														}
+													]
 												},
 												"method": "GET",
 												"header": [],
@@ -146,7 +161,18 @@
 														}
 													}
 												},
-												"url": "{{url}}/api/v1/users/token"
+												"url": {
+													"raw": "{{url}}/api/v1/users/token",
+													"host": [
+														"{{url}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"users",
+														"token"
+													]
+												}
 											},
 											"response": []
 										},
@@ -183,9 +209,13 @@
 											"request": {
 												"auth": {
 													"type": "bearer",
-													"bearer": {
-														"token": "{{currentUserAccessToken}}"
-													}
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{currentUserAccessToken}}",
+															"type": "string"
+														}
+													]
 												},
 												"method": "GET",
 												"header": [],
@@ -256,7 +286,18 @@
 														}
 													}
 												},
-												"url": "{{url}}/api/v1/users/token"
+												"url": {
+													"raw": "{{url}}/api/v1/users/token",
+													"host": [
+														"{{url}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"users",
+														"token"
+													]
+												}
 											},
 											"response": []
 										},
@@ -294,9 +335,13 @@
 											"request": {
 												"auth": {
 													"type": "bearer",
-													"bearer": {
-														"token": "{{currentUserAccessToken}}"
-													}
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{currentUserAccessToken}}",
+															"type": "string"
+														}
+													]
 												},
 												"method": "GET",
 												"header": [],
@@ -361,7 +406,18 @@
 														}
 													}
 												},
-												"url": "{{url}}/api/v1/users/token"
+												"url": {
+													"raw": "{{url}}/api/v1/users/token",
+													"host": [
+														"{{url}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"users",
+														"token"
+													]
+												}
 											},
 											"response": []
 										},
@@ -398,7 +454,18 @@
 														}
 													}
 												},
-												"url": "{{url}}/api/v1/users/token"
+												"url": {
+													"raw": "{{url}}/api/v1/users/token",
+													"host": [
+														"{{url}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"users",
+														"token"
+													]
+												}
 											},
 											"response": []
 										},
@@ -425,9 +492,13 @@
 											"request": {
 												"auth": {
 													"type": "bearer",
-													"bearer": {
-														"token": "{{currentAdminAccessToken}}"
-													}
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{currentAdminAccessToken}}",
+															"type": "string"
+														}
+													]
 												},
 												"method": "POST",
 												"header": [],
@@ -440,7 +511,17 @@
 														}
 													}
 												},
-												"url": "{{url}}/api/v1/crates"
+												"url": {
+													"raw": "{{url}}/api/v1/crates",
+													"host": [
+														"{{url}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"crates"
+													]
+												}
 											},
 											"response": []
 										},
@@ -462,9 +543,13 @@
 											"request": {
 												"auth": {
 													"type": "bearer",
-													"bearer": {
-														"token": "{{currentAdminAccessToken}}"
-													}
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{currentAdminAccessToken}}",
+															"type": "string"
+														}
+													]
 												},
 												"method": "PUT",
 												"header": [],
@@ -522,9 +607,13 @@
 											"request": {
 												"auth": {
 													"type": "bearer",
-													"bearer": {
-														"token": "{{currentAdminAccessToken}}"
-													}
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{currentAdminAccessToken}}",
+															"type": "string"
+														}
+													]
 												},
 												"method": "POST",
 												"header": [],
@@ -560,7 +649,7 @@
 											"response": []
 										},
 										{
-											"name": "getCrateShipmentById.adminPushRealtimeUpdates Copy",
+											"name": "getCrateShipmentById.adminPushRealtimeUpdates",
 											"event": [
 												{
 													"listen": "test",
@@ -577,22 +666,38 @@
 											"request": {
 												"auth": {
 													"type": "bearer",
-													"bearer": {
-														"token": "{{currentAdminAccessToken}}"
-													}
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{currentAdminAccessToken}}",
+															"type": "string"
+														}
+													]
 												},
 												"method": "POST",
 												"header": [],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n    \"crateId\": \"{{currentCrateId}}\",\n    \"telemetry\": {\n        \"temp\": {\n            \"degreesFahrenheit\": \"{{$randomInt}}\"\n        },\n        \"location\": {\n            \"coords\": {\n                \"lat\": \"{{$randomLatitude}}\",\n                \"long\": \"{{$randomLongitude}}\"\n            },\n            \"zip\": \"00001\"\n        },\n        \"sensors\": {\n            \"moisture\": {\n                \"thresholdExceeded\": false\n            },\n            \"thermometer\": {\n                \"thresholdExceeded\": false\n            },\n            \"photometer\": {\n                \"thresholdExceeded\": false\n            }\n        }\n    }\n}",
+													"raw": "{\n    \"crateId\": \"{{currentCrateId}}\",\n    \"telemetry\": {\n        \"temp\": {\n            \"degreesFahrenheit\": \"{{$randomInt}}\"\n        },\n        \"location\": {\n            \"coords\": {\n                \"lat\": {{$randomLatitude}},\n                \"lng\": {{$randomLongitude}}\n            },\n            \"zip\": \"00001\"\n        },\n        \"sensors\": {\n            \"moisture\": {\n                \"thresholdExceeded\": false\n            },\n            \"thermometer\": {\n                \"thresholdExceeded\": false\n            },\n            \"photometer\": {\n                \"thresholdExceeded\": false\n            }\n        }\n    }\n}",
 													"options": {
 														"raw": {
 															"language": "json"
 														}
 													}
 												},
-												"url": "{{url}}/api/v1/crates/telemetry/rt-updates"
+												"url": {
+													"raw": "{{url}}/api/v1/crates/telemetry/rt-updates",
+													"host": [
+														"{{url}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"crates",
+														"telemetry",
+														"rt-updates"
+													]
+												}
 											},
 											"response": []
 										},
@@ -623,9 +728,13 @@
 											"request": {
 												"auth": {
 													"type": "bearer",
-													"bearer": {
-														"token": "{{currentUserAccessToken}}"
-													}
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{currentUserAccessToken}}",
+															"type": "string"
+														}
+													]
 												},
 												"method": "GET",
 												"header": [],
@@ -700,7 +809,18 @@
 														}
 													}
 												},
-												"url": "{{url}}/api/v1/users/token"
+												"url": {
+													"raw": "{{url}}/api/v1/users/token",
+													"host": [
+														"{{url}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"users",
+														"token"
+													]
+												}
 											},
 											"response": []
 										},
@@ -730,13 +850,27 @@
 											"request": {
 												"auth": {
 													"type": "bearer",
-													"bearer": {
-														"token": "{{currentAdminAccessToken}}"
-													}
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{currentAdminAccessToken}}",
+															"type": "string"
+														}
+													]
 												},
 												"method": "GET",
 												"header": [],
-												"url": "{{url}}/api/v1/crates"
+												"url": {
+													"raw": "{{url}}/api/v1/crates",
+													"host": [
+														"{{url}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"crates"
+													]
+												}
 											},
 											"response": []
 										}
@@ -779,7 +913,18 @@
 														}
 													}
 												},
-												"url": "{{url}}/api/v1/users/token"
+												"url": {
+													"raw": "{{url}}/api/v1/users/token",
+													"host": [
+														"{{url}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"users",
+														"token"
+													]
+												}
 											},
 											"response": []
 										},
@@ -801,13 +946,27 @@
 											"request": {
 												"auth": {
 													"type": "bearer",
-													"bearer": {
-														"token": "{{currentUserAccessToken}}"
-													}
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{currentUserAccessToken}}",
+															"type": "string"
+														}
+													]
 												},
 												"method": "GET",
 												"header": [],
-												"url": "{{url}}/api/v1/crates"
+												"url": {
+													"raw": "{{url}}/api/v1/crates",
+													"host": [
+														"{{url}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"crates"
+													]
+												}
 											},
 											"response": []
 										}
@@ -857,7 +1016,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -894,9 +1064,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -909,7 +1083,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/crates"
+										"url": {
+											"raw": "{{url}}/api/v1/crates",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"crates"
+											]
+										}
 									},
 									"response": []
 								}
@@ -952,7 +1136,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -989,9 +1184,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -1004,7 +1203,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/crates"
+										"url": {
+											"raw": "{{url}}/api/v1/crates",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"crates"
+											]
+										}
 									},
 									"response": []
 								},
@@ -1040,9 +1249,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "PUT",
 										"header": [],
@@ -1100,9 +1313,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -1165,7 +1382,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -1202,9 +1430,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -1217,7 +1449,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/crates"
+										"url": {
+											"raw": "{{url}}/api/v1/crates",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"crates"
+											]
+										}
 									},
 									"response": []
 								},
@@ -1240,9 +1482,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "DELETE",
 										"header": [],
@@ -1285,9 +1531,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -1351,7 +1601,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -1401,9 +1662,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -1416,7 +1681,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/crates"
+										"url": {
+											"raw": "{{url}}/api/v1/crates",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"crates"
+											]
+										}
 									},
 									"response": []
 								},
@@ -1452,9 +1727,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "PUT",
 										"header": [],
@@ -1520,9 +1799,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -1586,9 +1869,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -1631,9 +1918,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -1697,9 +1988,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -1754,9 +2049,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentUserAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentUserAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -1805,9 +2104,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -1863,9 +2166,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -1929,7 +2236,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -1951,9 +2269,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentUserAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentUserAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -1966,7 +2288,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/crates"
+										"url": {
+											"raw": "{{url}}/api/v1/crates",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"crates"
+											]
+										}
 									},
 									"response": []
 								}
@@ -2009,7 +2341,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -2046,7 +2389,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -2068,9 +2422,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -2083,7 +2441,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/crates"
+										"url": {
+											"raw": "{{url}}/api/v1/crates",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"crates"
+											]
+										}
 									},
 									"response": []
 								},
@@ -2106,9 +2474,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentUserAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentUserAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "DELETE",
 										"header": [],
@@ -2177,7 +2549,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -2225,9 +2608,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -2240,7 +2627,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/crates"
+										"url": {
+											"raw": "{{url}}/api/v1/crates",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"crates"
+											]
+										}
 									},
 									"response": []
 								},
@@ -2276,9 +2673,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "PUT",
 										"header": [],
@@ -2347,9 +2748,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -2412,9 +2817,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -2469,9 +2878,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -2535,7 +2948,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -2585,9 +3009,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -2600,7 +3028,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/crates"
+										"url": {
+											"raw": "{{url}}/api/v1/crates",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"crates"
+											]
+										}
 									},
 									"response": []
 								},
@@ -2636,9 +3074,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "PUT",
 										"header": [],
@@ -2704,9 +3146,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -2771,9 +3217,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -2821,9 +3271,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentUserAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentUserAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -2893,7 +3347,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -2943,9 +3408,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -2958,7 +3427,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/crates"
+										"url": {
+											"raw": "{{url}}/api/v1/crates",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"crates"
+											]
+										}
 									},
 									"response": []
 								},
@@ -2994,9 +3473,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "PUT",
 										"header": [],
@@ -3062,9 +3545,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -3128,9 +3615,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -3173,9 +3664,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -3237,9 +3732,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -3293,9 +3792,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -3372,7 +3875,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -3409,7 +3923,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -3459,9 +3984,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -3474,7 +4003,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/crates"
+										"url": {
+											"raw": "{{url}}/api/v1/crates",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"crates"
+											]
+										}
 									},
 									"response": []
 								},
@@ -3510,9 +4049,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "PUT",
 										"header": [],
@@ -3578,9 +4121,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -3633,22 +4180,38 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"crateId\": \"{{currentCrateId}}\",\n    \"telemetry\": {\n        \"temp\": {\n            \"degreesFahrenheit\": \"{{$randomInt}}\"\n        },\n        \"location\": {\n            \"coords\": {\n                \"lat\": \"{{$randomLatitude}}\",\n                \"long\": \"{{$randomLongitude}}\"\n            },\n            \"zip\": \"00001\"\n        },\n        \"sensors\": {\n            \"moisture\": {\n                \"thresholdExceeded\": false\n            },\n            \"thermometer\": {\n                \"thresholdExceeded\": false\n            },\n            \"photometer\": {\n                \"thresholdExceeded\": false\n            }\n        }\n    }\n}",
+											"raw": "{\n    \"crateId\": \"{{currentCrateId}}\",\n    \"telemetry\": {\n        \"temp\": {\n            \"degreesFahrenheit\": \"{{$randomInt}}\"\n        },\n        \"location\": {\n            \"coords\": {\n                \"lat\": {{$randomLatitude}},\n                \"lng\": {{$randomLongitude}}\n            },\n            \"zip\": \"00001\"\n        },\n        \"sensors\": {\n            \"moisture\": {\n                \"thresholdExceeded\": false\n            },\n            \"thermometer\": {\n                \"thresholdExceeded\": false\n            },\n            \"photometer\": {\n                \"thresholdExceeded\": false\n            }\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/crates/telemetry/rt-updates"
+										"url": {
+											"raw": "{{url}}/api/v1/crates/telemetry/rt-updates",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"crates",
+												"telemetry",
+												"rt-updates"
+											]
+										}
 									},
 									"response": []
 								},
@@ -3679,9 +4242,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -3767,7 +4334,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -3817,7 +4395,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users"
+										"url": {
+											"raw": "{{url}}/api/v1/users",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users"
+											]
+										}
 									},
 									"response": []
 								},
@@ -3856,9 +4444,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -3871,7 +4463,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/merchants"
+										"url": {
+											"raw": "{{url}}/api/v1/merchants",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"merchants"
+											]
+										}
 									},
 									"response": []
 								}
@@ -3914,7 +4516,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -3964,7 +4577,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users"
+										"url": {
+											"raw": "{{url}}/api/v1/users",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users"
+											]
+										}
 									},
 									"response": []
 								},
@@ -4008,9 +4631,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -4023,7 +4650,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/merchants"
+										"url": {
+											"raw": "{{url}}/api/v1/merchants",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"merchants"
+											]
+										}
 									},
 									"response": []
 								},
@@ -4049,9 +4686,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentUserAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentUserAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "PUT",
 										"header": [],
@@ -4112,9 +4753,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentUserAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentUserAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -4178,7 +4823,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -4216,9 +4872,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -4231,7 +4891,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/merchants"
+										"url": {
+											"raw": "{{url}}/api/v1/merchants",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"merchants"
+											]
+										}
 									},
 									"response": []
 								}
@@ -4274,7 +4944,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -4312,9 +4993,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -4327,7 +5012,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/merchants"
+										"url": {
+											"raw": "{{url}}/api/v1/merchants",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"merchants"
+											]
+										}
 									},
 									"response": []
 								}
@@ -4370,7 +5065,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -4420,7 +5126,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users"
+										"url": {
+											"raw": "{{url}}/api/v1/users",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users"
+											]
+										}
 									},
 									"response": []
 								},
@@ -4464,9 +5180,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -4479,7 +5199,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/merchants"
+										"url": {
+											"raw": "{{url}}/api/v1/merchants",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"merchants"
+											]
+										}
 									},
 									"response": []
 								},
@@ -4503,9 +5233,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentUserAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentUserAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -4559,9 +5293,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentUserAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentUserAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -4625,7 +5363,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -4675,7 +5424,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users"
+										"url": {
+											"raw": "{{url}}/api/v1/users",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users"
+											]
+										}
 									},
 									"response": []
 								},
@@ -4720,9 +5479,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -4735,7 +5498,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/merchants"
+										"url": {
+											"raw": "{{url}}/api/v1/merchants",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"merchants"
+											]
+										}
 									},
 									"response": []
 								},
@@ -4757,9 +5530,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -4813,9 +5590,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentUserAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentUserAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -4879,7 +5660,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -4929,7 +5721,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users"
+										"url": {
+											"raw": "{{url}}/api/v1/users",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users"
+											]
+										}
 									},
 									"response": []
 								},
@@ -4974,9 +5776,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -4989,7 +5795,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/merchants"
+										"url": {
+											"raw": "{{url}}/api/v1/merchants",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"merchants"
+											]
+										}
 									},
 									"response": []
 								},
@@ -5026,9 +5842,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -5041,7 +5861,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/crates"
+										"url": {
+											"raw": "{{url}}/api/v1/crates",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"crates"
+											]
+										}
 									},
 									"response": []
 								},
@@ -5073,9 +5903,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentUserAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentUserAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -5167,7 +6001,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								}
@@ -5223,7 +6068,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -5250,9 +6106,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentUserAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentUserAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -5325,7 +6185,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -5347,9 +6218,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentUserAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentUserAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -5422,7 +6297,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -5444,9 +6330,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentUserAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentUserAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "PUT",
 										"header": [],
@@ -5557,7 +6447,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users"
+										"url": {
+											"raw": "{{url}}/api/v1/users",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users"
+											]
+										}
 									},
 									"response": []
 								},
@@ -5579,9 +6479,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentUserAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentUserAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "PUT",
 										"header": [],
@@ -5672,7 +6576,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users"
+										"url": {
+											"raw": "{{url}}/api/v1/users",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users"
+											]
+										}
 									},
 									"response": []
 								},
@@ -5694,9 +6608,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentUserAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentUserAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "PUT",
 										"header": [],
@@ -5787,7 +6705,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users"
+										"url": {
+											"raw": "{{url}}/api/v1/users",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users"
+											]
+										}
 									},
 									"response": []
 								},
@@ -5814,9 +6742,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentUserAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentUserAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "PUT",
 										"header": [],
@@ -5906,7 +6838,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -5960,7 +6903,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users"
+										"url": {
+											"raw": "{{url}}/api/v1/users",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users"
+											]
+										}
 									},
 									"response": []
 								},
@@ -5982,9 +6935,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -6066,7 +7023,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users"
+										"url": {
+											"raw": "{{url}}/api/v1/users",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users"
+											]
+										}
 									},
 									"response": []
 								},
@@ -6119,7 +7086,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								},
@@ -6152,9 +7130,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentUserAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentUserAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "PUT",
 										"header": [],
@@ -6238,7 +7220,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								}
@@ -6273,7 +7266,15 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{url}}/status"
+								"url": {
+									"raw": "{{url}}/status",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"status"
+									]
+								}
 							},
 							"response": []
 						}
@@ -6339,7 +7340,18 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/users/token"
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
 									},
 									"response": []
 								}
@@ -6373,9 +7385,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -6388,7 +7404,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/simulations"
+										"url": {
+											"raw": "{{url}}/api/v1/simulations",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"simulations"
+											]
+										}
 									},
 									"response": []
 								}
@@ -6422,9 +7448,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -6437,7 +7467,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/simulations"
+										"url": {
+											"raw": "{{url}}/api/v1/simulations",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"simulations"
+											]
+										}
 									},
 									"response": []
 								},
@@ -6465,9 +7505,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -6522,9 +7566,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -6537,7 +7585,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/simulations"
+										"url": {
+											"raw": "{{url}}/api/v1/simulations",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"simulations"
+											]
+										}
 									},
 									"response": []
 								},
@@ -6559,9 +7617,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -6612,9 +7674,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -6669,9 +7735,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -6684,7 +7754,17 @@
 												}
 											}
 										},
-										"url": "{{url}}/api/v1/simulations"
+										"url": {
+											"raw": "{{url}}/api/v1/simulations",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"simulations"
+											]
+										}
 									},
 									"response": []
 								},
@@ -6706,9 +7786,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -6759,9 +7843,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -6804,9 +7892,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "POST",
 										"header": [],
@@ -6857,9 +7949,13 @@
 									"request": {
 										"auth": {
 											"type": "bearer",
-											"bearer": {
-												"token": "{{currentAdminAccessToken}}"
-											}
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
 										},
 										"method": "GET",
 										"header": [],
@@ -6918,7 +8014,18 @@
 										}
 									}
 								},
-								"url": "localhost:3000/api/v1/simulations"
+								"url": {
+									"raw": "localhost:3000/api/v1/simulations",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"simulations"
+									]
+								}
 							},
 							"response": []
 						},
@@ -7038,6 +8145,318 @@
 										{
 											"key": "id",
 											"value": "{{currentSimulationId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "storage-service",
+			"item": [
+				{
+					"name": "getUserAccessToken",
+					"item": [
+						{
+							"name": "getUserAccessToken.getAdminAccessToken",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"pm.test(\"Should set admin access token in environment\", function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.environment.set(\"currentAdminAccessToken\", responseData.accessToken);",
+											"});",
+											"",
+											"pm.test(\"Should be able to get a userId and access credential when a new User instance is created\", function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(Object.keys(responseData).includes(\"accessToken\")).to.eql(true);",
+											"    pm.expect(Object.keys(responseData).includes(\"userId\")).to.eql(true);",
+											"    pm.expect(typeof(responseData.userId) === \"string\").to.eql(true);",
+											"    pm.expect(typeof(responseData.accessToken) === \"string\").to.eql(true);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"emailAddress\": \"{{furyEmailAddress}}\",\n    \"password\": \"{{globalUserPassword}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/users/token",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"token"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "getStorageBuckets",
+					"item": [
+						{
+							"name": "adminCreateCrate.createCrate",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"pm.test(\"Should set currentCrateId in environment\", function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.environment.set(\"currentCrateId\", jsonData[\"entries\"][0][\"id\"]);",
+											"",
+											"});",
+											"",
+											"pm.test(\"Should return an array of crates of length 1\", function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(Array.isArray(jsonData.entries)).to.eql(true);",
+											"    pm.expect(jsonData.entries.length === 1).to.eql(true);",
+											"     pm.expect(jsonData.entries[0][\"data\"][\"size\"][0] === \"L\").to.eql(true);",
+											"    pm.expect(jsonData.count === 1).to.eql(true);",
+											"    pm.expect(jsonData.error === null).to.eql(true);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{currentAdminAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"size\": [\"L\"],\n    \"merchantId\": \"{{$randomUUID}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/crates",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"crates"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getStorageBuckets.get",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Should return a list of storage buckets\", function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(Array.isArray(jsonData.entries)).to.eql(true);",
+											"    pm.expect(Object.keys(jsonData).includes(\"count\")).to.eql(true);",
+											"    pm.expect(jsonData.entries.length === jsonData.count).to.eql(true);",
+											"    pm.expect(jsonData.error === null).to.eql(true);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{currentAdminAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/storage/buckets",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"storage",
+										"buckets"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "getStorageBucketById",
+					"item": [
+						{
+							"name": "getStorageBucketById.get",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Should return a list of storage bucket items\", function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(Array.isArray(jsonData.entries)).to.eql(true);",
+											"    pm.expect(Object.keys(jsonData).includes(\"count\")).to.eql(true);",
+											"    pm.expect(jsonData.entries.length === jsonData.count).to.eql(true);",
+											"    pm.expect(jsonData.error === null).to.eql(true);",
+											"});",
+											"",
+											"pm.test(\"Should set the currentBucketItemId environment variable\", function () {",
+											"    const jsonData = pm.response.json();",
+											"    const [bucketId] = jsonData.entries;",
+											"    pm.environment.set(\"currentBucketItemId\", bucketId);",
+											"});",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{currentAdminAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/storage/buckets/:id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"storage",
+										"buckets",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "crate-qr-codes"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "getStorageBucketItemById",
+					"item": [
+						{
+							"name": "getStorageBucketItemById.get",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/storage/buckets/:id/:bucketItemId",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"storage",
+										"buckets",
+										":id",
+										":bucketItemId"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "crate-qr-codes"
+										},
+										{
+											"key": "bucketItemId",
+											"value": "{{currentBucketItemId}}"
 										}
 									]
 								}
