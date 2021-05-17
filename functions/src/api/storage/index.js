@@ -1,6 +1,10 @@
 /* istanbul ignore file */
 
 const express = require('express');
+const {
+  authorizeRequest,
+  validateJWT,
+} = require('../../lib/middleware');
 
 const router = new express.Router();
 
@@ -15,15 +19,21 @@ function StorageRouter(storageBucketService) {
     const { bucketId, itemId } = req.params;
     const bucketItem = await storageBucketService.getBucketItem(bucketId, itemId);
 
+    if (!bucketItem) {
+      res.status(404);
+      res.end();
+      return;
+    }
+
     res.status(200);
     res.set({
-      'Content-Type': 'image/png',
-      'Content-Length': bucketItem.length,
+      'content-type': 'image/png',
+      'content-length': bucketItem.length,
     });
     res.end(bucketItem);
   });
 
-  router.get('/buckets', async (req, res) => {
+  router.get('/buckets', validateJWT, authorizeRequest({ actionId: 'readAny:buckets' }), async (req, res) => {
     const bucketList = await storageBucketService.listBuckets();
 
     res.status(200);
@@ -34,9 +44,15 @@ function StorageRouter(storageBucketService) {
     });
   });
 
-  router.get('/buckets/:bucketId', async (req, res) => {
+  router.get('/buckets/:bucketId', validateJWT, authorizeRequest({ actionId: 'readAny:buckets' }), async (req, res) => {
     const { bucketId } = req.params;
     const bucket = await storageBucketService.getBucket(bucketId);
+
+    if (!bucket) {
+      res.status(404);
+      res.end();
+      return;
+    }
 
     res.status(200);
     res.json({
