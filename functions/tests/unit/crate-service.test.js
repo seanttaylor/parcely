@@ -291,7 +291,7 @@ describe('ShipmentManagement', () => {
     });
 
     await testCrate.save();
-    const crateShipmentList = await testCrateService.getCrateShipments(testCrate);
+    const crateShipmentList = await testCrateService.getShipmentsByCrate(testCrate);
 
     expect(Array.isArray(crateShipmentList)).toBe(true);
   });
@@ -334,7 +334,7 @@ describe('ShipmentManagement', () => {
       destinationAddress,
       trackingNumber: faker.datatype.uuid(),
     });
-    const [crateShipment] = await testCrateService.getCrateShipments(testCrate);
+    const [crateShipment] = await testCrateService.getShipmentsByCrate(testCrate);
     const crateDbRecord = await testCrateService.getCrateById(testCrateId);
 
     expect(crateShipment.id === testCrateShipmentId).toBe(true);
@@ -824,13 +824,13 @@ describe('ShipmentManagement', () => {
       destinationAddress,
       trackingNumber: faker.datatype.uuid(),
     });
-    const [crateShipmentNoWaypoints] = await testCrateService.getCrateShipments(testCrate);
+    const [crateShipmentNoWaypoints] = await testCrateService.getShipmentsByCrate(testCrate);
 
     expect(typeof (crateShipmentNoWaypoints.toJSON()) === 'object').toBe(true);
     expect(crateShipmentNoWaypoints.toJSON().data.waypoints.length === 0).toBe(true);
     expect(crateShipmentNoWaypoints.toJSON().data.waypointsIncluded === false).toBe(true);
 
-    const [crateShipmentWithWaypoints] = await testCrateService.getCrateShipments(testCrate, { includeWaypoints: true });
+    const [crateShipmentWithWaypoints] = await testCrateService.getShipmentsByCrate(testCrate, { includeWaypoints: true });
 
     expect(typeof (crateShipmentWithWaypoints.toJSON()) === 'object').toBe(true);
 

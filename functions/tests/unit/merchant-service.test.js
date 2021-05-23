@@ -8,19 +8,38 @@ process.env.NODE_ENV = 'ci/cd/test';
 const { mockImpl } = require('../../src/lib/utils/mocks');
 const uuid = require('uuid');
 const Ajv = require('ajv');
-
+const events = require('events');
 const ajv = new Ajv();
 const faker = require('faker');
 const crateSchema = require('../../src/schemas/crate.json');
 const { MerchantService } = require('../../src/services/merchant');
 const { UserService } = require('../../src/services/user');
 const DatabaseConnector = require('../../src/lib/database/connectors/memory');
-
-const testDbConnector = new DatabaseConnector({ console: mockImpl.console });
+const { CrateService } = require('../../src/services/crate');
+const CrateRepository = require('../../src/lib/repository/crate');
+const CrateShipmentRepository = require('../../src/lib/repository/crate-shipment');
+const ICrateRepository = require('../../src/interfaces/crate-repository');
+const ICrateShipmentRepository = require('../../src/interfaces/shipment-repository');
 const IMerchantRepository = require('../../src/interfaces/merchant-repository');
 const IUserRepository = require('../../src/interfaces/user-repository');
 const UserRepository = require('../../src/lib/repository/user');
 const MerchantRepository = require('../../src/lib/repository/merchant');
+const IStorageBucket = require('../../src/interfaces/storage-bucket');
+const {InMemoryStorageBucket} = require('../../src/lib/storage');
+
+const testStorageBucketService = new IStorageBucket(new InMemoryStorageBucket())
+
+const testDbConnector = new DatabaseConnector({ console: mockImpl.console });
+
+const testCrateRepo = new ICrateRepository(new CrateRepository(testDbConnector));
+const testCrateShipmentRepo = new ICrateShipmentRepository(new CrateShipmentRepository(testDbConnector));
+
+const testCrateService = new CrateService({
+  crateRepo: testCrateRepo,
+  crateShipmentRepo: testCrateShipmentRepo,
+  eventEmitter: new events.EventEmitter(),
+  storageBucketService: testStorageBucketService
+});
 
 const testUserRepo = new IUserRepository(new UserRepository(testDbConnector));
 const testMerchantRepo = new IMerchantRepository(new MerchantRepository(testDbConnector));
@@ -29,7 +48,7 @@ const fakeUserService = {
     return true;
   },
 };
-const testMerchantService = new MerchantService(testMerchantRepo, fakeUserService);
+const testMerchantService = new MerchantService(testMerchantRepo, fakeUserService, testCrateService);
 const defaultPlan = {
   planType: ['smallBusiness'],
   startDate: '01/01/2021',
@@ -252,6 +271,85 @@ describe('MerchantManagement', () => {
     const record = await testMerchantService.getMerchantById(testMerchantId);
 
     expect(record._data.status[0] === 'archived').toBe(true);
+  });
+
+  test('Should be able to find all shipments associated with a specified merchant', async () => {
+    const testMerchantData = {
+      name: faker.company.companyName(),
+      userId: faker.datatype.uuid(),
+      address: {
+        street: faker.address.streetName(),
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode(),
+      },
+      emailAddress: faker.internet.email(),
+      phoneNumber: faker.phone.phoneNumber(),
+      plan: defaultPlan,
+    };
+    const testMerchant = await testMerchantService.createMerchant(testMerchantData);
+
+    await testMerchant.save();
+
+    const testMerchantId = testMerchant.id;
+
+    const originAddress = {
+        street: faker.address.streetName(),
+        apartmentNumber: '7',
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode(),
+      };
+      const destinationAddress = {
+        street: faker.address.streetName(),
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode(),
+      };
+  
+      const fakeTelemetryData = {
+        temp: {
+          degreesFahrenheit: String(faker.datatype.float()),
+        },
+        location: {
+          coords: {
+            lat: Number(faker.address.latitude()),
+            lng: Number(faker.address.longitude()),
+          },
+          zip: faker.address.zipCode(),
+        },
+        sensors: {
+          moisture: {
+            thresholdExceeded: false,
+          },
+          thermometer: {
+            thresholdExceeded: false,
+          },
+          photometer: {
+            thresholdExceeded: false,
+          },
+        },
+      };
+  
+      const testCrate = await testCrateService.createCrate({
+        size: ['S'],
+        merchantId: testMerchantId,
+        recipientId: faker.datatype.uuid(),
+      });
+  
+      const testCrateId = await testCrate.save();
+      const testCrateTripId = await testCrate.startShipment({
+        originAddress,
+        destinationAddress,
+        trackingNumber: faker.datatype.uuid(),
+      });
+  
+      await testCrate.pushTelemetry(fakeTelemetryData);
+
+    const shipmentList = await testMerchantService.getShipmentsByMerchantId(testMerchantId);
+
+    expect(Array.isArray(shipmentList)).toBe(true);
+    expect(shipmentList[0]['_data']['merchantId'] === testMerchantId).toBe(true);
   });
 
   test('Should NOT be able to update existing merchants who have been archived', async () => {
