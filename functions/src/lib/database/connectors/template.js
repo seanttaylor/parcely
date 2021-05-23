@@ -139,6 +139,7 @@ module.exports = {
       id: 'd54cc57f-c32c-454a-a295-6481f126eb8b',
       crateId: '2055c145-7d3e-446c-a7ad-ae6aaf886335',
       recipientId: 'b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09',
+      merchantId: 'dd8b20dd-1637-4396-bba5-bcd6d65e2d5d',
       departureTimestamp: '2018-06-13T10:11:13+05:30',
       departureZip: '11249-1005',
       arrivalTimestamp: null,

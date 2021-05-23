@@ -123,6 +123,7 @@ function Crate(repo, crateDTO, eventEmitter) {
       id,
       crateId: this._data.id,
       recipientId: this._data.recipientId,
+      merchantId: this._data.merchantId,
       originAddress,
       destinationAddress,
       trackingNumber,
@@ -373,7 +374,7 @@ function CrateService({
      * @param {Crate} crate - an instance of a Crate
      * @param {Object} options - a configuration object
      */
-  this.getCrateShipments = async function (crate, { includeWaypoints = false } = {}) {
+  this.getShipmentsByCrate = async function (crate, { includeWaypoints = false } = {}) {
     const crateShipmentList = await this._repo.crateShipment.getCrateShipmentsByCrateId(crate.id);
 
     return crateShipmentList.map((shipmentData) => {
@@ -386,6 +387,21 @@ function CrateService({
 
       return shipment;
     });
+  };
+
+  /**
+     * @param {String} merchantId - a uuid for merchant
+     */
+  this.getShipmentsByMerchantId = async function (merchantId) {
+    const crateShipmentList = await this._repo.crateShipment.getAllCrateShipments();
+
+    return crateShipmentList.filter((s) => s.merchantId === merchantId)
+      .map((shipmentData) => {
+        const shipment = new CrateShipment(this._repo.crateShipment, new CrateShipmentDTO(shipmentData));
+        shipment._data.waypointsIncluded = true;
+
+        return shipment;
+      });
   };
 
   /**

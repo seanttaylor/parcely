@@ -97,9 +97,10 @@ function Merchant(repo, merchantDTO) {
  *
  * @param {Object} repo - the repos associated with this service
  * @param {UserService} userService - an instance of the UserService
+ * @param {CrateService} crateService - an instance of the CrateService
  */
 
-function MerchantService(repo, userService) {
+function MerchantService(repo, userService, crateService) {
   this._repo = repo;
 
   /**
@@ -125,7 +126,7 @@ function MerchantService(repo, userService) {
   };
 
   /**
-     * @param {String} id - a uuid for a merchant\
+     * @param {String} id - a uuid for a merchant
      * @returns {Object}
      */
   this.getMerchantById = async function (id) {
@@ -161,11 +162,19 @@ function MerchantService(repo, userService) {
   };
 
   /**
-     * @param {String} id - a uuid of a User
+     * @param {String} userId - a uuid of a User
      */
   this.merchantExists = async function (userId) {
     const merchantList = await this._repo.getAllMerchants();
     return merchantList.find((m) => m.userId === userId);
+  };
+
+  /**
+     * @param {String} merchantId - a uuid of a merchant
+     */
+  this.getShipmentsByMerchantId = async function (merchantId) {
+    const shipmentList = await crateService.getShipmentsByMerchantId(merchantId);
+    return shipmentList;
   };
 }
 

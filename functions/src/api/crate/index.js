@@ -69,7 +69,7 @@ function CrateRouter({
 
     try {
       const crate = await crateService.getCrateById(crateId);
-      const shipmentList = await crateService.getCrateShipments(crate);
+      const shipmentList = await crateService.getShipmentsByCrate(crate);
       res.set('content-type', 'application/json');
 
       res.status(200);
