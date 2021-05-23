@@ -207,6 +207,7 @@ function CrateShipment(repo, crateShipmentDTO) {
       data: {
         id: this.id,
         crateId: this._data.crateId,
+        merchantId: this._data.merchantId,
         recipientId: this._data.recipientId,
         departureTimestamp: this._data.departureTimestamp,
         departureZip: this._data.departureZip,

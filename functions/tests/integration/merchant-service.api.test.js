@@ -393,4 +393,100 @@ describe('MerchantManagement', () => {
     expect(res5.body.count === 1).toBe(true);
     expect(res5.body.entries[0].data.merchantId === starkMerchantId).toBe(true);
   });
+
+  test('Merchants should be able to get a list of shipments associated with their account', async () => {
+    const fakePassword = faker.internet.password();
+    const fakeEmailAddress = faker.internet.email();
+
+    const res = await request.post('/api/v1/users')
+      .send({
+        emailAddress: fakeEmailAddress,
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        phoneNumber: faker.phone.phoneNumber(),
+        password: fakePassword,
+      })
+      .expect(201);
+
+    const fakeUserId = res.body.userId;
+
+    const res1 = await request.post('/api/v1/users/token')
+      .send({
+        emailAddress: furyEmailAddress,
+        password: superSecretPassword,
+      })
+      .expect(201);
+
+    const furyAccessToken = res1.body.accessToken;
+    const fakeAccessToken = res.body.accessToken;
+
+    const testMerchantData = {
+      name: faker.company.companyName(),
+      userId: fakeUserId,
+      address: {
+        street: faker.address.streetName(),
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode(),
+      },
+      emailAddress: faker.internet.email(),
+      phoneNumber: faker.phone.phoneNumber(),
+      plan: defaultPlan,
+    };
+
+    const res2 = await request.post('/api/v1/merchants')
+      .set('authorization', `Bearer ${furyAccessToken}`)
+      .send(testMerchantData)
+      .expect(201);
+
+    const merchantId = res2.body.entries[0].id;
+
+    const res3 = await request.post('/api/v1/crates')
+      .set('authorization', `Bearer ${furyAccessToken}`)
+      .send({
+        size: ['L'],
+        merchantId,
+      })
+      .expect(201);
+
+    const crateId = res3.body.entries[0].id;
+
+    await request.put(`/api/v1/crates/${crateId}/recipient`)
+      .set('authorization', `Bearer ${furyAccessToken}`)
+      .send({
+        recipientId: faker.datatype.uuid(),
+      })
+      .expect(204);
+
+    const res4 = await request.post(`/api/v1/crates/${crateId}/shipments`)
+      .set('authorization', `Bearer ${furyAccessToken}`)
+      .send({
+        originAddress: {
+          street: faker.address.streetName(),
+          apartmentNumber: '7',
+          city: faker.address.city(),
+          state: faker.address.stateAbbr(),
+          zip: faker.address.zipCode(),
+        },
+        destinationAddress: {
+          street: faker.address.streetName(),
+          apartmentNumber: '7',
+          city: faker.address.city(),
+          state: faker.address.stateAbbr(),
+          zip: faker.address.zipCode(),
+        },
+        trackingNumber: faker.datatype.uuid(),
+      })
+      .expect(201);
+
+
+    const res5 = await request.get(`/api/v1/merchants/${merchantId}/shipments`)
+      .set('authorization', `Bearer ${fakeAccessToken}`)
+      .send()
+      .expect(200);
+
+    expect(Array.isArray(res5.body.entries)).toBe(true);
+    expect(res5.body.count === 1).toBe(true);
+    expect(res5.body.entries[0].data.merchantId === merchantId).toBe(true);
+  });
 });

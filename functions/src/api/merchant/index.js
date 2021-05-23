@@ -145,6 +145,27 @@ function MerchantRouter({ merchantService, crateService }) {
     }
   });
 
+  router.get('/:id/shipments', validateJWT, authorizeRequest({
+    actionId: 'readOwn:merchants',
+    authzOverride: merchantAuthzOverride(merchantService),
+  }), async (req, res, next) => {
+    const merchantId = req.params.id;
+    res.set('content-type', 'application/json');
+
+    try {
+      const shipmentList = await crateService.getShipmentsByMerchantId(merchantId);
+
+      res.status(200);
+      res.json({
+        entries: shipmentList,
+        error: null,
+        count: shipmentList.length,
+      });
+    } catch (e) {
+      next(e);
+    }
+  });
+
   /** PUT* */
   router.put('/:id/plan', validateRequest(updateMerchantPlanSchema), validateJWT, authorizeRequest({
     actionId: 'updateOwn:merchants',

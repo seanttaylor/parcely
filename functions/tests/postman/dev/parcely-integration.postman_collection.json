@@ -4287,6 +4287,345 @@
 								}
 							],
 							"description": "Platform should be able to ingest real-time updates from hardware crates"
+						},
+						{
+							"name": "adminGetShipmentsByMerchantId",
+							"item": [
+								{
+									"name": "adminGetShipments.getAdminAccessToken",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201\", function () {",
+													"    pm.response.to.have.status(201);",
+													"});",
+													"",
+													"pm.test(\"Should set access token and current admin id in environment\", function () {",
+													"    const responseData = pm.response.json();",
+													"    pm.environment.set(\"currentAdminAccessToken\", responseData.accessToken);",
+													"    pm.environment.set(\"currentAdminId\", responseData.userId);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"emailAddress\": \"{{furyEmailAddress}}\",\n    \"password\": \"{{globalUserPassword}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/v1/users/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"token"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "adminGetShipments.createCrate",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201\", function () {",
+													"    pm.response.to.have.status(201);",
+													"});",
+													"",
+													"pm.test(\"Should set currentCrateId in environment\", function () {",
+													"    const jsonData = pm.response.json();",
+													"    pm.environment.set(\"currentCrateId\", jsonData[\"entries\"][0][\"id\"]);",
+													"",
+													"});",
+													"",
+													"pm.test(\"Should return an array of crates of length 1\", function () {",
+													"    const jsonData = pm.response.json();",
+													"    pm.expect(Array.isArray(jsonData.entries)).to.eql(true);",
+													"    pm.expect(jsonData.entries.length === 1).to.eql(true);",
+													"     pm.expect(jsonData.entries[0][\"data\"][\"size\"][0] === \"L\").to.eql(true);",
+													"    pm.expect(jsonData.count === 1).to.eql(true);",
+													"    pm.expect(jsonData.error === null).to.eql(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"//Add a `fakeMerchantId` variable to the current environment",
+													"const fakeMerchantId = pm.variables.replaceIn(\"{{$randomUUID}}\");",
+													"pm.environment.set(\"fakeMerchantId\", fakeMerchantId);",
+													"",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"size\": [\"L\"],\n    \"merchantId\": \"{{fakeMerchantId}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/v1/crates",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"crates"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "adminGetShipments.setCrateRecipient",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", function () {",
+													"    pm.response.to.have.status(204);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"//Add a `fakeRecipientId` variable to the current environment",
+													"const fakeRecipientId = pm.variables.replaceIn(\"{{$randomUUID}}\");",
+													"pm.environment.set(\"fakeRecipientId\", fakeRecipientId);",
+													"",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"recipientId\": \"{{fakeRecipientId}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/v1/crates/:id/recipient",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"crates",
+												":id",
+												"recipient"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{currentCrateId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "adminGetShipments.startCrateShipment",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201\", function () {",
+													"    pm.response.to.have.status(201);",
+													"});",
+													"",
+													"pm.test(\"Should set shipmentId in environment\", function () {",
+													"    const jsonData = pm.response.json();",
+													"    pm.environment.set(\"currentShipmentId\", jsonData[\"entries\"][0][\"data\"][\"shipmentId\"]);",
+													"});",
+													"",
+													"pm.test(\"Should update all shipment metadata\", function () {",
+													"    const jsonData = pm.response.json();",
+													"    pm.expect(jsonData.entries[0][\"data\"][\"id\"] === pm.environment.get(\"currentCrateId\")).to.eql(true);",
+													"    pm.expect(jsonData.entries[0][\"data\"][\"shipmentId\"] === pm.environment.get(\"currentShipmentId\")).to.eql(true);",
+													"    pm.expect(jsonData.entries[0][\"data\"][\"merchantId\"] === pm.environment.get(\"fakeMerchantId\")).to.eql(true);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"originAddress\": {\n        \"street\": \"{{$randomStreetName}}\",\n        \"apartmentNumber\": \"7\",\n        \"city\": \"{{$randomCity}}\",\n        \"state\": \"NY\",\n        \"zip\": \"10001\"\n    },\n    \"destinationAddress\": {\n        \"street\": \"{{$randomStreetName}}\",\n        \"city\": \"{{$randomCity}}\",\n        \"state\": \"MA\",\n        \"zip\": \"00001\"\n    },\n    \"trackingNumber\": \"{{$randomUUID}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/v1/crates/:id/shipments",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"crates",
+												":id",
+												"shipments"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{currentCrateId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "adminGetShipments.getShipmentsByMerchantId",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Should return a list of shipments associated with the specified merchant\", function () {",
+													"     const jsonData = pm.response.json();",
+													"",
+													"    pm.expect(Array.isArray(jsonData.entries)).to.eql(true);",
+													"    pm.expect(jsonData.entries.length === 1).to.eql(true);",
+													"    pm.expect(jsonData.count === 1).to.eql(true);",
+													"    pm.expect(jsonData.error === null).to.eql(true);",
+													"   ",
+													"    pm.expect(jsonData.entries[0][\"data\"][\"merchantId\"] === pm.environment.get(\"fakeMerchantId\")).to.eql(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{currentAdminAccessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url}}/api/v1/merchants/:id/shipments",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"merchants",
+												":id",
+												"shipments"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{fakeMerchantId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"description": "Admins should be able to get a list of all shipments for a specified crate"
 						}
 					]
 				}
