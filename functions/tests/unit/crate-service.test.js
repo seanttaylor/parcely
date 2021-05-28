@@ -22,6 +22,12 @@ const testDbConnector = new DatabaseConnector({ console: mockImpl.console });
 const ICrateRepository = require('../../src/interfaces/crate-repository');
 const ICrateShipmentRepository = require('../../src/interfaces/shipment-repository');
 
+const { UserService } = require('../../src/services/user');
+const UserRepository = require('../../src/lib/repository/user');
+const IUserRepository = require('../../src/interfaces/user-repository');
+const testUserRepo = new IUserRepository(new UserRepository(testDbConnector));
+const testUserService = new UserService(testUserRepo);
+
 const IStorageBucket = require('../../src/interfaces/storage-bucket');
 const {InMemoryStorageBucket} = require('../../src/lib/storage');
 const testStorageBucketService = new IStorageBucket(new InMemoryStorageBucket())
@@ -32,9 +38,13 @@ const testCrateService = new CrateService({
   crateRepo: testCrateRepo,
   crateShipmentRepo: testCrateShipmentRepo,
   eventEmitter: new events.EventEmitter(),
-  storageBucketService: testStorageBucketService
+  storageBucketService: testStorageBucketService,
+  userService: testUserService
 });
 const starkMerchantId = 'dd8b20dd-1637-4396-bba5-bcd6d65e2d5d';
+const thorUserId = 'b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09';
+const thorUserEmail = 'thor@avengers.io';
+const furyUserEmail = 'nfury@shield.gov';
 
 /** Tests* */
 afterAll(() => {
@@ -229,7 +239,7 @@ describe('CrateManagement', () => {
     });
 
     await testCrate.save();
-    await testCrate.setRecipient(thorUserId);
+    await testCrate.setRecipient(thorUserEmail);
 
     expect(testCrate._data.recipientId === thorUserId).toBe(true);
   });
@@ -241,7 +251,7 @@ describe('CrateManagement', () => {
     });
 
     await testCrate.save();
-    await testCrate.setRecipient(thorUserId);
+    await testCrate.setRecipient(thorUserEmail);
 
     const crateList = await testCrateService.getCratesByRecipient({
       id: thorUserId,
@@ -780,21 +790,19 @@ describe('ShipmentManagement', () => {
   });
 
   test('Should ONLY be able to associate (1) recipient with (1) crate on a single shipment.', async () => {
-    const firstUserId = faker.datatype.uuid();
-    const secondUserId = faker.datatype.uuid();
     const testCrate = await testCrateService.createCrate({
       size: ['S'],
       merchantId: faker.datatype.uuid(),
     });
 
     await testCrate.save();
-    await testCrate.setRecipient(firstUserId);
+    await testCrate.setRecipient(thorUserEmail);
 
     try {
-      await testCrate.setRecipient(secondUserId);
+      await testCrate.setRecipient(furyUserEmail);
     } catch (e) {
       expect(e.message).toMatch('CrateError.CannotSetRecipient');
-      expect(testCrate._data.recipientId === firstUserId).toBe(true);
+      expect(testCrate._data.recipientId === thorUserId).toBe(true);
     }
   });
 

@@ -17,6 +17,8 @@
             "arrivalZip": "40511-2345",
             "trackingNumber": "1Z54F78A0450293517",
             "tripLengthMiles": "706.4",
+            "originAddress": {},
+            "destinationAddress": {},
             "status": [
                 "inProgress"
             ],

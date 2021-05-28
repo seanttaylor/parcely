@@ -14,11 +14,14 @@ const { CrateShipmentDTO, CrateTelemetryDTO } = require('../lib/repository/crate
 /**
  *
  * @param {Object} repo - the repo associated with this entity
- * @param {CrateDTO} crateDTO - an instance of the CrateDTO,
+ * @param {CrateDTO} crateDTO - an instance of the CrateDTO
  * @param {EventEmitter} eventEmitter - an instance of EventEmitter
+ * @param {UserService} userService - an instance of UserService
  */
 
-function Crate(repo, crateDTO, eventEmitter) {
+function Crate({
+  repo, crateDTO, eventEmitter, userService,
+}) {
   const dtoData = crateDTO.value();
 
   this._data = dtoData;
@@ -56,17 +59,18 @@ function Crate(repo, crateDTO, eventEmitter) {
 
   /**
     Associates the crate with a recipient user in the data store
-    @param {String} recipientId - a uuid for the recipient user
+    @param {String} recipientEmail - an email address for the recipient user
     */
-  this.setRecipient = async function (recipientId) {
+  this.setRecipient = async function (recipientEmail) {
     if (this._data.recipientId) {
       throw new Error('CrateError.CannotSetRecipient => Recipient has already been assigned for this crate');
     }
 
-    const crateDTO = new CrateDTO(Object.assign(this._data, { recipientId }));
+    const [user] = await userService.findUserByEmail(recipientEmail);
+    const crateDTO = new CrateDTO(Object.assign(this._data, { recipientId: user.id }));
     await this._repo.crate.setCrateRecipient(crateDTO);
 
-    this._data.recipientId = recipientId;
+    this._data.recipientId = user.id;
   };
 
   /**
@@ -270,6 +274,7 @@ function CrateShipment(repo, crateShipmentDTO) {
  * @param {Object} crateShipmentRepo - the crate_shipments repository
  * @param {QueueService} queueService - an instance of QueueService
  * @param {StorageBucketService} storageBucketService - an instance of StorageBucketService
+ * @param {UserService} userService - an instance of UserService
  * @param {EventEmitter} eventEmitter - an instance of EventEmitter
  */
 function CrateService({
@@ -277,6 +282,7 @@ function CrateService({
   crateShipmentRepo,
   queueService,
   storageBucketService,
+  userService,
   eventEmitter,
 }) {
   this._repo = {
@@ -314,7 +320,12 @@ function CrateService({
     const id = uuid.v4();
     const data = { id, ...doc };
 
-    return new Crate(this._repo, new CrateDTO(data), eventEmitter);
+    return new Crate({
+      repo: this._repo,
+      crateDTO: new CrateDTO(data),
+      eventEmitter,
+      userService,
+    });
   };
 
   /**
@@ -327,7 +338,12 @@ function CrateService({
       return undefined;
     }
 
-    const crate = new Crate(this._repo, new CrateDTO(crateData));
+    const crate = new Crate({
+      repo: this._repo,
+      crateDTO: new CrateDTO(crateData),
+      eventEmitter,
+      userService,
+    });
     const { shipmentId } = crate._data;
 
     if (shipmentId) {
@@ -343,7 +359,12 @@ function CrateService({
 
   this.getAllCrates = async function () {
     const crates = await this._repo.crate.getAllCrates();
-    return crates.map((c) => new Crate(this._repo.crate, new CrateDTO(c)));
+    return crates.map((c) => new Crate({
+      repo: this._repo.crate,
+      crateDTO: new CrateDTO(c),
+      eventEmitter,
+      userService,
+    }));
   };
 
   /**
@@ -351,7 +372,12 @@ function CrateService({
      */
   this.getCratesByRecipient = async function (user) {
     const crateList = await this._repo.crate.getCratesByRecipientId(user.id);
-    return crateList.map((c) => new Crate(this._repo.crate, new CrateDTO(c)));
+    return crateList.map((c) => new Crate({
+      repo: this._repo.crate,
+      crateDTO: new CrateDTO(c),
+      eventEmitter,
+      userService,
+    }));
   };
 
   /**
@@ -411,7 +437,12 @@ function CrateService({
   this.getCratesByMerchantId = async function (id) {
     const crateList = await this._repo.crate.getCratesByMerchantId(id);
 
-    return crateList.map((crateData) => new Crate(this._repo, new CrateDTO(crateData)));
+    return crateList.map((crateData) => new Crate({
+      repo: this._repo,
+      crateDTO: new CrateDTO(crateData),
+      eventEmitter,
+      userService,
+    }));
   };
 
   /**

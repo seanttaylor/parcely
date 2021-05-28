@@ -230,11 +230,11 @@ function CrateRouter({
 
   router.put('/:id/recipient', validateRequest(setRecipientSchema), validateJWT, authorizeRequest({ actionId: 'updateAny:crates' }), async (req, res, next) => {
     const crateId = req.params.id;
-    const { recipientId } = req.body;
+    const { recipientEmail } = req.body;
 
     try {
       const crate = await crateService.getCrateById(crateId);
-      await crate.setRecipient(recipientId);
+      await crate.setRecipient(recipientEmail);
 
       res.set('content-type', 'application/json');
       res.status(204);

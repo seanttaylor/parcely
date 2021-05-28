@@ -112,7 +112,7 @@ describe('CrateAccess', () => {
       const res4 = await request.put(`/api/v1/crates/${crateId}/recipient`)
         .set('authorization', `Bearer ${furyAccessToken}`)
         .send({
-          recipientId: thorUserId,
+          recipientEmail: thorEmailAddress,
         })
         .expect(204);
 
@@ -276,12 +276,11 @@ describe('CrateManagement', () => {
       .expect(201);
 
     const crateId = res2.body.entries[0].id;
-    const fakeRecipientId = faker.datatype.uuid();
 
     const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
-        recipientId: fakeRecipientId,
+        recipientEmail: thorEmailAddress,
       })
       .expect(204);
 
@@ -290,7 +289,7 @@ describe('CrateManagement', () => {
       .send()
       .expect(200);
 
-    expect(res4.body.entries[0].data.recipientId === fakeRecipientId).toBe(true);
+    expect(res4.body.entries[0].data.recipientId === thorUserId).toBe(true);
   });
 
   test('Admins should be able to delete an existing crate', async () => {
@@ -386,7 +385,7 @@ describe('CrateManagement', () => {
     const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
-        recipientId: faker.datatype.uuid(),
+        recipientEmail: thorEmailAddress,
       })
       .expect(204);
 
@@ -482,7 +481,7 @@ describe('ShipmentManagement', () => {
     const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
-        recipientId: faker.datatype.uuid(),
+        recipientEmail: thorEmailAddress,
       })
       .expect(204);
 
@@ -543,7 +542,7 @@ describe('ShipmentManagement', () => {
     const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
-        recipientId: faker.datatype.uuid(),
+        recipientEmail: thorEmailAddress,
       })
       .expect(204);
 
@@ -601,7 +600,7 @@ describe('ShipmentManagement', () => {
     const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
-        recipientId: faker.datatype.uuid(),
+        recipientEmail: thorEmailAddress,
       })
       .expect(204);
 
@@ -690,7 +689,7 @@ describe('ShipmentManagement', () => {
     const res4 = await request.put(`/api/v1/crates/${crateId}/recipient`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
-        recipientId: thorUserId,
+        recipientEmail: thorEmailAddress,
       })
       .expect(204);
 

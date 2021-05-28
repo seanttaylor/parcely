@@ -454,7 +454,7 @@ describe('MerchantManagement', () => {
     await request.put(`/api/v1/crates/${crateId}/recipient`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
-        recipientId: faker.datatype.uuid(),
+        recipientEmail: thorEmailAddress,
       })
       .expect(204);
 
