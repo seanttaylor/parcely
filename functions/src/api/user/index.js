@@ -37,23 +37,20 @@ function UserRouter({
 
   /** **** GET ****** */
 
-  /*
-    router.get("/", async(req, res, next) => {
-
-        try {
-            const userList = await userService.findAllUsers();
-            res.set("content-type", "application/json");
-            res.status(200);
-            res.json({
-                data: userList.map(u => u.toJSON()),
-                entries: userList.length
-            });
-        }
-        catch (e) {
-            next(e);
-        }
-    });
-    */
+  router.get('/', validateJWT, authorizeRequest({ actionId: 'readAny:users' }), async (req, res, next) => {
+    try {
+      const userList = await userService.findAllUsers();
+      res.set('content-type', 'application/json');
+      res.status(200);
+      res.json({
+        entries: userList.map((u) => u.toJSON()),
+        error: null,
+        count: userList.length,
+      });
+    } catch (e) {
+      next(e);
+    }
+  });
 
   router.get('/:id/crates', validateJWT, authorizeRequest({ actionId: 'readOwn:crates' }), verifyUserExists, async (req, res, next) => {
     const { id } = req.params;
@@ -173,6 +170,7 @@ function UserRouter({
       const [errorMessage] = e.message.split(' =>');
 
       if (errorMessage.includes('BadRequest')) {
+        // console.error(e);
         res.status(400);
         res.json({
           entries: [],

@@ -65,6 +65,7 @@ const crateService = new CrateService({
   crateShipmentRepo,
   queueService,
   eventEmitter,
+  userService,
   storageBucketService,
 });
 
@@ -130,8 +131,9 @@ app.use('/api/v1/crates', CrateAPI({
   authService,
   crateService,
   queueService,
-  publishService: ssePublishService,
   eventEmitter,
+  userService,
+  publishService: ssePublishService,
 }));
 
 app.use('/api/v1/merchants', MerchantAPI({

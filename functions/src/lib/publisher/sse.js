@@ -21,6 +21,9 @@ function SSEPublisher(eventEmitter) {
     */
 
   this.publish = function ([eventName, data]) {
+    if (!onPublish) {
+      return;
+    }
     const event = sse.of(eventName, data);
     onPublish(event);
   };

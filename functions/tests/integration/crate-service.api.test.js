@@ -109,10 +109,10 @@ describe('CrateAccess', () => {
 
       const crateId = res3.body.entries[0].id;
 
-      const res4 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+      await request.put(`/api/v1/crates/${crateId}/recipient`)
         .set('authorization', `Bearer ${furyAccessToken}`)
         .send({
-          recipientId: thorUserId,
+          recipientEmail: thorEmailAddress,
         })
         .expect(204);
 
@@ -138,7 +138,7 @@ describe('CrateAccess', () => {
 
       const { shipmentId } = res5.body.entries[0].data;
 
-      const res6 = await request.post('/api/v1/crates/telemetry/rt-updates')
+      await request.post('/api/v1/crates/telemetry/rt-updates')
         .set('authorization', `Bearer ${furyAccessToken}`)
         .send({
           crateId,
@@ -276,12 +276,11 @@ describe('CrateManagement', () => {
       .expect(201);
 
     const crateId = res2.body.entries[0].id;
-    const fakeRecipientId = faker.datatype.uuid();
 
-    const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+    await request.put(`/api/v1/crates/${crateId}/recipient`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
-        recipientId: fakeRecipientId,
+        recipientEmail: thorEmailAddress,
       })
       .expect(204);
 
@@ -290,7 +289,7 @@ describe('CrateManagement', () => {
       .send()
       .expect(200);
 
-    expect(res4.body.entries[0].data.recipientId === fakeRecipientId).toBe(true);
+    expect(res4.body.entries[0].data.recipientId === thorUserId).toBe(true);
   });
 
   test('Admins should be able to delete an existing crate', async () => {
@@ -383,10 +382,10 @@ describe('CrateManagement', () => {
 
     const crateId = res2.body.entries[0].id;
 
-    const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+    await request.put(`/api/v1/crates/${crateId}/recipient`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
-        recipientId: faker.datatype.uuid(),
+        recipientEmail: thorEmailAddress,
       })
       .expect(204);
 
@@ -479,10 +478,10 @@ describe('ShipmentManagement', () => {
 
     const crateId = res2.body.entries[0].id;
 
-    const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+    await request.put(`/api/v1/crates/${crateId}/recipient`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
-        recipientId: faker.datatype.uuid(),
+        recipientEmail: thorEmailAddress,
       })
       .expect(204);
 
@@ -540,10 +539,10 @@ describe('ShipmentManagement', () => {
 
     const crateId = res2.body.entries[0].id;
 
-    const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+    await request.put(`/api/v1/crates/${crateId}/recipient`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
-        recipientId: faker.datatype.uuid(),
+        recipientEmail: thorEmailAddress,
       })
       .expect(204);
 
@@ -598,10 +597,10 @@ describe('ShipmentManagement', () => {
 
     const crateId = res2.body.entries[0].id;
 
-    const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+    await request.put(`/api/v1/crates/${crateId}/recipient`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
-        recipientId: faker.datatype.uuid(),
+        recipientEmail: thorEmailAddress,
       })
       .expect(204);
 
@@ -687,10 +686,10 @@ describe('ShipmentManagement', () => {
 
     const crateId = res3.body.entries[0].id;
 
-    const res4 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+    await request.put(`/api/v1/crates/${crateId}/recipient`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
-        recipientId: thorUserId,
+        recipientEmail: thorEmailAddress,
       })
       .expect(204);
 

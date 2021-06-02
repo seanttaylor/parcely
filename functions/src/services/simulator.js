@@ -3,6 +3,8 @@ const nodePetName = require('node-petname');
 const { from, zip, interval } = require('rxjs');
 const { routeConfig, onCoords } = require('../lib/simulator');
 
+const thorEmailAddress = 'thor@avengers.io';
+
 /**
  * @param {String} id - the uuid assigned to this simulation
  * @param {Array} instances - a list of Crate instances
@@ -178,7 +180,7 @@ function ShipmentSimulatorService({
 
     await Promise.all(_instances.map(async (c) => {
       await c.save();
-      await c.setRecipient(faker.datatype.uuid());
+      await c.setRecipient(thorEmailAddress);
     }));
 
     const simulation = new Simulation({

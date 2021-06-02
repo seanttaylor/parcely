@@ -379,19 +379,22 @@ describe('MerchantManagement', () => {
 
     const merchantId = res3.body.entries[0].id;
 
-    const res4 = await request.post(`/api/v1/merchants/${merchantId}/status/archived`)
+    await request.post(`/api/v1/crates`)
       .set('authorization', `Bearer ${furyAccessToken}`)
-      .send()
-      .expect(204);
+      .send({
+        size: ["L"],
+        merchantId
+      })
+      .expect(201);
 
-    const res5 = await request.get(`/api/v1/merchants/${starkMerchantId}/crates`)
+    const res5 = await request.get(`/api/v1/merchants/${merchantId}/crates`)
       .set('authorization', `Bearer ${fakeAccessToken}`)
       .send()
       .expect(200);
-
+    
     expect(Array.isArray(res5.body.entries)).toBe(true);
     expect(res5.body.count === 1).toBe(true);
-    expect(res5.body.entries[0].data.merchantId === starkMerchantId).toBe(true);
+    expect(res5.body.entries[0].data.merchantId === merchantId).toBe(true);
   });
 
   test('Merchants should be able to get a list of shipments associated with their account', async () => {
@@ -454,11 +457,11 @@ describe('MerchantManagement', () => {
     await request.put(`/api/v1/crates/${crateId}/recipient`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
-        recipientId: faker.datatype.uuid(),
+        recipientEmail: thorEmailAddress,
       })
       .expect(204);
 
-    const res4 = await request.post(`/api/v1/crates/${crateId}/shipments`)
+    await request.post(`/api/v1/crates/${crateId}/shipments`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
         originAddress: {

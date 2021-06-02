@@ -10,6 +10,7 @@
             "id": "d54cc57f-c32c-454a-a295-6481f126eb8b",
             "crateId": "0c2b0c0c-068c-49df-93c0-4ed02575cff7",
             "recipientId": "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09",
+            "recipientEmail": "thor@avengers.io",
             "merchantId": "dd8b20dd-1637-4396-bba5-bcd6d65e2d5d",
             "departureTimestamp": "2018-06-13T10:11:13+05:30",
             "departureZip": "11249-1005",
@@ -17,6 +18,8 @@
             "arrivalZip": "40511-2345",
             "trackingNumber": "1Z54F78A0450293517",
             "tripLengthMiles": "706.4",
+            "originAddress": {},
+            "destinationAddress": {},
             "status": [
                 "inProgress"
             ],
@@ -56,7 +59,7 @@
     "required": [
         "id",
         "crateId",
-        "recipientId",
+        "recipientEmail",
         "merchantId",
         "departureTimestamp",
         "departureZip",
@@ -96,6 +99,19 @@
                 "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09"
             ],
             "title": "The recipientId schema",
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "recipientEmail": {
+            "$id": "#/properties/recipientEmail",
+            "default": "",
+            "description": "Recipient email associated with this shipment",
+            "examples": [
+                "thor@avengers.io"
+            ],
+            "title": "The recipientEmail schema",
             "type": "string"
         },
         "merchantId": {

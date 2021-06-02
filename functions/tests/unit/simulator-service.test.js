@@ -20,6 +20,9 @@ const IUserRepository = require('../../src/interfaces/user-repository');
 const UserRepository = require('../../src/lib/repository/user');
 const testUserRepo = new IUserRepository(new UserRepository(testDbConnector));
 
+/** UserService */
+const testUserService = new UserService(testUserRepo);
+
 /** MerchantRepo */
 const IMerchantRepository = require('../../src/interfaces/merchant-repository');
 const MerchantRepository = require('../../src/lib/repository/merchant');
@@ -45,15 +48,17 @@ const IQueue = require('../../src/interfaces/queue');
 const { InMemoryQueue } = require('../../src/lib/queue');
 const testQueueService = new IQueue(new InMemoryQueue());
 
+
+
 const { ShipmentSimulatorService } = require('../../src/services/simulator');
 const testCrateService = new CrateService({
     crateRepo: testCrateRepo,
     crateShipmentRepo: testCrateShipmentRepo,
     queueService: testQueueService,
     storageBucketService: testStorageBucketService,
-    eventEmitter
+    eventEmitter,
+    userService: testUserService
 });
-const testUserService = new UserService(testUserRepo);
 const testMerchantService = new MerchantService(testMerchantRepo, testUserService);
 const testSimulationService = new ShipmentSimulatorService({
     userService: testUserService,

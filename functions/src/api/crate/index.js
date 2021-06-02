@@ -17,6 +17,7 @@ const {
  * @param {EventEmitter} eventEmitter - an instance of EventEmitter
  * @param {QueueService} queueService - an instance of QueueService
  * @param {PublishService} publishService - an instance of PublishService
+
  * @returns router - an instance of an Express router
  */
 
@@ -230,11 +231,11 @@ function CrateRouter({
 
   router.put('/:id/recipient', validateRequest(setRecipientSchema), validateJWT, authorizeRequest({ actionId: 'updateAny:crates' }), async (req, res, next) => {
     const crateId = req.params.id;
-    const { recipientId } = req.body;
+    const { recipientEmail } = req.body;
 
     try {
       const crate = await crateService.getCrateById(crateId);
-      await crate.setRecipient(recipientId);
+      await crate.setRecipient(recipientEmail);
 
       res.set('content-type', 'application/json');
       res.status(204);

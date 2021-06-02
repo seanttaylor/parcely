@@ -7,23 +7,23 @@
     "default": {},
     "examples": [
         {
-            "recipientId": "1f3aaf85-539e-4a0b-9b6b-507ae10d1b9c"
+            "recipientEmail": "thor@avengers.io"
         }
     ],
     "required": [
-        "recipientId"
+        "recipientEmail"
     ],
     "properties": {
-        "recipientId": {
-            "$id": "#/properties/recipientId",
+        "recipientEmail": {
+            "$id": "#/properties/recipientEmail",
             "type": "string",
-            "title": "The recipientId schema",
-            "description": "The uuid of a recipient for a specified crate",
+            "title": "The recipientEmail schema",
+            "description": "The email address of a recipient for a specified crate",
             "default": "",
             "examples": [
-                "1f3aaf85-539e-4a0b-9b6b-507ae10d1b9c"
+                "thor@avengers.io"
             ]
         }
     },
-    "additionalProperties": true
+    "additionalProperties": false
 }
