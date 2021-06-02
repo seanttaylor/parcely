@@ -288,7 +288,7 @@ describe('MerchantManagement', () => {
       plan: defaultPlan,
     };
     const testMerchant = await testMerchantService.createMerchant(testMerchantData);
-
+ 
     await testMerchant.save();
 
     const testMerchantId = testMerchant.id;
@@ -333,12 +333,13 @@ describe('MerchantManagement', () => {
   
       const testCrate = await testCrateService.createCrate({
         size: ['S'],
-        merchantId: testMerchantId,
-        recipientId: faker.datatype.uuid(),
+        merchantId: testMerchantId
       });
-  
-      const testCrateId = await testCrate.save();
-      const testCrateTripId = await testCrate.startShipment({
+      
+
+      await testCrate.save();
+      await testCrate.setRecipient(faker.internet.email());
+      await testCrate.startShipment({
         originAddress,
         destinationAddress,
         trackingNumber: faker.datatype.uuid(),
@@ -346,9 +347,91 @@ describe('MerchantManagement', () => {
   
       await testCrate.pushTelemetry(fakeTelemetryData);
 
-    const shipmentList = await testMerchantService.getShipmentsByMerchantId(testMerchantId);
+    const shipmentList = await testMerchantService.getShipmentsByMerchantId({merchantId: testMerchantId});
+
 
     expect(Array.isArray(shipmentList)).toBe(true);
+    expect(shipmentList[0]['_data']['merchantId'] === testMerchantId).toBe(true);
+  });
+
+  test('Should be able to find all shipments associated with a specified merchant with shipment waypoints in a digest format', async () => {
+    const testMerchantData = {
+      name: faker.company.companyName(),
+      userId: faker.datatype.uuid(),
+      address: {
+        street: faker.address.streetName(),
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode(),
+      },
+      emailAddress: faker.internet.email(),
+      phoneNumber: faker.phone.phoneNumber(),
+      plan: defaultPlan,
+    };
+    const testMerchant = await testMerchantService.createMerchant(testMerchantData);
+ 
+    await testMerchant.save();
+
+    const testMerchantId = testMerchant.id;
+
+    const originAddress = {
+        street: faker.address.streetName(),
+        apartmentNumber: '7',
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode(),
+      };
+      const destinationAddress = {
+        street: faker.address.streetName(),
+        city: faker.address.city(),
+        state: faker.address.stateAbbr(),
+        zip: faker.address.zipCode(),
+      };
+  
+      const fakeTelemetryData = {
+        temp: {
+          degreesFahrenheit: String(faker.datatype.float()),
+        },
+        location: {
+          coords: {
+            lat: Number(faker.address.latitude()),
+            lng: Number(faker.address.longitude()),
+          },
+          zip: faker.address.zipCode(),
+        },
+        sensors: {
+          moisture: {
+            thresholdExceeded: false,
+          },
+          thermometer: {
+            thresholdExceeded: false,
+          },
+          photometer: {
+            thresholdExceeded: false,
+          },
+        },
+      };
+  
+      const testCrate = await testCrateService.createCrate({
+        size: ['S'],
+        merchantId: testMerchantId
+      });
+      
+
+      await testCrate.save();
+      await testCrate.setRecipient(faker.internet.email());
+      await testCrate.startShipment({
+        originAddress,
+        destinationAddress,
+        trackingNumber: faker.datatype.uuid(),
+      });
+  
+      await testCrate.pushTelemetry(fakeTelemetryData);
+
+    const shipmentList = await testMerchantService.getShipmentsByMerchantId({merchantId: testMerchantId, asDigest: true});
+
+    expect(Array.isArray(shipmentList)).toBe(true);
+    expect(shipmentList[0]['waypoints'][0]['timestamp']).toBeTruthy();
     expect(shipmentList[0]['_data']['merchantId'] === testMerchantId).toBe(true);
   });
 

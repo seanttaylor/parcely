@@ -77,9 +77,44 @@ module.exports = {
     '2055c145-7d3e-446c-a7ad-ae6aaf886335': {
       id: '2055c145-7d3e-446c-a7ad-ae6aaf886335',
       size: ['L'],
-      shipmentId: '172b101d-3d24-4172-8e9d-2c34beb9c07f',
+      shipmentId: 'd54cc57f-c32c-454a-a295-6481f126eb8b',
       merchantId: 'dd8b20dd-1637-4396-bba5-bcd6d65e2d5d',
       recipientId: 'b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09',
+      recipientEmail: 'thor@avengers.io',
+      createdDate: '2021-02-24T19:04:33.436344',
+      lastModified: '2021-01-24T17:45:36.230152',
+      lastPing: '2021-02-24T19:04:33.436344',
+      telemetry: {
+        temp: {
+          degreesFahrenheit: null,
+        },
+        location: {
+          coords: {
+            lat: null,
+            lng: null,
+          },
+          zip: null,
+        },
+        sensors: {
+          moisture: {
+            thresholdExceeded: false,
+          },
+          thermometer: {
+            thresholdExceeded: false,
+          },
+          photometer: {
+            thresholdExceeded: false,
+          },
+        },
+      },
+    },
+    '2c3846c8-a429-4765-854b-2283eaa8885b': {
+      id: '2c3846c8-a429-4765-854b-2283eaa8885b',
+      size: ['M'],
+      shipmentId: null,
+      merchantId: 'dd8b20dd-1637-4396-bba5-bcd6d65e2d5d',
+      recipientId: null,
+      recipientEmail: null,
       createdDate: '2021-02-24T19:04:33.436344',
       lastModified: '2021-01-24T17:45:36.230152',
       lastPing: '2021-02-24T19:04:33.436344',
@@ -137,8 +172,11 @@ module.exports = {
   crate_shipments: {
     'd54cc57f-c32c-454a-a295-6481f126eb8b': {
       id: 'd54cc57f-c32c-454a-a295-6481f126eb8b',
+      createdDate: '2021-02-24T19:04:33.436344',
+      lastModified: '2021-01-24T17:45:36.230152',
       crateId: '2055c145-7d3e-446c-a7ad-ae6aaf886335',
       recipientId: 'b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09',
+      recipientEmail: 'thor@avengers.io',
       merchantId: 'dd8b20dd-1637-4396-bba5-bcd6d65e2d5d',
       departureTimestamp: '2018-06-13T10:11:13+05:30',
       departureZip: '11249-1005',

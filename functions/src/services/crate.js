@@ -39,7 +39,17 @@ function Crate({
         shipmentId: this._data.shipmentId,
         merchantId: this._data.merchantId,
         recipientId: this._data.recipientId,
+        recipientEmail: this._data.recipientEmail,
         telemetry: this._data.telemetry,
+        adaloDigestTelemetry: {
+          temp: String(this._data.telemetry.temp.degreesFahrenheit),
+          lat: String(this._data.telemetry.location.coords.lat),
+          lng: String(this._data.telemetry.location.coords.lng),
+          zip: String(this._data.telemetry.location.zip),
+          moistureThresholdExceeded: String(this._data.telemetry.sensors.moisture.thresholdExceeded),
+          photometerThresholdExceeded: String(this._data.telemetry.sensors.photometer.thresholdExceeded),
+          thermometerThresholdExceeded: String(this._data.telemetry.sensors.thermometer.thresholdExceeded),
+        },
         lastPing: this._data.lastPing,
         status: this._data.status,
       },
@@ -62,15 +72,32 @@ function Crate({
     @param {String} recipientEmail - an email address for the recipient user
     */
   this.setRecipient = async function (recipientEmail) {
-    if (this._data.recipientId) {
+    if (this._data.recipientEmail) {
       throw new Error('CrateError.CannotSetRecipient => Recipient has already been assigned for this crate');
     }
 
-    const [user] = await userService.findUserByEmail(recipientEmail);
-    const crateDTO = new CrateDTO(Object.assign(this._data, { recipientId: user.id }));
-    await this._repo.crate.setCrateRecipient(crateDTO);
+    try {
+      const [user] = await userService.findUserByEmail(recipientEmail);
+      const crateDTO = new CrateDTO(Object.assign(this._data, {
+        recipientId: user.id,
+        recipientEmail: user._data.emailAddress,
+      }));
+      await this._repo.crate.setCrateRecipient(crateDTO);
+      this._data.recipientId = user.id;
+      this._data.recipientEmail = user._data.emailAddress;
+    } catch (e) {
+      // If the user isn't registered, we only associate the crate with an email address
+      // console.error('CrateError.CannotSetRecipient.BadRequest.UserDoesNotExist => Could not find the specified user in the database');
+      // console.info('CrateInfo.SetRecipient.Fallback => Associating crate with recipient email address only');
 
-    this._data.recipientId = user.id;
+      const crateDTO = new CrateDTO(Object.assign(this._data, {
+        recipientId: null,
+        recipientEmail,
+      }));
+      await this._repo.crate.setCrateRecipient(crateDTO);
+      this._data.recipientId = null;
+      this._data.recipientEmail = recipientEmail;
+    }
   };
 
   /**
@@ -117,8 +144,8 @@ function Crate({
       throw new Error('CrateError.CannotStartShipment.missingMerchantId => Cannot start crate shipment without merchantId assigned to associated crate');
     }
 
-    if (!this._data.recipientId) {
-      throw new Error('CrateError.CannotStartShipment.missingRecipientId => Cannot start crate shipment without recipientId assigned to associated crate');
+    if (!this._data.recipientEmail) {
+      throw new Error('CrateError.CannotStartShipment.missingRecipient => Cannot start crate shipment without recipient assigned to associated crate');
     }
 
     const id = uuid.v4();
@@ -127,6 +154,7 @@ function Crate({
       id,
       crateId: this._data.id,
       recipientId: this._data.recipientId,
+      recipientEmail: this._data.recipientEmail,
       merchantId: this._data.merchantId,
       originAddress,
       destinationAddress,
@@ -162,6 +190,7 @@ function Crate({
       ...this._data,
       shipmentId: null,
       recipientId: null,
+      recipientEmail: null,
       status: crateStatus,
     });
     const crateShipmentDTO = new CrateShipmentDTO(
@@ -177,6 +206,7 @@ function Crate({
     await this._repo.crateShipment.completeCrateShipment(crateShipmentDTO);
     this.currentTrip._data.status = shipmentStatus;
     this._data.recipientId = null;
+    this._data.recipientEmail = null;
     this._data.shipmentId = null;
     this._data.status = crateStatus;
   };
@@ -204,6 +234,8 @@ function CrateShipment(repo, crateShipmentDTO) {
   this.waypoints = dtoData.waypoints;
 
   this.toJSON = function () {
+    const lastWaypoint = this._data.waypoints[this._data.waypoints.length - 1];
+
     return {
       id: this.id,
       createdDate: this._data.createdDate,
@@ -213,6 +245,7 @@ function CrateShipment(repo, crateShipmentDTO) {
         crateId: this._data.crateId,
         merchantId: this._data.merchantId,
         recipientId: this._data.recipientId,
+        recipientEmail: this._data.recipientEmail,
         departureTimestamp: this._data.departureTimestamp,
         departureZip: this._data.departureZip,
         arrivalTimestamp: this._data.arrivalTimestamp,
@@ -221,6 +254,7 @@ function CrateShipment(repo, crateShipmentDTO) {
         originAddress: this._data.originAddress,
         destinationAddress: this._data.destinationAddress,
         status: this._data.status,
+        adaloDigestTelemetry: new VendorDigestTelemetry(lastWaypoint),
         waypoints: this._data.waypoints,
         waypointsIncluded: this._data.waypointsIncluded,
       },
@@ -418,17 +452,29 @@ function CrateService({
 
   /**
      * @param {String} merchantId - a uuid for merchant
+     * @param {Boolean} asDigest - indicates whether the waypoint data should be returned in digest format
      */
-  this.getShipmentsByMerchantId = async function (merchantId) {
+  this.getShipmentsByMerchantId = async function ({ merchantId, asDigest = false }) {
     const crateShipmentList = await this._repo.crateShipment.getAllCrateShipments();
 
-    return crateShipmentList.filter((s) => s.merchantId === merchantId)
+    const merchantShipmentList = crateShipmentList.filter((s) => s.merchantId === merchantId)
       .map((shipmentData) => {
         const shipment = new CrateShipment(this._repo.crateShipment, new CrateShipmentDTO(shipmentData));
         shipment._data.waypointsIncluded = true;
 
         return shipment;
       });
+
+    if (!asDigest) {
+      return merchantShipmentList;
+    }
+
+    merchantShipmentList.forEach((shipment) => {
+      const digestWaypoints = shipment.waypoints.map((wp) => new VendorDigestTelemetry(wp));
+      Object.assign(shipment, { waypoints: digestWaypoints });
+    });
+
+    return merchantShipmentList;
   };
 
   /**
@@ -485,6 +531,39 @@ function CrateService({
 
       await this._repo.crate.markCrateReturned(crateDTO);
     }
+  };
+}
+
+/**
+ * @typedef {Object} VendorDigestTelemetry - flattens a telemetry waypoint object includes vendor-specific fields
+ */
+
+/**
+ * @param {Object} waypoint - a waypoint object
+ */
+function VendorDigestTelemetry(waypoint) {
+  if (!waypoint) {
+    return {
+      timestamp: 'null',
+      temp: 'null',
+      lat: 'null',
+      lng: 'null',
+      zip: 'null',
+      moistureThresholdExceeded: 'null',
+      photometerThresholdExceeded: 'null',
+      thermometerThresholdExceeded: 'null',
+    };
+  }
+
+  return {
+    timestamp: String(waypoint.timestamp),
+    temp: String(waypoint.telemetry.temp.degreesFahrenheit),
+    lat: String(waypoint.telemetry.location.coords.lat),
+    lng: String(waypoint.telemetry.location.coords.lng),
+    zip: String(waypoint.telemetry.location.zip),
+    moistureThresholdExceeded: String(waypoint.telemetry.sensors.moisture.thresholdExceeded),
+    photometerThresholdExceeded: String(waypoint.telemetry.sensors.photometer.thresholdExceeded),
+    thermometerThresholdExceeded: String(waypoint.telemetry.sensors.thermometer.thresholdExceeded),
   };
 }
 

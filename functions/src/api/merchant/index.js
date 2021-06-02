@@ -113,6 +113,12 @@ function MerchantRouter({ merchantService, crateService }) {
     try {
       const merchant = await merchantService.getMerchantById(merchantId);
 
+      if (!merchant) {
+        res.status(404);
+        res.end();
+        return;
+      }
+
       res.status(200);
       res.json({
         entries: [merchant],
@@ -150,16 +156,79 @@ function MerchantRouter({ merchantService, crateService }) {
     authzOverride: merchantAuthzOverride(merchantService),
   }), async (req, res, next) => {
     const merchantId = req.params.id;
+    const { asDigest } = req.query;
     res.set('content-type', 'application/json');
 
     try {
-      const shipmentList = await crateService.getShipmentsByMerchantId(merchantId);
+      const merchant = await merchantService.getMerchantById(merchantId);
+
+      if (!merchant) {
+        res.status(404);
+        res.end();
+        return;
+      }
+      const shipmentList = await crateService.getShipmentsByMerchantId({ merchantId, asDigest });
 
       res.status(200);
       res.json({
         entries: shipmentList,
         error: null,
         count: shipmentList.length,
+      });
+    } catch (e) {
+      next(e);
+    }
+  });
+
+  router.get('/:id/shipments/:shipmentId', validateJWT, authorizeRequest({ actionId: 'readOwn:crates' }), async (req, res, next) => {
+    const merchantId = req.params.id;
+    const { shipmentId } = req.params;
+    const { asDigest } = req.query;
+
+    try {
+      const shipmentList = await crateService.getShipmentsByMerchantId({ merchantId, asDigest });
+      const currentShipment = shipmentList.find((shipment) => shipment.id === shipmentId);
+
+      if (!currentShipment) {
+        next();
+        return;
+      }
+
+      res.set('content-type', 'application/json');
+      res.status(200);
+      res.json({
+        entries: [currentShipment.toJSON()],
+        error: null,
+        count: 1,
+      });
+    } catch (e) {
+      next(e);
+    }
+  });
+
+  router.get('/:id/shipments/:shipmentId/waypoints', validateJWT, authorizeRequest({ actionId: 'readOwn:crates' }), async (req, res, next) => {
+    const merchantId = req.params.id;
+    const { asDigest } = req.query;
+    const { shipmentId } = req.params;
+
+    try {
+      const shipmentList = await crateService.getShipmentsByMerchantId({
+        merchantId,
+        asDigest,
+      });
+      const currentShipment = shipmentList.find((shipment) => shipment.id === shipmentId);
+
+      if (!currentShipment) {
+        next();
+        return;
+      }
+
+      res.set('content-type', 'application/json');
+      res.status(200);
+      res.json({
+        entries: currentShipment.waypoints,
+        error: null,
+        count: currentShipment.waypoints.length,
       });
     } catch (e) {
       next(e);

@@ -13,6 +13,7 @@
             ],
             "shipmentId": "172b101d-3d24-4172-8e9d-2c34beb9c07f",
             "recipientId": "b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09",
+            "recipientEmail": "thor@avengers.io",
             "merchantId": "e3634bd2-7cb4-45b7-a442-f38ee4ad008b",
             "createdDate": "2021-02-24T19:04:33.436344",
             "lastModified": "2021-01-24T17:45:36.230152",
@@ -141,6 +142,19 @@
             "default": "",
             "examples": [
                 "fee7b553-f3d1-4a6f-82ae-7e37e1ed697c"
+            ]
+        },
+        "recipientEmail": {
+            "$id": "#/properties/recipientEmail",
+            "type": [
+                "string",
+                "null"
+            ],
+            "title": "The recipientEmail schema",
+            "description": "The email address of the user associated with this crate.",
+            "default": "",
+            "examples": [
+                "thor@avengers.io"
             ]
         },
         "lastPing": {

@@ -42,7 +42,7 @@ const testCrateService = new CrateService({
   userService: testUserService
 });
 const starkMerchantId = 'dd8b20dd-1637-4396-bba5-bcd6d65e2d5d';
-const thorUserId = 'b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09';
+const thorUserId ='b0a2ca71-475d-4a4e-8f5b-5a4ed9496a09';
 const thorUserEmail = 'thor@avengers.io';
 const furyUserEmail = 'nfury@shield.gov';
 
@@ -138,12 +138,12 @@ describe('CrateManagement', () => {
 
     const testCrate = await testCrateService.createCrate({
       size: ['S'],
-      merchantId: faker.datatype.uuid(),
-      recipientId: faker.datatype.uuid(),
+      merchantId: faker.datatype.uuid()
     });
 
-    const testCrateId = await testCrate.save();
-    const testCrateTripId = await testCrate.startShipment({
+    await testCrate.save();
+    await testCrate.setRecipient(faker.internet.email());
+    await testCrate.startShipment({
       originAddress,
       destinationAddress,
       trackingNumber: faker.datatype.uuid(),
@@ -200,12 +200,12 @@ describe('CrateManagement', () => {
 
     const testCrate = await testCrateService.createCrate({
       size: ['S'],
-      merchantId: faker.datatype.uuid(),
-      recipientId: faker.datatype.uuid(),
+      merchantId: faker.datatype.uuid()
     });
 
-    const testCrateId = await testCrate.save();
-    const testCrateTripId = await testCrate.startShipment({
+    await testCrate.save();
+    await testCrate.setRecipient(faker.internet.email());
+    await testCrate.startShipment({
       originAddress,
       destinationAddress,
       trackingNumber: faker.datatype.uuid(),
@@ -334,11 +334,11 @@ describe('ShipmentManagement', () => {
     };
     const testCrate = await testCrateService.createCrate({
       size: ['S'],
-      merchantId: faker.datatype.uuid(),
-      recipientId: faker.datatype.uuid(),
+      merchantId: faker.datatype.uuid()
     });
 
     const testCrateId = await testCrate.save();
+    await testCrate.setRecipient(faker.internet.email());
     const testCrateShipmentId = await testCrate.startShipment({
       originAddress,
       destinationAddress,
@@ -355,8 +355,7 @@ describe('ShipmentManagement', () => {
   test('Should be able to push the hardware crate telemetry data to the platform', async () => {
     const testCrate = await testCrateService.createCrate({
       size: ['S'],
-      merchantId: faker.datatype.uuid(),
-      recipientId: faker.datatype.uuid(),
+      merchantId: faker.datatype.uuid()
     });
     const originAddress = {
       street: faker.address.streetName(),
@@ -396,7 +395,8 @@ describe('ShipmentManagement', () => {
     };
 
     await testCrate.save();
-    const testCrateTripId = await testCrate.startShipment({
+    await testCrate.setRecipient(faker.internet.email());
+    await testCrate.startShipment({
       originAddress,
       destinationAddress,
       trackingNumber: faker.datatype.uuid(),
@@ -457,11 +457,11 @@ describe('ShipmentManagement', () => {
 
     const testCrate = await testCrateService.createCrate({
       size: ['S'],
-      merchantId: faker.datatype.uuid(),
-      recipientId: faker.datatype.uuid(),
+      merchantId: faker.datatype.uuid()
     });
 
     const testCrateId = await testCrate.save();
+    await testCrate.setRecipient(faker.internet.email());
     const testCrateShipmentId = await testCrate.startShipment({
       originAddress,
       destinationAddress,
@@ -524,7 +524,8 @@ describe('ShipmentManagement', () => {
     });
 
     const testCrateId = await testCrate.save();
-    const testCrateTripId = await testCrate.startShipment({
+    await testCrate.setRecipient(faker.internet.email());
+    await testCrate.startShipment({
       originAddress,
       destinationAddress,
       trackingNumber: faker.datatype.uuid(),
@@ -578,12 +579,12 @@ describe('ShipmentManagement', () => {
 
     const testCrate = await testCrateService.createCrate({
       size: ['S'],
-      merchantId: faker.datatype.uuid(),
-      recipientId: faker.datatype.uuid(),
+      merchantId: faker.datatype.uuid()
     });
 
     const testCrateId = await testCrate.save();
-    const testCrateShipmentId = await testCrate.startShipment({
+    await testCrate.setRecipient(faker.internet.email());
+    await testCrate.startShipment({
       originAddress,
       destinationAddress,
       trackingNumber: faker.datatype.uuid(),
@@ -640,11 +641,12 @@ describe('ShipmentManagement', () => {
     };
     const testCrate = await testCrateService.createCrate({
       size: ['S'],
-      merchantId: faker.datatype.uuid(),
-      recipientId: faker.datatype.uuid(),
+      merchantId: faker.datatype.uuid()
     });
 
     await testCrate.save();
+    await testCrate.setRecipient(faker.internet.email());
+
     const testCrateShipmentId = await testCrate.startShipment({
       originAddress,
       destinationAddress,
@@ -683,6 +685,7 @@ describe('ShipmentManagement', () => {
       size: ['S'],
     });
     await testCrate.save();
+    await testCrate.setRecipient(faker.internet.email());
 
     try {
       await testCrate.startShipment({
@@ -722,15 +725,14 @@ describe('ShipmentManagement', () => {
         trackingNumber: faker.datatype.uuid(),
       });
     } catch (e) {
-      expect(e.message).toMatch('CrateError.CannotStartShipment.missingRecipientId');
+      expect(e.message).toMatch('CrateError.CannotStartShipment.missingRecipien');
     }
   });
 
   test('CrateShipment waypoints should be read-only', async () => {
     const testCrate = await testCrateService.createCrate({
       size: ['S'],
-      merchantId: faker.datatype.uuid(),
-      recipientId: faker.datatype.uuid(),
+      merchantId: faker.datatype.uuid()
     });
     const originAddress = {
       street: faker.address.streetName(),
@@ -770,7 +772,8 @@ describe('ShipmentManagement', () => {
     };
 
     await testCrate.save();
-    const testCrateTripId = await testCrate.startShipment({
+    await testCrate.setRecipient(faker.internet.email());
+    await testCrate.startShipment({
       originAddress,
       destinationAddress,
       trackingNumber: faker.datatype.uuid(),
@@ -827,7 +830,8 @@ describe('ShipmentManagement', () => {
     });
 
     await testCrate.save();
-    const testCrateShipmentId = await testCrate.startShipment({
+    await testCrate.setRecipient(faker.internet.email());
+    await testCrate.startShipment({
       originAddress,
       destinationAddress,
       trackingNumber: faker.datatype.uuid(),

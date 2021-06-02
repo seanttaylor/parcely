@@ -48,12 +48,13 @@ const crateTelemetrySchemaValidation = ajv.compile(crateTelemetrySchema);
  */
 
 function CrateShipmentDTO({
-  id, crateId, recipientId, merchantId, departureTimestamp, arrivalTimestamp = null, trackingNumber, departureZip, arrivalZip, waypoints = [], createdDate = new Date().toISOString(), lastModified = null, tripLengthMiles = null, status = ['inProgress'], originAddress, destinationAddress,
+  id, crateId, recipientEmail, merchantId, departureTimestamp, trackingNumber, departureZip, arrivalZip, originAddress, destinationAddress, arrivalTimestamp = null, recipientId = null, waypoints = [], createdDate = new Date().toISOString(), lastModified = null, tripLengthMiles = null, status = ['inProgress'],
 }) {
   const crateShipmentData = {
     id,
     crateId,
     recipientId,
+    recipientEmail,
     merchantId,
     departureTimestamp,
     arrivalTimestamp,

@@ -109,7 +109,7 @@ describe('CrateAccess', () => {
 
       const crateId = res3.body.entries[0].id;
 
-      const res4 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+      await request.put(`/api/v1/crates/${crateId}/recipient`)
         .set('authorization', `Bearer ${furyAccessToken}`)
         .send({
           recipientEmail: thorEmailAddress,
@@ -138,7 +138,7 @@ describe('CrateAccess', () => {
 
       const { shipmentId } = res5.body.entries[0].data;
 
-      const res6 = await request.post('/api/v1/crates/telemetry/rt-updates')
+      await request.post('/api/v1/crates/telemetry/rt-updates')
         .set('authorization', `Bearer ${furyAccessToken}`)
         .send({
           crateId,
@@ -277,7 +277,7 @@ describe('CrateManagement', () => {
 
     const crateId = res2.body.entries[0].id;
 
-    const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+    await request.put(`/api/v1/crates/${crateId}/recipient`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
         recipientEmail: thorEmailAddress,
@@ -382,7 +382,7 @@ describe('CrateManagement', () => {
 
     const crateId = res2.body.entries[0].id;
 
-    const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+    await request.put(`/api/v1/crates/${crateId}/recipient`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
         recipientEmail: thorEmailAddress,
@@ -478,7 +478,7 @@ describe('ShipmentManagement', () => {
 
     const crateId = res2.body.entries[0].id;
 
-    const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+    await request.put(`/api/v1/crates/${crateId}/recipient`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
         recipientEmail: thorEmailAddress,
@@ -539,7 +539,7 @@ describe('ShipmentManagement', () => {
 
     const crateId = res2.body.entries[0].id;
 
-    const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+    await request.put(`/api/v1/crates/${crateId}/recipient`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
         recipientEmail: thorEmailAddress,
@@ -597,7 +597,7 @@ describe('ShipmentManagement', () => {
 
     const crateId = res2.body.entries[0].id;
 
-    const res3 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+    await request.put(`/api/v1/crates/${crateId}/recipient`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
         recipientEmail: thorEmailAddress,
@@ -686,7 +686,7 @@ describe('ShipmentManagement', () => {
 
     const crateId = res3.body.entries[0].id;
 
-    const res4 = await request.put(`/api/v1/crates/${crateId}/recipient`)
+    await request.put(`/api/v1/crates/${crateId}/recipient`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
         recipientEmail: thorEmailAddress,

@@ -170,6 +170,7 @@ function UserRouter({
       const [errorMessage] = e.message.split(' =>');
 
       if (errorMessage.includes('BadRequest')) {
+        // console.error(e);
         res.status(400);
         res.json({
           entries: [],

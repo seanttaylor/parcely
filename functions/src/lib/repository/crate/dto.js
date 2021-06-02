@@ -58,7 +58,7 @@ const defaultTelemetry = {
   */
 
 function CrateDTO({
-  id, size, status = ['awaitingDeployment'], shipmentId = null, merchantId = null, recipientId = null, lastPing = null, telemetry, createdDate = new Date().toISOString(), lastModified = null,
+  id, size, telemetry, status = ['awaitingDeployment'], shipmentId = null, merchantId = null, recipientId = null, recipientEmail = null, lastPing = null, createdDate = new Date().toISOString(), lastModified = null,
 }) {
   const crateData = {
     id,
@@ -67,6 +67,7 @@ function CrateDTO({
     shipmentId,
     merchantId,
     recipientId,
+    recipientEmail,
     lastPing,
     telemetry: telemetry || defaultTelemetry,
     createdDate,

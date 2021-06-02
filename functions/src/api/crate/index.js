@@ -17,6 +17,7 @@ const {
  * @param {EventEmitter} eventEmitter - an instance of EventEmitter
  * @param {QueueService} queueService - an instance of QueueService
  * @param {PublishService} publishService - an instance of PublishService
+
  * @returns router - an instance of an Express router
  */
 

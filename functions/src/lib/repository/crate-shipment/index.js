@@ -3,8 +3,6 @@
 /* Implements ICrateShipmentRepository interface for connecting to a datastore.
 See interfaces/shipment-repository for method documentation */
 
-// const { CrateShipmentDTO } = require('./dto');
-
 /**
  * @implements {ICrateShipmentRepository}
  * @param {Object} databaseConnector - object with methods for connecting to a database
