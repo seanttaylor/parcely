@@ -555,7 +555,7 @@
 												"header": [],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n    \"recipientId\": \"{{currentUserId}}\"\n}",
+													"raw": "{\n    \"recipientEmail\": \"{{thorEmailAddress}}\"\n}",
 													"options": {
 														"raw": {
 															"language": "json"
@@ -1261,7 +1261,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"recipientId\": \"{{fakeRecipientId}}\"\n}",
+											"raw": "{\n    \"recipientEmail\": \"{{thorEmailAddress}}\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1301,9 +1301,9 @@
 													"    pm.response.to.have.status(200);",
 													"});",
 													"",
-													"pm.test(\"Should return a crate with a `recipientId` matching the recipient in the setCrateRecipient request\", function () {",
+													"pm.test(\"Should return a crate with a `recipientEmail` matching the email in the setCrateRecipient request\", function () {",
 													"    const jsonData = pm.response.json();",
-													"    pm.expect(jsonData[\"entries\"][0][\"data\"][\"recipientId\"] === pm.environment.get(\"fakeRecipientId\")).to.eql(true);",
+													"    pm.expect(jsonData[\"entries\"][0][\"data\"][\"recipientEmail\"] === pm.environment.get(\"thorEmailAddress\")).to.eql(true);",
 													"});"
 												],
 												"type": "text/javascript"
@@ -1739,7 +1739,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"recipientId\": \"{{fakeRecipientId}}\"\n}",
+											"raw": "{\n    \"recipientEmail\": \"{{thorEmailAddress}}\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2685,7 +2685,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"recipientId\": \"{{fakeRecipientId}}\"\n}",
+											"raw": "{\n    \"recipientEmail\": \"{{thorEmailAddress}}\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -3086,7 +3086,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"recipientId\": \"{{fakeRecipientId}}\"\n}",
+											"raw": "{\n    \"recipientEmail\": \"{{thorEmailAddress}}\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -3485,7 +3485,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"recipientId\": \"{{fakeRecipientId}}\"\n}",
+											"raw": "{\n    \"recipientEmail\": \"{{thorEmailAddress}}\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -4061,7 +4061,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"recipientId\": \"{{fakeRecipientId}}\"\n}",
+											"raw": "{\n        \"recipientEmail\": \"{{thorEmailAddress}}\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -4397,7 +4397,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"size\": [\"L\"],\n    \"merchantId\": \"{{fakeMerchantId}}\"\n}",
+											"raw": "{\n    \"size\": [\"L\"],\n    \"merchantId\": \"{{tstarkMerchantId}}\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -4462,7 +4462,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"recipientId\": \"{{fakeRecipientId}}\"\n}",
+											"raw": "{\n    \"recipientEmail\": \"{{thorEmailAddress}}\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -4511,7 +4511,7 @@
 													"    const jsonData = pm.response.json();",
 													"    pm.expect(jsonData.entries[0][\"data\"][\"id\"] === pm.environment.get(\"currentCrateId\")).to.eql(true);",
 													"    pm.expect(jsonData.entries[0][\"data\"][\"shipmentId\"] === pm.environment.get(\"currentShipmentId\")).to.eql(true);",
-													"    pm.expect(jsonData.entries[0][\"data\"][\"merchantId\"] === pm.environment.get(\"fakeMerchantId\")).to.eql(true);",
+													"    pm.expect(jsonData.entries[0][\"data\"][\"merchantId\"] === pm.environment.get(\"tstarkMerchantId\")).to.eql(true);",
 													"});",
 													""
 												],
@@ -4578,11 +4578,11 @@
 													"     const jsonData = pm.response.json();",
 													"",
 													"    pm.expect(Array.isArray(jsonData.entries)).to.eql(true);",
-													"    pm.expect(jsonData.entries.length === 1).to.eql(true);",
-													"    pm.expect(jsonData.count === 1).to.eql(true);",
+													"    pm.expect(jsonData.entries.length > 1).to.eql(true);",
+													"    pm.expect(jsonData.count > 1).to.eql(true);",
 													"    pm.expect(jsonData.error === null).to.eql(true);",
 													"   ",
-													"    pm.expect(jsonData.entries[0][\"data\"][\"merchantId\"] === pm.environment.get(\"fakeMerchantId\")).to.eql(true);",
+													"    pm.expect(jsonData.entries[0][\"data\"][\"merchantId\"] === pm.environment.get(\"tstarkMerchantId\")).to.eql(true);",
 													"});"
 												],
 												"type": "text/javascript"
@@ -4617,7 +4617,7 @@
 											"variable": [
 												{
 													"key": "id",
-													"value": "{{fakeMerchantId}}"
+													"value": "{{tstarkMerchantId}}"
 												}
 											]
 										}
