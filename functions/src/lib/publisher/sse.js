@@ -15,13 +15,13 @@ const sse = ServerSentEvent();
 
 function SSEPublisher(eventEmitter) {
   let onPublish;
+  let sseConnectionEstablishedOK;
   /**
     * Serializes an instance of the Post class to EventStream format sending Server-Sent Events
     * @param {Array} eventData - whose elements consist of a {String} eventName and an {Object} having a toJSON method
     */
-
   this.publish = function ([eventName, data]) {
-    if (!onPublish) {
+    if (!sseConnectionEstablishedOK) {
       return;
     }
     const event = sse.of(eventName, data);
@@ -46,6 +46,7 @@ function SSEPublisher(eventEmitter) {
       return;
     }
 
+    sseConnectionEstablishedOK = true;
     onPublish = onPublishFn;
   };
 }
