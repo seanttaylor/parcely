@@ -329,8 +329,8 @@ function CrateService({
 
     messageList.map(async ({ crateId, telemetry }) => {
       const crate = await this.getCrateById(crateId);
-      const telemetryUpdate = await crate.pushTelemetry(telemetry);
-      eventEmitter.emit('SSEPublisher.TelemetryUpdateReceived', telemetryUpdate);
+      await crate.pushTelemetry(telemetry);
+      // eventEmitter.emit('SSEPublisher.TelemetryUpdateReceived', telemetryUpdate);
     });
   });
 
