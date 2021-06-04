@@ -329,8 +329,9 @@ function CrateService({
 
     messageList.map(async ({ crateId, telemetry }) => {
       const crate = await this.getCrateById(crateId);
-      await crate.pushTelemetry(telemetry);
-      // eventEmitter.emit('SSEPublisher.TelemetryUpdateReceived', telemetryUpdate);
+      const telemetryUpdate = await crate.pushTelemetry(telemetry);
+      const eventName = 'SSEPublisher.TelemetryUpdateReceived';
+      eventEmitter.emit(eventName, [eventName, telemetryUpdate]);
     });
   });
 
@@ -420,7 +421,7 @@ function CrateService({
      */
   this.getCrateShipmentById = async function (shipmentId, { includeWaypoints = false } = {}) {
     const shipmentData = await this._repo.crateShipment.getCrateShipmentById(shipmentId);
-    console.log(`SHIPMENT_DATA: ${JSON.stringify(shipmentData)}`);
+
     const shipment = new CrateShipment(this._repo.crateShipment, new CrateShipmentDTO(shipmentData));
 
     shipment._data.waypointsIncluded = includeWaypoints;

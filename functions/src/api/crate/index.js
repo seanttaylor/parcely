@@ -90,7 +90,6 @@ function CrateRouter({
     const boolMap = { true: true, false: false };
 
     try {
-      console.log(`SHIPMENT_ID: ${shipmentId}`);
       const shipment = await crateService.getCrateShipmentById(shipmentId, { includeWaypoints: boolMap[includeWaypoints] });
       res.set('content-type', 'application/json');
 
