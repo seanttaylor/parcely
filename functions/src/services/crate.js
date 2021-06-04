@@ -544,6 +544,10 @@ function CrateService({
  * @param {Object} waypoint - a waypoint object
  */
 function VendorDigestTelemetry(waypoint) {
+  const exceededThresholdStatusIconMap = {
+    true: '✓',
+    false: '⚠',
+  };
   if (!waypoint) {
     return {
       timestamp: 'null',
@@ -563,9 +567,18 @@ function VendorDigestTelemetry(waypoint) {
     lat: String(waypoint.telemetry.location.coords.lat),
     lng: String(waypoint.telemetry.location.coords.lng),
     zip: String(waypoint.telemetry.location.zip),
-    moistureThresholdExceeded: String(waypoint.telemetry.sensors.moisture.thresholdExceeded),
-    photometerThresholdExceeded: String(waypoint.telemetry.sensors.photometer.thresholdExceeded),
-    thermometerThresholdExceeded: String(waypoint.telemetry.sensors.thermometer.thresholdExceeded),
+    moisture: {
+      thresholdExceeded: String(waypoint.telemetry.sensors.moisture.thresholdExceeded),
+      statusIcon: exceededThresholdStatusIconMap[waypoint.telemetry.sensors.moisture.thresholdExceeded],
+    },
+    photometer: {
+      thresholdExceeded: String(waypoint.telemetry.sensors.photometer.thresholdExceeded),
+      statusIcon: exceededThresholdStatusIconMap[waypoint.telemetry.sensors.photometer.thresholdExceeded],
+    },
+    thermometer: {
+      thresholdExceeded: String(waypoint.telemetry.sensors.thermometer.thresholdExceeded),
+      statusIcon: exceededThresholdStatusIconMap[waypoint.telemetry.sensors.thermometer.thresholdExceeded],
+    },
   };
 }
 
