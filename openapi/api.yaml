@@ -14,6 +14,8 @@ tags:
   - name: users
   - name: shipments
   - name: merchants
+  - name: simulations
+  - name: storage
 paths:
   '/crates/{crateId}':
     get:
@@ -106,7 +108,7 @@ paths:
     parameters: []
   /users:
     get:
-      summary: getUsers
+      summary: getAllUsers
       tags:
         - users
       responses:
@@ -120,7 +122,7 @@ paths:
           description: Not Found
         '500':
           description: Internal Server Error
-      operationId: getUsers
+      operationId: getAllUsers
       description: Get all platform users
       parameters:
         - $ref: '#/components/parameters/authorization'
@@ -132,10 +134,13 @@ paths:
           description: Created
         '400':
           description: Bad Request
+        '401':
+          description: Unauthorized
         '500':
           description: Internal Server Error
       description: Create a new platform user
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/authorization'
       tags:
         - users
       requestBody:
@@ -143,29 +148,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/user'
-  '/crates/{crateId}/telemetry':
-    parameters:
-      - $ref: '#/components/parameters/crateId'
-    get:
-      summary: getCrateTelemetryByCrateId
-      operationId: getCrateTelemetryByCrateId
-      tags:
-        - crates
-        - shipments
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden
-        '404':
-          description: Not Found
-        '500':
-          description: Internal Server Error
-      description: Get a list of telemetry data points for a specified crate by UUID
-      parameters:
-        - $ref: '#/components/parameters/authorization'
   '/crates/{crateId}/shipments':
     parameters:
       - $ref: '#/components/parameters/crateId'
@@ -570,8 +552,8 @@ paths:
     parameters:
       - $ref: '#/components/parameters/crateId'
     put:
-      summary: setRecipient
-      operationId: setRecipient
+      summary: setCrateRecipient
+      operationId: setCrateRecipient
       tags:
         - crates
         - shipments
@@ -819,13 +801,9 @@ paths:
           description: Internal Server Error
   '/merchants/{merchantId}/plan':
     parameters:
-      - schema:
-          type: string
-        name: merchantId
-        in: path
-        required: true
+      - $ref: '#/components/parameters/merchantId'
     put:
-      summary: updatePlan
+      summary: updateMerchantPlan
       tags:
         - merchants
       responses:
@@ -841,7 +819,7 @@ paths:
           description: Not Found
         '500':
           description: Internal Server Error
-      operationId: updatePlan
+      operationId: updateMerchantPlan
       description: Update an existing merchant's plan
       parameters:
         - $ref: '#/components/parameters/authorization'
@@ -881,7 +859,7 @@ paths:
         in: path
         required: true
     post:
-      summary: cancelPlan
+      summary: cancelMerchantPlan
       tags:
         - merchants
       responses:
@@ -897,14 +875,15 @@ paths:
           description: Not Found
         '500':
           description: Internal Server Error
-      operationId: cancelPlan
+      operationId: cancelMerchantPlan
       description: Cancels an existing Merchant's plan
       parameters:
         - $ref: '#/components/parameters/authorization'
   /storage/buckets:
     get:
       summary: getStorageBuckets
-      tags: []
+      tags:
+        - storage
       responses:
         '200':
           description: OK
@@ -924,7 +903,8 @@ paths:
       - $ref: '#/components/parameters/bucketId'
     get:
       summary: getStorageBucketById
-      tags: []
+      tags:
+        - storage
       responses:
         '200':
           description: OK
@@ -954,7 +934,6 @@ paths:
         description: The uuid for a storage bucket item
     get:
       summary: getStorageBucketItemById
-      tags: []
       responses:
         '200':
           description: OK
@@ -969,6 +948,170 @@ paths:
           description: Internal Server Error
       operationId: getStorageBucketItemById
       description: Get a specified storage bucket item
+      tags:
+        - storage
+  /crates/telemetry/rt-updates/subscribe:
+    get:
+      summary: subscribeToRealtimeUpdates
+      tags: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            connection:
+              schema:
+                type: string
+            cache-control:
+              schema:
+                type: string
+            content-type:
+              schema:
+                type: string
+      operationId: subscribeToRealtimeUpdates
+      description: Receive real-time updates via Server-Sent Events
+      parameters: []
+  '/merchants/{merchantId}/shipments':
+    parameters:
+      - schema:
+          type: string
+        name: merchantId
+        in: path
+        required: true
+    get:
+      summary: getShipmentsByMerchantId
+      tags:
+        - merchants
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: getShipmentsByMerchantId
+      description: Get a list of all shipments associated with a specified Merchant
+  '/merchants/{merchantId}/shipments/{shipmentId}':
+    parameters:
+      - schema:
+          type: string
+        name: merchantId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: shipmentId
+        in: path
+        required: true
+    get:
+      summary: getMerchantShipmentById
+      tags: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: getMerchantShipmentById
+      description: Get a specified merchant shipment
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+  '/merchants/{merchantId}/shipments/{shipmentId}/waypoints':
+    get:
+      summary: getShipmentWaypoints
+      tags: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: getShipmentWaypoints
+      description: Get a list of waypoints associated with a specified shipment
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+    parameters:
+      - $ref: '#/components/parameters/merchantId'
+      - $ref: '#/components/parameters/shipmentId'
+  '/simulations/{simulationId}':
+    get:
+      summary: getSimulationById
+      tags:
+        - simulations
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: getSimulationById
+      description: Get a specified crate simulation
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+    parameters:
+      - $ref: '#/components/parameters/simulationId'
+  '/simulations/{simulationId}/end':
+    parameters:
+      - $ref: '#/components/parameters/simulationId'
+    post:
+      summary: endSimulationById
+      tags:
+        - simulations
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: endSimulationById
+      description: End a specified simulation run
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+  '/simulations/{simulationId}/start':
+    parameters:
+      - $ref: '#/components/parameters/simulationId'
+    post:
+      summary: startSimulationById
+      tags:
+        - simulations
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: startSimulationById
+      description: Start a specified simulation run
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+  /simulations:
+    post:
+      summary: createSimulation
+      tags:
+        - simulations
+      responses:
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+      operationId: createSimulation
+      description: Create a new simulation run
+      parameters:
+        - $ref: '#/components/parameters/authorization'
 components:
   schemas:
     crateId:
@@ -1206,6 +1349,20 @@ components:
       schema:
         type: string
       description: The uuid for a user
+      required: true
+    merchantId:
+      name: merchantId
+      in: path
+      schema:
+        type: string
+      description: The uuid for a merchant
+      required: true
+    simulationId:
+      name: simulationId
+      in: path
+      schema:
+        type: string
+      description: The uuid for a simulation
       required: true
     crateId:
       name: crateId
