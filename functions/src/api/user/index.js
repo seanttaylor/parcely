@@ -12,7 +12,7 @@ const {
 /**
  * @param {UserService} userService - an instance of the UserService
  * @param {AuthService} authService - an instance of the AuthService
- * @param {EventEmitter} eventEmitter - an instance of the AuthService
+ * @param {EventEmitter} eventEmitter - an instance of the EventEmitter
  * @returns router - an instance of an Express router
  */
 
@@ -35,15 +35,14 @@ function UserRouter({
     next();
   }
 
-  /** **** GET ****** */
-
+  // OpenAPI operationId: getAllUsers
   router.get('/', validateJWT, authorizeRequest({ actionId: 'readAny:users' }), async (req, res, next) => {
     try {
       const userList = await userService.findAllUsers();
       res.set('content-type', 'application/json');
       res.status(200);
       res.json({
-        entries: userList.map((u) => u.toJSON()),
+        entries: userList,
         error: null,
         count: userList.length,
       });
@@ -52,6 +51,7 @@ function UserRouter({
     }
   });
 
+  // OpenAPI operationId: getCratesByRecipient
   router.get('/:id/crates', validateJWT, authorizeRequest({ actionId: 'readOwn:crates' }), verifyUserExists, async (req, res, next) => {
     const { id } = req.params;
 
@@ -61,7 +61,7 @@ function UserRouter({
       res.set('content-type', 'application/json');
       res.status(200);
       res.json({
-        entries: crateList.map((c) => c.toJSON()),
+        entries: crateList,
         error: null,
         count: crateList.length,
       });
@@ -70,6 +70,7 @@ function UserRouter({
     }
   });
 
+  // OpenAPI operationId: getUserById
   router.get('/:id', validateJWT, authorizeRequest({ actionId: 'readOwn:users' }), verifyUserExists, async (req, res, next) => {
     const userId = req.params.id;
 
@@ -78,7 +79,7 @@ function UserRouter({
       res.set('content-type', 'application/json');
       res.status(200);
       res.json({
-        entries: userList.map((u) => u.toJSON()),
+        entries: userList,
         error: null,
         count: userList.length,
       });
@@ -87,6 +88,7 @@ function UserRouter({
     }
   });
 
+  // OpenAPI operationId: getUserShipmentHistory
   router.get('/:id/shipments', validateJWT, authorizeRequest({ actionId: 'readOwn:users' }), verifyUserExists, async (req, res, next) => {
     const userId = req.params.id;
     const statusFilter = req.query.status;
@@ -97,7 +99,7 @@ function UserRouter({
       res.set('content-type', 'application/json');
       res.status(200);
       res.json({
-        entries: shipmentList.map((t) => t.toJSON()),
+        entries: shipmentList,
         error: null,
         count: shipmentList.length,
       });
@@ -106,7 +108,8 @@ function UserRouter({
     }
   });
 
-  router.get('/email_exists/:emailAddress', validateJWT, authorizeRequest({ actionId: 'readAny:users' }), async (req, res) => {
+  // OpenAPI operationId: verifyEmailExists
+  router.get('/email-exists/:emailAddress', validateJWT, authorizeRequest({ actionId: 'readAny:users' }), async (req, res) => {
     const { emailAddress } = req.params;
 
     try {
@@ -122,8 +125,7 @@ function UserRouter({
     }
   });
 
-  /** * POST *** */
-
+  // OpenAPI operationId: getUserAccessToken
   router.post('/token', async (req, res) => {
     const { password } = req.body;
     const userEmailAddress = req.body.emailAddress;
@@ -150,6 +152,7 @@ function UserRouter({
     });
   });
 
+  // OpenAPI operationId: createUser
   router.post('/', validateRequest(userSchema), async (req, res, next) => {
     const { password, ...requestBody } = req.body;
 
@@ -183,8 +186,7 @@ function UserRouter({
     }
   });
 
-  /** * PUT ** */
-
+  // OpenAPI operationId: editName
   router.put('/:id/name', validateRequest(userSchema), validateJWT, verifyUserExists, authorizeRequest({ actionId: 'updateOwn:users' }), async (req, res, next) => {
     const userId = req.params.id;
 
@@ -203,6 +205,7 @@ function UserRouter({
     }
   });
 
+  // OpenAPI operationId: editPhoneNumber
   router.put('/:id/phone', validateRequest(userSchema), validateJWT, verifyUserExists, authorizeRequest({ actionId: 'updateOwn:users' }), async (req, res, next) => {
     const userId = req.params.id;
     const { phoneNumber } = req.body;
@@ -222,6 +225,7 @@ function UserRouter({
     }
   });
 
+  // OpenAPI operationId: editEmailAddress
   router.put('/:id/email', validateRequest(userSchema), validateJWT, verifyUserExists, authorizeRequest({ actionId: 'updateOwn:users' }), async (req, res, next) => {
     const userId = req.params.id;
     const { emailAddress } = req.body;
@@ -241,6 +245,7 @@ function UserRouter({
     }
   });
 
+  // OpenAPI operationId: resetPassword
   router.put('/:id/password', validateJWT, verifyUserExists, authorizeRequest({ actionId: 'updateOwn:users' }), async (req, res, next) => {
     const userId = req.params.id;
     const { password } = req.body;

@@ -10,6 +10,7 @@ const router = new express.Router();
  */
 
 function StatusRouter(config) {
+  // OpenAPI operationId: getSystemStatus
   router.get('/', async (req, res) => {
     res.set('content-type', 'application/json');
     res.status(200);

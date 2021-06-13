@@ -43,9 +43,9 @@ function User(repo, userDTO) {
   };
 
   /**
-     * Saves a new user to the data store
-     * @returns {String} - a uuid for the new user
-     */
+   * Saves a new user to the data store
+   * @returns {String} - a uuid for the new user
+   */
   this.save = async function () {
     const userDTO = new UserDTO(this._data);
     const userRoleDTO = new UserRoleDTO(this._data);
@@ -55,10 +55,10 @@ function User(repo, userDTO) {
   };
 
   /**
-     * Edit firstName and/or lastName on an existing user in the data store
-     * @param {String} firstName - updated first name
-     * @param {String} lastName - updated last name
-     */
+   * Edit firstName and/or lastName on an existing user in the data store
+   * @param {String} firstName - updated first name
+   * @param {String} lastName - updated last name
+   */
   this.editName = async function (doc) {
     const firstName = doc.firstName || this._data.firstName;
     const lastName = doc.lastName || this._data.lastName;
@@ -73,9 +73,9 @@ function User(repo, userDTO) {
   };
 
   /**
-     * Edit emailAddress on an existing user in the data store
-     * @param {String} emailAddress - updated emailAddress
-     */
+   * Edit emailAddress of an existing user in the data store
+   * @param {String} emailAddress - updated emailAddress
+   */
   this.editEmailAddress = async function (emailAddress) {
     const userDTO = new UserDTO(Object.assign(this._data, {
       emailAddress,
@@ -86,9 +86,9 @@ function User(repo, userDTO) {
   };
 
   /**
-     * Edit phoneNumber property of an existing user in the data store
-     * @param {Integer} phoneNumber - a telephone number
-     */
+   * Edit phoneNumber of an existing user in the data store
+   * @param {Integer} phoneNumber - a telephone number
+   */
   this.editPhoneNumber = async function (phoneNumber) {
     const userDTO = new UserDTO(Object.assign(this._data, { phoneNumber }));
     const { lastModified } = await this._repo.editPhoneNumber(userDTO);
@@ -105,7 +105,6 @@ function User(repo, userDTO) {
  */
 
 /**
- *
  * @param {Object} repo - the repo associated with this service
  * @param {Object} validator - the validator used to validate a new user
  */

@@ -6,8 +6,8 @@ const { CrateShipmentDTO, CrateTelemetryDTO } = require('../lib/repository/crate
 
 /**
 * @typedef {Object} Crate
-* @property {String} id - the uuid of the user
-* @property {Object} _data - the user data
+* @property {String} id - the uuid of the crate
+* @property {Object} _data - the crate data
 * @property {Object} _repo - the repository instance associated with this entity
 */
 
@@ -58,7 +58,7 @@ function Crate({
 
   /**
     Saves a new crate to the data store
-    @returns {String} - a uuid for the new user
+    @returns {String} - a uuid for the new crate
     */
   this.save = async function () {
     const crateDTO = new CrateDTO(this._data);
@@ -263,7 +263,7 @@ function CrateShipment(repo, crateShipmentDTO) {
 
   /**
      * Saves a new CrateShipment to the data store
-     * @returns {String} - a uuid for the new user
+     * @returns {String} - a uuid for the new CrateShipment
      */
   this.save = async function () {
     const crateShipmentDTO = new CrateShipmentDTO(this._data);
@@ -349,8 +349,8 @@ function CrateService({
   storageBucketService.create('crate-qr-codes');
 
   /**
-     * @param {Object} doc - object representing valid crate data
-     */
+   * @param {Object} doc - object representing valid crate data
+   */
   this.createCrate = function (doc) {
     const id = uuid.v4();
     const data = { id, ...doc };
@@ -403,8 +403,8 @@ function CrateService({
   };
 
   /**
-     * @param {User} user - an instance of a User
-     */
+   * @param {User} user - an instance of a User
+   */
   this.getCratesByRecipient = async function (user) {
     const crateList = await this._repo.crate.getCratesByRecipientId(user.id);
     return crateList.map((c) => new Crate({
@@ -434,9 +434,9 @@ function CrateService({
   };
 
   /**
-     * @param {Crate} crate - an instance of a Crate
-     * @param {Object} options - a configuration object
-     */
+   * @param {Crate} crate - an instance of a Crate
+   * @param {Object} options - a configuration object
+   */
   this.getShipmentsByCrate = async function (crate, { includeWaypoints = false } = {}) {
     const crateShipmentList = await this._repo.crateShipment.getCrateShipmentsByCrateId(crate.id);
 
@@ -453,9 +453,9 @@ function CrateService({
   };
 
   /**
-     * @param {String} merchantId - a uuid for merchant
-     * @param {Boolean} asDigest - indicates whether the waypoint data should be returned in digest format
-     */
+   * @param {String} merchantId - a uuid for merchant
+   * @param {Boolean} asDigest - indicates whether the waypoint data should be returned in digest format
+   */
   this.getShipmentsByMerchantId = async function ({ merchantId, asDigest = false }) {
     const crateShipmentList = await this._repo.crateShipment.getAllCrateShipments();
 
@@ -494,9 +494,9 @@ function CrateService({
   };
 
   /**
-     * @param {User} user - an instance of a User
-     * @param {Object} options - an options object
-     */
+   * @param {User} user - an instance of a User
+   * @param {Object} options - an options object
+   */
   this.getShipmentHistoryOf = async function (user, { filterBy }) {
     const crateShipmentList = await this._repo.crateShipment.getCrateShipmentsByRecipientId(user.id);
 
@@ -516,15 +516,15 @@ function CrateService({
   };
 
   /**
-     * @param {String} id - a uuid for a crate
-     */
+   * @param {String} id - a uuid for a crate
+   */
   this.deleteCrate = async function (id) {
     await this._repo.crate.deleteCrate(id);
   };
 
   /**
-     * @param {Crate} crate - an instance of a Crate
-     */
+   * @param {Crate} crate - an instance of a Crate
+   */
   this.markCrateReturned = async function (crate) {
     if (crate._data.status[0] === 'delivered') {
       const crateDTO = new CrateDTO(Object.assign(crate._data, {

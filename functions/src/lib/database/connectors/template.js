@@ -1,4 +1,4 @@
-// Basic structure for JSON file or in-memory document database implementation
+// Basic structure for document database implementation
 
 module.exports = {
   users: {

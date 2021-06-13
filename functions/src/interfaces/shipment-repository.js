@@ -4,8 +4,8 @@
 * An object having the ICrateShipmentRepository API; a set of methods for managing crate shipments
 * @typedef {Object} ICrateShipmentRepositoryAPI
 * @property {Function} create - creates a new crate shipment in the data store
-* @property {Function} getCrateShipmentById- finds a crate shipment in the data store by uuid
-* @property {Function} getAllCrateShipments- finds all crate shipments in the data store
+* @property {Function} getCrateShipmentById - finds a crate shipment in the data store by uuid
+* @property {Function} getAllCrateShipments - finds all crate shipments in the data store
 * @property {Function} getCrateShipmentsByCrateId - finds a list of all unique shipments of a specified crate
 */
 
@@ -21,13 +21,13 @@ function ICrateShipmentRepository(myImpl) {
 
   /**
     @param {Object} doc - object representing a valid entry
-    @returns {String} - a uuid for the new user
+    @returns {String} - a uuid for the new shipment
     */
   this.create = myImpl.create || required;
 
   /**
-    @param {String} id - uuid of the crateTrip
-    @returns {CrateShipment} - the requested crateTrip
+    @param {String} id - uuid of the CrateShipment
+    @returns {CrateShipment} - the requested CrateShipment
     */
   this.getCrateShipmentById = myImpl.getCrateShipmentById || required;
 

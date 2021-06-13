@@ -39,9 +39,9 @@ function Merchant(repo, merchantDTO) {
   };
 
   /**
-     * Saves a new merchant to the data store
-     * @returns {String} - a uuid for the new merchant
-    */
+   * Saves a new merchant to the data store
+   * @returns {String} - a uuid for the new merchant
+  */
   this.save = async function () {
     const merchantDTO = new MerchantDTO(this._data);
     const merchant = await this._repo.create(merchantDTO);
@@ -50,9 +50,9 @@ function Merchant(repo, merchantDTO) {
   };
 
   /**
-     * Updates an existing plan for a merchant
-     * @param {Object} plan - valid Parcely plan
-    */
+   * Updates an existing plan for a merchant
+   * @param {Object} plan - valid Parcely plan
+  */
   this.updatePlan = async function (plan) {
     if (this._data.status[0] === 'archived') {
       return;
@@ -69,9 +69,9 @@ function Merchant(repo, merchantDTO) {
   };
 
   /**
-     * Cancels an existing plan for a merchant
-     * @returns
-    */
+   * Cancels an existing plan for a merchant
+   * @returns
+  */
   this.cancelPlan = async function () {
     const cancelledPlan = {
       ...this._data.plan,
@@ -95,17 +95,17 @@ function Merchant(repo, merchantDTO) {
 
 /**
  *
- * @param {Object} repo - the repos associated with this service
+ * @param {Object} repo - the repositories associated with this service
  * @param {UserService} userService - an instance of the UserService
  * @param {CrateService} crateService - an instance of the CrateService
  */
 
-function MerchantService(repo, userService, crateService) {
+function MerchantService({ repo, userService, crateService }) {
   this._repo = repo;
 
   /**
-     * @param {Object} doc - object representing valid merchant data
-     */
+   * @param {Object} doc - object representing valid merchant data
+   */
   this.createMerchant = async function (doc) {
     /* for successful merchant account creation user account SHOULD already exist and merchant account SHOULD NOT already exist */
 
@@ -126,9 +126,9 @@ function MerchantService(repo, userService, crateService) {
   };
 
   /**
-     * @param {String} id - a uuid for a merchant
-     * @returns {Object}
-     */
+   * @param {String} id - a uuid for a merchant
+   * @returns {Object}
+   */
   this.getMerchantById = async function (id) {
     const merchantData = await this._repo.getMerchantById(id);
 
@@ -147,8 +147,8 @@ function MerchantService(repo, userService, crateService) {
     */
 
   /**
-     * @param {Merchant} merchant - an instance of a Merchant
-     */
+   * @param {Merchant} merchant - an instance of a Merchant
+   */
   this.archiveMerchant = async function (merchant) {
     const merchantDTO = new MerchantDTO(Object.assign(merchant._data, {
       status: ['archived'],
@@ -162,16 +162,16 @@ function MerchantService(repo, userService, crateService) {
   };
 
   /**
-     * @param {String} userId - a uuid of a User
-     */
+   * @param {String} userId - a uuid of a User
+   */
   this.merchantExists = async function (userId) {
     const merchantList = await this._repo.getAllMerchants();
     return merchantList.find((m) => m.userId === userId);
   };
 
   /**
-     * @param {String} merchantId - a uuid of a merchant
-     */
+   * @param {String} merchantId - a uuid of a merchant
+   */
   this.getShipmentsByMerchantId = async function (merchantId) {
     const shipmentList = await crateService.getShipmentsByMerchantId(merchantId);
     return shipmentList;

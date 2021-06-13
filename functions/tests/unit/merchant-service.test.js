@@ -6,14 +6,11 @@
 process.env.NODE_ENV = 'ci/cd/test';
 
 const { mockImpl } = require('../../src/lib/utils/mocks');
-const uuid = require('uuid');
 const Ajv = require('ajv');
 const events = require('events');
 const ajv = new Ajv();
 const faker = require('faker');
-const crateSchema = require('../../src/schemas/crate.json');
 const { MerchantService } = require('../../src/services/merchant');
-const { UserService } = require('../../src/services/user');
 const DatabaseConnector = require('../../src/lib/database/connectors/memory');
 const { CrateService } = require('../../src/services/crate');
 const CrateRepository = require('../../src/lib/repository/crate');
@@ -21,8 +18,6 @@ const CrateShipmentRepository = require('../../src/lib/repository/crate-shipment
 const ICrateRepository = require('../../src/interfaces/crate-repository');
 const ICrateShipmentRepository = require('../../src/interfaces/shipment-repository');
 const IMerchantRepository = require('../../src/interfaces/merchant-repository');
-const IUserRepository = require('../../src/interfaces/user-repository');
-const UserRepository = require('../../src/lib/repository/user');
 const MerchantRepository = require('../../src/lib/repository/merchant');
 const IStorageBucket = require('../../src/interfaces/storage-bucket');
 const {InMemoryStorageBucket} = require('../../src/lib/storage');
@@ -41,14 +36,17 @@ const testCrateService = new CrateService({
   storageBucketService: testStorageBucketService
 });
 
-const testUserRepo = new IUserRepository(new UserRepository(testDbConnector));
 const testMerchantRepo = new IMerchantRepository(new MerchantRepository(testDbConnector));
 const fakeUserService = {
   userExists() {
     return true;
   },
 };
-const testMerchantService = new MerchantService(testMerchantRepo, fakeUserService, testCrateService);
+const testMerchantService = new MerchantService({
+  repo: testMerchantRepo, 
+  userService: fakeUserService, 
+  crateService: testCrateService
+});
 const defaultPlan = {
   planType: ['smallBusiness'],
   startDate: '01/01/2021',
@@ -87,10 +85,13 @@ describe('MerchantManagement', () => {
   });
 
   test('Should NOT be able to create a new Merchant instance for non-existing user', async () => {
-    const anotherTestMerchantService = new MerchantService(testMerchantRepo, {
-      userExists() {
-        return false;
-      },
+    const anotherTestMerchantService = new MerchantService({
+      repo: testMerchantRepo,
+      userService: { 
+        userExists() {
+          return false;
+        },
+      }
     });
     const testMerchantData = {
       name: faker.company.companyName(),

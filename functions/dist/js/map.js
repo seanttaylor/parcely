@@ -1,6 +1,6 @@
 /**
  *
- * @param {Array} crates - list of all crateId for all simulations
+ * @param {Array} crates - list of all crateIds for all simulations
  * @returns {Object}
  */
 function MapServiceAPI(crates) {

@@ -59,7 +59,10 @@ const testCrateService = new CrateService({
     eventEmitter,
     userService: testUserService
 });
-const testMerchantService = new MerchantService(testMerchantRepo, testUserService);
+const testMerchantService = new MerchantService({
+  repo: testMerchantRepo, 
+  userService: testUserService
+});
 const testSimulationService = new ShipmentSimulatorService({
     userService: testUserService,
     merchantService: testMerchantService,

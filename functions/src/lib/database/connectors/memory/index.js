@@ -24,8 +24,8 @@ function InMemoryDatabaseConnector({ console }) {
 
   /**
      * Add a document to the database.
-     * @params {Object} doc - an instance of an entity DTO containing data to store
-     * @params {String} collection - name of collection to add to.
+     * @param {Object} doc - an instance of an entity DTO containing data to store
+     * @param {String} collection - name of collection to add to
      * @returns {Object}
      */
 
@@ -56,11 +56,11 @@ function InMemoryDatabaseConnector({ console }) {
   };
 
   /**
-     * Update a document in the database by id
-     * @params {Object} doc - an instance of an entity DTO containing data to store
-     * @params {String} collection - collection to update
-     * @returns {Object}
-     */
+   * Update a document in the database by id
+   * @param {Object} doc - an instance of an entity DTO containing data to store
+   * @param {String} collection - collection to update
+   * @returns {Object}
+   */
 
   this.updateOne = async function ({ doc, collection }) {
     const { id } = doc.value();
@@ -70,7 +70,7 @@ function InMemoryDatabaseConnector({ console }) {
     }
 
     if (!id) {
-      throw new Error('InMemoryDatabaseConnectorError.UpdateError: record id CANNOT be falsy');
+      throw new Error('InMemoryDatabaseConnectorError.UpdateError.MissingId');
     }
 
     if (!Object.keys(this._schemaValidators).includes(collection)) {
@@ -101,12 +101,12 @@ function InMemoryDatabaseConnector({ console }) {
   };
 
   /**
-     * Add a document to the database with a user-defined ID
-     * @params {String} id - id of the document to create in the database
-     * @params {Object} doc - an instance of an entity DTO containg data to store
-     * @params {String} collection - collection to update
-     * @returns {Object}
-     */
+   * Add a document to the database with a user-defined ID
+   * @param {String} id - id of the document to create in the database
+   * @param {Object} doc - an instance of an entity DTO containg data to store
+   * @param {String} collection - collection to update
+   * @returns {Object}
+   */
 
   this.putOne = async function ({ doc, collection }) {
     const { id } = doc.value();
@@ -116,7 +116,7 @@ function InMemoryDatabaseConnector({ console }) {
     }
 
     if (!id) {
-      throw new Error('InMemoryDatabaseConnectorError.PutError: Record id CANNOT be falsy');
+      throw new Error('InMemoryDatabaseConnectorError.PutError.MissingId');
     }
 
     if (!Object.keys(this._schemaValidators).includes(collection)) {
@@ -140,13 +140,13 @@ function InMemoryDatabaseConnector({ console }) {
   };
 
   /**
-     * Remove a document from a collection BY ID ONLY
-     * @params {String} id - Id of the document in the database
-     * @params {String} collection - Collection to from from
-     * @returns {Object}
-     */
+   * Remove a document from a collection BY ID ONLY
+   * @param {String} id - uuid of the document in the database
+   * @param {String} collection - collection to remove from
+   * @returns {Object}
+   */
 
-  this.removeOne = async function (id, collection) {
+  this.removeOne = async function ({ id, collection }) {
     try {
       delete data[collection][id];
       return [];
@@ -157,10 +157,10 @@ function InMemoryDatabaseConnector({ console }) {
   };
 
   /**
-     * Find all documents in a collection
-     * @params {String} collection - Collection to pull from
-     * @returns {Object}
-     */
+   * Find all documents in a collection
+   * @param {String} collection - collection to pull from
+   * @returns {Object}
+   */
 
   this.findAll = async function (collection) {
     try {
@@ -172,11 +172,11 @@ function InMemoryDatabaseConnector({ console }) {
   };
 
   /**
-     * Find a document in a collection by id
-     * @params {String} id - id of the document
-     * @params {String} collection - collection to pull from
-     * @returns {Object}
-     */
+   * Find a document in a collection by uuid
+   * @param {String} id - uuid of the document
+   * @param {String} collection - collection to pull from
+   * @returns {Object}
+   */
 
   this.findOne = async function ({ id, collection }) {
     if (!Object.keys(this._schemaValidators).includes(collection)) {
@@ -184,7 +184,7 @@ function InMemoryDatabaseConnector({ console }) {
     }
 
     if (!id) {
-      throw new Error('InMemoryDatabaseConnectorError.FindOneError: record id CANNOT be falsy');
+      throw new Error('InMemoryDatabaseConnectorError.FindOneError.MissingId');
     }
 
     try {
@@ -200,10 +200,10 @@ function InMemoryDatabaseConnector({ console }) {
   };
 
   /**
-     * Drop a collection from the database
-     * @params {String} collection - collection to drop
-     * @returns
-     */
+   * Drop a collection from the database
+   * @param {String} collection - collection to drop
+   * @returns
+   */
 
   this.drop = async function (collection) {
     delete data[collection];
@@ -211,10 +211,10 @@ function InMemoryDatabaseConnector({ console }) {
   };
 
   /**
-     * Closes an existing connection to the database
-     * This implementation does nothing as there is no database server connection.
-     * @returns
-     */
+   * Closes an existing connection to the database
+   * This implementation does nothing as there is no database server connection
+   * @returns
+   */
   this.close = function () {
     return [];
   };

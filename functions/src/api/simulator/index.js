@@ -14,7 +14,7 @@ const {
  */
 
 function SimulatorRouter(simulatorService) {
-  /** POST */
+  // OpenAPI operationId: createSimulation
   router.post('/', validateJWT, authorizeRequest({ actionId: 'createAny:simulations' }), async (req, res, next) => {
     try {
       const { instanceCount, intervalMillis } = req.body;
@@ -26,7 +26,7 @@ function SimulatorRouter(simulatorService) {
       res.set('content-type', 'application/json');
       res.status(201);
       res.json({
-        entries: [simulation.toJSON()],
+        entries: [simulation],
         error: null,
         count: 1,
       });
@@ -35,6 +35,7 @@ function SimulatorRouter(simulatorService) {
     }
   });
 
+  // OpenAPI operationId: startSimulationById
   router.post('/:id/start', validateJWT, authorizeRequest({ actionId: 'updateAny:simulations' }), async (req, res, next) => {
     res.set('content-type', 'application/json');
     try {
@@ -54,6 +55,7 @@ function SimulatorRouter(simulatorService) {
     }
   });
 
+  // OpenAPI operationId: endSimulationById
   router.post('/:id/end', validateJWT, authorizeRequest({ actionId: 'updateAny:simulations' }), (req, res, next) => {
     res.set('content-type', 'application/json');
     try {
@@ -73,7 +75,7 @@ function SimulatorRouter(simulatorService) {
     }
   });
 
-  /** GET */
+  // OpenAPI operationId: getSimulationById
   router.get('/:id', validateJWT, authorizeRequest({ actionId: 'readAny:simulations' }), async (req, res, next) => {
     res.set('content-type', 'application/json');
     try {
@@ -87,7 +89,7 @@ function SimulatorRouter(simulatorService) {
 
       res.status(200);
       res.json({
-        entries: [simulation.toJSON()],
+        entries: [simulation],
         error: null,
         count: 1,
       });

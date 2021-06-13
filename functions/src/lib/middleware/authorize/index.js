@@ -12,7 +12,7 @@ const ac = new AccessControl(accessGrants.grants);
  * @param {Boolean} allowResourceOwnerOnly - indicates whether a child resource
  * (e.g. /users/{id}/posts/{post_id}/comments) can ONLY be accessed by the owner of the top-level resource
  * @param {Function} authzOverride - a user-defined predicate function that
- * authorizes a requests if the function returns true
+ * authorizes a request if the function returns true
  * (e.g. /users/{id}/posts/{post_id}/comments) can ONLY be accessed by the owner of the top-level resource
  * @param {Function} next - Express 'next' function
  * @returns {Function} - function with Express middleware signature
@@ -40,8 +40,8 @@ module.exports = function ({ actionId, authzOverride, allowResourceOwnerOnly = t
     }
 
     /* The request is for a child resource; permissions are overridden
-        * at the router-level to permit access to the child resource
-        */
+      * at the router-level to permit access to the child resource
+      */
     if (!allowResourceOwnerOnly) {
       next();
       return;

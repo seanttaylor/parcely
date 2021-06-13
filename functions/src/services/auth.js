@@ -8,11 +8,11 @@ const jwt = require('jsonwebtoken');
 
 function UserAuthService({ cacheService, config }) {
   /**
-     * Issues a new authorization credential for a specified user
-     * @param {User} user - an instance of the User class
-     * @param {String} role - role associated with the user in the datastore
-     * @returns a JSON Web Token
-    */
+   * Issues a new authorization credential for a specified user
+   * @param {User} user - an instance of the User class
+   * @param {String} role - role associated with the user in the datastore
+   * @returns a JSON Web Token
+  */
 
   this.issueAuthCredential = async function (user, role = 'user') {
     const expiresInOneHour = Math.floor(Date.now() / 1000) + (60 * 60);
@@ -28,17 +28,17 @@ function UserAuthService({ cacheService, config }) {
   };
 
   /**
-     * Expires an existing credential
-     * @param {String} credential - a JSON Web Token
-    */
+   * Expires an existing credential
+   * @param {String} credential - a JSON Web Token
+  */
 
   this.expireAuthCredential = function (credential) {
     cacheService.del(credential);
   };
 
   /**
-     * @param {String} credential - a JSON Web Token
-     * @returns Boolean indicating whether the credential is valid (i.e. not expired)
+   * @param {String} credential - a JSON Web Token
+   * @returns Boolean indicating whether the credential is valid (i.e. not expired)
     */
 
   this.validateAuthCredential = function (credential) {

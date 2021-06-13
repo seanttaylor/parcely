@@ -1,5 +1,7 @@
 const $ = document.querySelector.bind(document);
-
+/**
+ * @param {Object} sidebar - object containing DOM element references comprising the UI sidebar
+ */
 function sidebarAPI(sidebar) {
   return {
     updateCrateList(crateIds) {

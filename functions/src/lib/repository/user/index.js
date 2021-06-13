@@ -12,9 +12,9 @@ See interfaces/user-repository for method documentation */
 
 function UserRepository(databaseConnector) {
   /**
-     * @param {UserDTO} userDTO - an instance of UserDTO
-     * @param {UserRoleDTO} userRoleDTO - an instance of UserRoleDTO
-     */
+   * @param {UserDTO} userDTO - an instance of UserDTO
+   * @param {UserRoleDTO} userRoleDTO - an instance of UserRoleDTO
+   */
   this.create = async function ({ userDTO, userRoleDTO }) {
     const [record] = await databaseConnector.add({
       doc: userDTO,
@@ -30,8 +30,8 @@ function UserRepository(databaseConnector) {
   };
 
   /**
-     * @param {UserCredentialsDTO} userCredentialsDTO - an instance of UserCredentialsDTO
-     */
+   * @param {UserCredentialsDTO} userCredentialsDTO - an instance of UserCredentialsDTO
+   */
   this.createUserPassword = async function (userCredentialsDTO) {
     await databaseConnector.putOne({
       doc: userCredentialsDTO,
@@ -40,24 +40,24 @@ function UserRepository(databaseConnector) {
   };
 
   /**
-     * @param {String} emailAddress - user email address
-     */
+   * @param {String} emailAddress - user email address
+   */
   this.getUserPassword = async function (emailAddress) {
     const [result] = await databaseConnector.findOne({ id: emailAddress, collection: 'user_credentials' });
     return result.password;
   };
 
   /**
-     * @param {String} id - uuid for a user
-     */
+   * @param {String} id - uuid for a user
+   */
   this.findOneById = async function (id) {
     const result = await databaseConnector.findOne({ id, collection: 'users' });
     return result;
   };
 
   /**
-     * @param {String} emailAddress - user email address
-     */
+   * @param {String} emailAddress - user email address
+   */
   this.findOneByEmail = async function (emailAddress) {
     // Remember: the result of a failed Array.find is `undefined`
     const result = await databaseConnector.findAll('users');
@@ -71,8 +71,8 @@ function UserRepository(databaseConnector) {
   };
 
   /**
-     * @param {UserDTO} userDTO - an instance of UserDTO
-     */
+   * @param {UserDTO} userDTO - an instance of UserDTO
+   */
   this.editName = async function (userDTO) {
     const [record] = await databaseConnector.updateOne({
       doc: userDTO,
@@ -83,8 +83,8 @@ function UserRepository(databaseConnector) {
   };
 
   /**
-     * @param {UserDTO} userDTO - an instance of UserDTO
-     */
+   * @param {UserDTO} userDTO - an instance of UserDTO
+   */
   this.editPhoneNumber = async function (userDTO) {
     const [record] = await databaseConnector.updateOne({
       doc: userDTO,
@@ -95,8 +95,8 @@ function UserRepository(databaseConnector) {
   };
 
   /**
-     * @param {UserDTO} userDTO - an instance of UserDTO
-     */
+   * @param {UserDTO} userDTO - an instance of UserDTO
+   */
   this.editEmailAddress = async function (userDTO) {
     const [record] = await databaseConnector.updateOne({
       doc: userDTO,

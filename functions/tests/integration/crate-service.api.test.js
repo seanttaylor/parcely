@@ -311,12 +311,12 @@ describe('CrateManagement', () => {
 
     const crateId = res2.body.entries[0].id;
 
-    const res3 = await request.delete(`/api/v1/crates/${crateId}`)
+    await request.delete(`/api/v1/crates/${crateId}`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send()
       .expect(204);
 
-    const res4 = await request.get(`/api/v1/crates/${crateId}`)
+    await request.get(`/api/v1/crates/${crateId}`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send()
       .expect(404);
@@ -442,7 +442,7 @@ describe('CrateManagement', () => {
 
     expect(res8.body.entries[0].data.status[0] === 'complete').toBe(true);
 
-    const res9 = await request.post(`/api/v1/crates/${crateId}/status/pending_return`)
+    const res9 = await request.post(`/api/v1/crates/${crateId}/status/pending-return`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send()
       .expect(204);
