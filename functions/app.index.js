@@ -75,7 +75,7 @@ const MerchantRepository = require('./src/lib/repository/merchant');
 const IMerchantRepository = require('./src/interfaces/merchant-repository');
 
 const merchantRepo = new IMerchantRepository(new MerchantRepository(asiagoDatabaseConnector));
-const merchantService = new MerchantService(merchantRepo, userService);
+const merchantService = new MerchantService({ repo: merchantRepo, userService });
 
 /** PublishService */
 const IPublisher = require('./src/interfaces/publisher');

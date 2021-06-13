@@ -25,7 +25,7 @@ function MerchantRouter({ merchantService, crateService }) {
     };
   }
 
-  /** ***POST**** */
+  // OpenAPI operationId: createMerchant
   router.post('/', validateRequest(createMerchantSchema), validateJWT, authorizeRequest({ actionId: 'createAny:merchants' }), async (req, res, next) => {
     const merchantData = req.body;
     res.set('content-type', 'application/json');
@@ -56,6 +56,7 @@ function MerchantRouter({ merchantService, crateService }) {
     }
   });
 
+  // OpenAPI operationId: cancelMerchantPlan
   router.post('/:id/plan/cancel', validateJWT, authorizeRequest({
     actionId: 'updateOwn:merchants',
     authzOverride: merchantAuthzOverride(merchantService),
@@ -84,6 +85,7 @@ function MerchantRouter({ merchantService, crateService }) {
     }
   });
 
+  // OpenAPI operationId: archiveMerchant
   router.post('/:id/status/archived', validateJWT, authorizeRequest({
     actionId: 'updateAny:merchants',
   }), async (req, res, next) => {
@@ -102,7 +104,7 @@ function MerchantRouter({ merchantService, crateService }) {
     }
   });
 
-  /** ***GET****** */
+  // OpenAPI operationId: getMerchantById
   router.get('/:id', validateJWT, authorizeRequest({
     actionId: 'readOwn:merchants',
     authzOverride: merchantAuthzOverride(merchantService),
@@ -130,6 +132,7 @@ function MerchantRouter({ merchantService, crateService }) {
     }
   });
 
+  // OpenAPI operationId: getCrateByMerchant
   router.get('/:id/crates', validateJWT, authorizeRequest({
     actionId: 'readOwn:merchants',
     authzOverride: merchantAuthzOverride(merchantService),
@@ -151,6 +154,7 @@ function MerchantRouter({ merchantService, crateService }) {
     }
   });
 
+  // OpenAPI operationId: getShipmentsByMerchantId
   router.get('/:id/shipments', validateJWT, authorizeRequest({
     actionId: 'readOwn:merchants',
     authzOverride: merchantAuthzOverride(merchantService),
@@ -180,6 +184,7 @@ function MerchantRouter({ merchantService, crateService }) {
     }
   });
 
+  // OpenAPI operationId: getMerchantShipmentById
   router.get('/:id/shipments/:shipmentId', validateJWT, authorizeRequest({ actionId: 'readOwn:crates' }), async (req, res, next) => {
     const merchantId = req.params.id;
     const { shipmentId } = req.params;
@@ -197,7 +202,7 @@ function MerchantRouter({ merchantService, crateService }) {
       res.set('content-type', 'application/json');
       res.status(200);
       res.json({
-        entries: [currentShipment.toJSON()],
+        entries: [currentShipment],
         error: null,
         count: 1,
       });
@@ -206,6 +211,7 @@ function MerchantRouter({ merchantService, crateService }) {
     }
   });
 
+  // OpenAPI operationId: getShipmentWaypoints
   router.get('/:id/shipments/:shipmentId/waypoints', validateJWT, authorizeRequest({ actionId: 'readOwn:crates' }), async (req, res, next) => {
     const merchantId = req.params.id;
     const { asDigest } = req.query;
@@ -235,7 +241,7 @@ function MerchantRouter({ merchantService, crateService }) {
     }
   });
 
-  /** PUT* */
+  // OpenAPI operationId: updateMerchantPlan
   router.put('/:id/plan', validateRequest(updateMerchantPlanSchema), validateJWT, authorizeRequest({
     actionId: 'updateOwn:merchants',
     authzOverride: merchantAuthzOverride(merchantService),

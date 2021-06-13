@@ -257,12 +257,12 @@ describe('UserAccountManagement', () => {
 
     const furyAccessToken = res1.body.accessToken;
 
-    const res2 = await request.get(`/api/v1/users/email_exists/${fakeEmail}`)
+    const res2 = await request.get(`/api/v1/users/email-exists/${fakeEmail}`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send()
       .expect(404);
 
-    const res3 = await request.get(`/api/v1/users/email_exists/${furyEmailAddress}`)
+    const res3 = await request.get(`/api/v1/users/email-exists/${furyEmailAddress}`)
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send()
       .expect(200);

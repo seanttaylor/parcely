@@ -15,6 +15,8 @@ const router = new express.Router();
 
 function StorageRouter(storageBucketService) {
   // This API will be deprecated in favor of a permanent solution for static files storage (e.g. AWS S3)
+
+  // OpenAPI operationId: getStorageBucketItemById
   router.get('/buckets/:bucketId/:itemId', async (req, res) => {
     const { bucketId, itemId } = req.params;
     const bucketItem = await storageBucketService.getBucketItem(bucketId, itemId);
@@ -33,6 +35,7 @@ function StorageRouter(storageBucketService) {
     res.end(bucketItem);
   });
 
+  // OpenAPI operationId: getStorageBuckets
   router.get('/buckets', validateJWT, authorizeRequest({ actionId: 'readAny:buckets' }), async (req, res) => {
     const bucketList = await storageBucketService.listBuckets();
 
@@ -44,6 +47,7 @@ function StorageRouter(storageBucketService) {
     });
   });
 
+  // OpenAPI operationId: getStorageBucketById
   router.get('/buckets/:bucketId', validateJWT, authorizeRequest({ actionId: 'readAny:buckets' }), async (req, res) => {
     const { bucketId } = req.params;
     const bucket = await storageBucketService.getBucket(bucketId);

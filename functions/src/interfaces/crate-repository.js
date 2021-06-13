@@ -9,7 +9,7 @@
 * @property {Function} getCrateShipmentsByCrateId - finds a list of all unique shipments of a specified crate
 * @property {Function} getCratesByMerchantId - finds a list of all unique crates associated with a specified merchant
 * @property {Function} getCratesByRecipientId - finds all crates associated with a specified recipient
-* @property {Function} markCrateReturned -  set a crate's status to indicate a pending return
+* @property {Function} markCrateReturned - set a crate's status to indicate a pending return
 * @property {Function} delete - deletes a crate in the data store by its uuid
 * @property {Function} setCrateRecipient - associates a crate with a specified recipient user in the data store
 * @property {Function} startCrateShipment - initializes a new shipment for the current crate
@@ -28,13 +28,13 @@ function ICrateRepository(myImpl) {
 
   /**
     @param {Object} doc - object representing a valid entry
-    @returns {String} - a uuid for the new user
+    @returns {String} - a uuid for the new crate
     */
   this.create = myImpl.create || required;
 
   /**
-    @param {String} id - uuid of the user
-    @returns {User} - the requested User instance
+    @param {String} id - uuid of the crate
+    @returns {Crate} - the requested Crate instance
     */
   this.getCrateById = myImpl.getCrateById || required;
 
@@ -59,7 +59,7 @@ function ICrateRepository(myImpl) {
   this.getCratesByMerchantId = myImpl.getCratesByMerchantId || required;
 
   /**
-    @param {User} user - an instance of User
+    @param {String} uuid - a uuid for a recipient
     @returns {Array} - a list of crates associated with a specified recipient
     */
   this.getCratesByRecipientId = myImpl.getCratesByRecipientId || required;

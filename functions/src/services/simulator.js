@@ -85,6 +85,7 @@ function Simulation({
   };
 
   /**
+   * Returns of list of crates
    * @returns {Object}
    */
   this.getCrates = function () {
