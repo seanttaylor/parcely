@@ -92,6 +92,15 @@ const simulatorService = new ShipmentSimulatorService({
   crateService,
   eventEmitter,
 });
+
+/** HardwareCrateService* */
+const IHardwareCrateService = require('./src/interfaces/hardware-crate');
+const remoteHardwareCrateService = require('./src/lib/hardware-crate/remote');
+const mockHardwareCrateService = require('./src/lib/utils/mocks/hardware-crate-service');
+
+const hardwareCrateServiceImpl = process.env.NODE_ENV === 'ci/cd/test' ? mockHardwareCrateService : remoteHardwareCrateService;
+const hardwareCrateService = new IHardwareCrateService(hardwareCrateServiceImpl);
+
 /** *************************************************************************** */
 
 /** **********************************APIS************************************* */
@@ -130,6 +139,7 @@ app.use('/api/v1/users', UserAPI({
 app.use('/api/v1/crates', CrateAPI({
   authService,
   crateService,
+  hardwareCrateService,
   queueService,
   eventEmitter,
   userService,
