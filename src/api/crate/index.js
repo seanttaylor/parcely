@@ -17,12 +17,13 @@ const {
  * @param {EventEmitter} eventEmitter - an instance of EventEmitter
  * @param {QueueService} queueService - an instance of QueueService
  * @param {PublishService} publishService - an instance of PublishService
+ * @param {HardwareCrateService} hardwareCrateService - an instance of HardwareCrateService
 
  * @returns router - an instance of an Express router
  */
 
 function CrateRouter({
-  crateService, queueService, publishService, eventEmitter,
+  crateService, queueService, publishService, eventEmitter, hardwareCrateService,
 }) {
   // OpenAPI operationId: getAllCrates
   router.get('/', validateJWT, authorizeRequest({ actionId: 'readAny:crates' }), async (req, res, next) => {
@@ -147,11 +148,26 @@ function CrateRouter({
 
     try {
       const crate = await crateService.getCrateById(crateId);
+      const { ready: crateReady } = await hardwareCrateService.getCrateStatus(crateId);
+
+      if (!crateReady) {
+        res.status(503);
+        res.json({
+          entries: [],
+          error: 'Service Unavailable',
+          count: 0,
+        });
+        return;
+      }
+
       await crate.startShipment({
         originAddress,
         destinationAddress,
         trackingNumber,
       });
+      // Maybe hardwareCrateService should be a dependency of CrateService?
+      await hardwareCrateService.shipCrate(crate);
+
       res.set('content-type', 'application/json');
       res.status(201);
       res.json({

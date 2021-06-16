@@ -18,7 +18,7 @@ function IPublisher(myImpl) {
   }
 
   /**
-    @param {Post} post - an instance of the Post class
+    @param {Object} data - the data to be published
     */
   this.publish = myImpl.publish || required;
 

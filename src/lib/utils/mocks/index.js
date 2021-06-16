@@ -4,6 +4,7 @@ const userService = require('./user-service');
 const cache = require('./cache');
 const console = require('./console');
 const publishService = require('./publish-service');
+const hardwareCrateService = require('./hardware-crate-service');
 
 module.exports = {
   mocks: {
@@ -13,6 +14,7 @@ module.exports = {
     repo,
     user,
     publishService,
+    hardwareCrateService,
     userService,
     cache,
     console,

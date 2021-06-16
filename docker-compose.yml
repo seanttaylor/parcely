@@ -12,7 +12,7 @@ services:
       - FIREBASE_CONFIG="{\"projectId\":\"fakeProjectId\",\"storageBucket\":\"fakeProjectId.appspot.com\"}"
       - NODE_ENV=local
     ports:
-      - "3000:3000"
+      - 3000:3000
     volumes:
       - ./:/src
     networks:
@@ -28,7 +28,9 @@ services:
       - FIREBASE_CONFIG="{\"projectId\":\"fakeProjectId\",\"storageBucket\":\"fakeProjectId.appspot.com\"}"
       - NODE_ENV=local
     ports:
-      - "3001:3001"
+      - 3001:3001
+    volumes: 
+      - ../parcely-hw/:/src
     networks:
         - shared_network
 networks:
