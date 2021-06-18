@@ -182,7 +182,7 @@ app.use((err, req, res) => {
 if (process.env.NODE_ENV !== 'ci/cd/test') {
   http.createServer(app).listen(serverPort, () => {
     console.info(
-      'Application listening on port %d (http://localhost:%d)',
+      'parcely_core listening on port %d (http://localhost:%d)',
       serverPort,
       serverPort,
     );

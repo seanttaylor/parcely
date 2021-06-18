@@ -27,11 +27,32 @@ services:
       - GCLOUD_PROJECT=fakeProjectId
       - FIREBASE_CONFIG="{\"projectId\":\"fakeProjectId\",\"storageBucket\":\"fakeProjectId.appspot.com\"}"
       - NODE_ENV=local
+      - KAFKA_HOST_NAME=kafka
     ports:
       - 3001:3001
     volumes: 
       - ../parcely-hw/:/src
     networks:
-        - shared_network
+      - shared_network
+  zookeeper:
+    container_name: zookeeper
+    image: wurstmeister/zookeeper
+    ports:
+      - 2181:2181
+    networks:
+      - shared_network
+  kafka:
+    container_name: kafka
+    image: wurstmeister/kafka
+    depends_on: 
+      - zookeeper
+    ports:
+      - 9092:9092
+    environment: 
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "incoming_crate_telemetry:1:1"
+    networks:
+      - shared_network
 networks:
-    shared_network:
+  shared_network:
