@@ -20,8 +20,8 @@ function onCoords(crate, simulation, eventEmitter) {
         },
         location: {
           coords: {
-            lat: data.lat,
-            lng: data.lng,
+            lat: String(data.lat),
+            lng: String(data.lng),
           },
           zip: faker.address.zipCode(),
         },
@@ -38,7 +38,7 @@ function onCoords(crate, simulation, eventEmitter) {
         },
       });
       try {
-        const eventName = 'SSEPublisher.TelemetryUpdateReceived';
+        const eventName = 'CrateTelemetryUpdateReceived';
         eventEmitter.emit(eventName, [eventName, telemetryUpdate]);
       } catch (e) {
         /* istanbul ignore next */

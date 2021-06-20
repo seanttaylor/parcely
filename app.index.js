@@ -46,6 +46,13 @@ const { InMemoryQueue } = require('./src/lib/queue');
 
 const queueService = new IQueue(new InMemoryQueue());
 
+/** StreamService */
+const IStreamService = require('./src/interfaces/stream');
+const { KafkaStream, MockStream } = require('./src/lib/stream');
+
+const streamServiceImpl = process.env.NODE_ENV === 'ci/cd/test' ? new MockStream() : new KafkaStream();
+const streamService = new IStreamService(streamServiceImpl);
+
 /** AuthService* */
 const { UserAuthService } = require('./src/services/auth');
 
@@ -63,6 +70,7 @@ const crateShipmentRepo = new ICrateShipmentRepository(new CrateShipmentReposito
 const crateService = new CrateService({
   crateRepo,
   crateShipmentRepo,
+  streamService,
   queueService,
   eventEmitter,
   userService,
@@ -95,10 +103,10 @@ const simulatorService = new ShipmentSimulatorService({
 
 /** HardwareCrateService* */
 const IHardwareCrateService = require('./src/interfaces/hardware-crate');
-const remoteHardwareCrateService = require('./src/lib/hardware-crate/remote');
+const RemoteHardwareCrateService = require('./src/lib/hardware-crate/remote');
 const mockHardwareCrateService = require('./src/lib/utils/mocks/hardware-crate-service');
 
-const hardwareCrateServiceImpl = process.env.NODE_ENV === 'ci/cd/test' ? mockHardwareCrateService : remoteHardwareCrateService;
+const hardwareCrateServiceImpl = process.env.NODE_ENV === 'ci/cd/test' ? mockHardwareCrateService : new RemoteHardwareCrateService(config);
 const hardwareCrateService = new IHardwareCrateService(hardwareCrateServiceImpl);
 
 /** *************************************************************************** */

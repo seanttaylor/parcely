@@ -10,6 +10,8 @@ services:
       - COMMIT_HASH=13626a216c8a4b38079d91a3750fa6c435adb0dd
       - GCLOUD_PROJECT=fakeProjectId
       - FIREBASE_CONFIG="{\"projectId\":\"fakeProjectId\",\"storageBucket\":\"fakeProjectId.appspot.com\"}"
+      - PARCELY_HW_API_URL=http://parcely_hw:3001
+      - KAFKA_HOST_NAME=kafka
       - NODE_ENV=local
     ports:
       - 3000:3000
@@ -26,8 +28,8 @@ services:
       - COMMIT_HASH=13626a216c8a4b38079d91a3750fa6c435adb0dd
       - GCLOUD_PROJECT=fakeProjectId
       - FIREBASE_CONFIG="{\"projectId\":\"fakeProjectId\",\"storageBucket\":\"fakeProjectId.appspot.com\"}"
-      - NODE_ENV=local
       - KAFKA_HOST_NAME=kafka
+      - NODE_ENV=local
     ports:
       - 3001:3001
     volumes: 

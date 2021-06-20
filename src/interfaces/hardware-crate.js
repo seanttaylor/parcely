@@ -5,7 +5,7 @@
 * @typedef {Object} IHardwareCrateServiceAPI
 * @property {Function} getCrateStatus - gets the current operational status of
 * a hardware crate
-* @property {Function} shipCrate - sends a control message to a specified
+* @property {Function} activateCrate - sends a control message to a specified
 * hardware crate to begin pushing telemetry data
 */
 
@@ -27,7 +27,7 @@ function IHardwareCrateService(myImpl) {
   /**
     @param {Crate} crate - an instance of Crate
     */
-  this.shipCrate = myImpl.shipCrate || required;
+  this.activateCrate = myImpl.activateCrate || required;
 }
 
 module.exports = IHardwareCrateService;

@@ -1,306 +1,306 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "http://schemas.parcely.com/api/waypoint.json?version=0.0.1",
-    "type": "object",
-    "title": "The Waypoint schema",
-    "description": "The API schema use for validating the creation of new waypoints",
-    "default": {},
-    "examples": [
-        {
-            "timestamp": "2018-06-13T12:11:13+05:30",
-            "telemetry": {
-                "temp": {
-                    "degreesFahrenheit": "68"
-                },
-                "location": {
-                    "coords": {
-                        "lat": 40.7128,
-                        "lng": 74.0060
-                    },
-                    "zip": "40508-0000"
-                },
-                "sensors": {
-                    "moisture": {
-                        "thresholdExceeded": true
-                    },
-                    "thermometer": {
-                        "thresholdExceeded": false
-                    },
-                    "photometer": {
-                        "thresholdExceeded": false
-                    }
-                }
-            }
-        }
-    ],
-    "required": [
-        "crateId",
-        "telemetry"
-    ],
-    "properties": {
-        "crateId": {
-            "$id": "#/properties/crateId",
-            "default": "",
-            "description": "The uuid of the crate registering the waypoint",
-            "examples": [
-                "1f3aaf85-539e-4a0b-9b6b-507ae10d1b9c"
-            ],
-            "title": "The crateId schema",
-            "type": "string"
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://schemas.parcely.com/api/waypoint.json?version=0.0.1",
+  "type": "object",
+  "title": "The Waypoint schema",
+  "description": "The API schema use for validating the creation of new waypoints",
+  "default": {},
+  "examples": [
+    {
+      "timestamp": "2018-06-13T12:11:13+05:30",
+      "telemetry": {
+        "temp": {
+          "degreesFahrenheit": "68"
         },
-        "telemetry": {
-            "$id": "#/properties/telemetry",
-            "default": {},
-            "description": "A summary of all telemetry data gathered from the crate sensor array.",
-            "examples": [
-                {
-                    "temp": {
-                        "degreesFahrenheit": "68"
-                    },
-                    "location": {
-                        "coords": {
-                            "lat": 40.7128,
-                            "lng": 74.0060
-                        },
-                        "zip": "40508-0000"
-                    },
-                    "sensors": {
-                        "moisture": {
-                            "thresholdExceeded": true
-                        },
-                        "thermometer": {
-                            "thresholdExceeded": false
-                        },
-                        "photometer": {
-                            "thresholdExceeded": false
-                        }
-                    }
-                }
-            ],
-            "required": [
-                "temp",
-                "location",
-                "sensors"
-            ],
-            "title": "The telemetry schema",
-            "type": "object",
-            "properties": {
-                "temp": {
-                    "$id": "#/properties/telemetry/properties/temp",
-                    "default": {},
-                    "description": "Summary of crate ambient temperature data.",
-                    "examples": [
-                        {
-                            "degreesFahrenheit": "68"
-                        }
-                    ],
-                    "required": [
-                        "degreesFahrenheit"
-                    ],
-                    "title": "The temp schema",
-                    "type": "object",
-                    "properties": {
-                        "degreesFahrenheit": {
-                            "$id": "#/properties/telemetry/properties/temp/properties/degreesFahrenheit",
-                            "default": "",
-                            "description": "An approximation of the crate current temperature in degrees Fahrenheit.",
-                            "examples": [
-                                "68"
-                            ],
-                            "title": "The degreesFahrenheit schema",
-                            "type": "string"
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "location": {
-                    "$id": "#/properties/telemetry/properties/location",
-                    "type": "object",
-                    "title": "The location schema",
-                    "description": "A summary of location data from the crate sensor array.",
-                    "default": {},
-                    "examples": [
-                        {
-                            "coords": {
-                                "lat": 40.7128,
-                                "lng": 74.0060
-                            },
-                            "zip": "40508-0000"
-                        }
-                    ],
-                    "required": [
-                        "coords",
-                        "zip"
-                    ],
-                    "properties": {
-                        "coords": {
-                            "$id": "#/properties/telemetry/properties/location/properties/coords",
-                            "type": "object",
-                            "title": "The coords schema",
-                            "description": "The current lattitude and longitude coordinates of the crate.",
-                            "default": {},
-                            "examples": [
-                                {
-                                    "lat": 40.7128,
-                                    "lng": 74.0060
-                                }
-                            ],
-                            "required": [
-                                "lat",
-                                "lng"
-                            ],
-                            "properties": {
-                                "lat": {
-                                    "$id": "#/properties/telemetry/properties/location/properties/coords/properties/lat",
-                                    "type": "number",
-                                    "title": "The lat schema",
-                                    "description": "The current lattitude of the crate.",
-                                    "default": "",
-                                    "examples": [
-                                        40.7128
-                                    ]
-                                },
-                                "lng": {
-                                    "$id": "#/properties/telemetry/properties/location/properties/coords/properties/lng",
-                                    "type": "number",
-                                    "title": "The lng schema",
-                                    "description": "The current longtitude of the crate.",
-                                    "default": "",
-                                    "examples": [
-                                        74.0060
-                                    ]
-                                }
-                            },
-                            "additionalProperties": false
-                        },
-                        "zip": {
-                            "$id": "#/properties/telemetry/properties/location/properties/zip",
-                            "type": "string",
-                            "title": "The zip schema",
-                            "description": "The current zip code of the crate.",
-                            "default": "",
-                            "examples": [
-                                "40508-0000"
-                            ]
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "sensors": {
-                    "$id": "#/properties/telemetry/properties/sensors",
-                    "default": {},
-                    "description": "A summary of the status of each sensor in the sensor array.",
-                    "examples": [
-                        {
-                            "moisture": {
-                                "thresholdExceeded": true
-                            },
-                            "thermometer": {
-                                "thresholdExceeded": false
-                            },
-                            "photometer": {
-                                "thresholdExceeded": false
-                            }
-                        }
-                    ],
-                    "required": [
-                        "moisture",
-                        "thermometer",
-                        "photometer"
-                    ],
-                    "title": "The sensors schema",
-                    "type": "object",
-                    "properties": {
-                        "moisture": {
-                            "$id": "#/properties/telemetry/properties/sensors/properties/moisture",
-                            "default": {},
-                            "description": "The moisture sensor data.",
-                            "examples": [
-                                {
-                                    "thresholdExceeded": true
-                                }
-                            ],
-                            "required": [
-                                "thresholdExceeded"
-                            ],
-                            "title": "The moisture schema",
-                            "type": "object",
-                            "properties": {
-                                "thresholdExceeded": {
-                                    "$id": "#/properties/waypoints/items/allOf/0/properties/telemetry/properties/sensors/properties/moisture/properties/thresholdExceeded",
-                                    "default": false,
-                                    "description": "Indicates a value that exceeds the platform threshold for this sensor.",
-                                    "examples": [
-                                        true
-                                    ],
-                                    "title": "The thresholdExceeded schema",
-                                    "type": "boolean"
-                                }
-                            },
-                            "additionalProperties": false
-                        },
-                        "thermometer": {
-                            "$id": "#/properties/telemetry/properties/sensors/properties/thermometer",
-                            "default": {},
-                            "description": "The thermometer sensor data.",
-                            "examples": [
-                                {
-                                    "thresholdExceeded": false
-                                }
-                            ],
-                            "required": [
-                                "thresholdExceeded"
-                            ],
-                            "title": "The thermometer schema",
-                            "type": "object",
-                            "properties": {
-                                "thresholdExceeded": {
-                                    "$id": "#/properties/telemetry/properties/sensors/properties/thermometer/properties/thresholdExceeded",
-                                    "default": false,
-                                    "description": "Indicates a value that exceeds the platform threshold for this sensor.",
-                                    "examples": [
-                                        false
-                                    ],
-                                    "title": "The thresholdExceeded schema",
-                                    "type": "boolean"
-                                }
-                            },
-                            "additionalProperties": false
-                        },
-                        "photometer": {
-                            "$id": "#/properties/w/telemetry/properties/sensors/properties/photometer",
-                            "default": {},
-                            "description": "The photometer sensor data.",
-                            "examples": [
-                                {
-                                    "thresholdExceeded": false
-                                }
-                            ],
-                            "required": [
-                                "thresholdExceeded"
-                            ],
-                            "title": "The photometer schema",
-                            "type": "object",
-                            "properties": {
-                                "thresholdExceeded": {
-                                    "$id": "#/properties/telemetry/properties/sensors/properties/photometer/properties/thresholdExceeded",
-                                    "default": false,
-                                    "description": "Indicates a value that exceeds the platform threshold for this sensor.",
-                                    "examples": [
-                                        false
-                                    ],
-                                    "title": "The thresholdExceeded schema",
-                                    "type": "boolean"
-                                }
-                            },
-                            "additionalProperties": false
-                        }
-                    },
-                    "additionalProperties": false
-                }
-            },
-            "additionalProperties": false
+        "location": {
+          "coords": {
+            "lat": "40.7128",
+            "lng": "74.0060"
+          },
+          "zip": "40508-0000"
+        },
+        "sensors": {
+          "moisture": {
+            "thresholdExceeded": true
+          },
+          "thermometer": {
+            "thresholdExceeded": false
+          },
+          "photometer": {
+            "thresholdExceeded": false
+          }
         }
+      }
+    }
+  ],
+  "required": [
+    "crateId",
+    "telemetry"
+  ],
+  "properties": {
+    "crateId": {
+      "$id": "#/properties/crateId",
+      "default": "",
+      "description": "The uuid of the crate registering the waypoint",
+      "examples": [
+        "1f3aaf85-539e-4a0b-9b6b-507ae10d1b9c"
+      ],
+      "title": "The crateId schema",
+      "type": "string"
     },
-    "additionalProperties": false
+    "telemetry": {
+      "$id": "#/properties/telemetry",
+      "default": {},
+      "description": "A summary of all telemetry data gathered from the crate sensor array.",
+      "examples": [
+        {
+          "temp": {
+            "degreesFahrenheit": "68"
+          },
+          "location": {
+            "coords": {
+              "lat": "40.7128",
+              "lng": "74.0060"
+            },
+            "zip": "40508-0000"
+          },
+          "sensors": {
+            "moisture": {
+              "thresholdExceeded": true
+            },
+            "thermometer": {
+              "thresholdExceeded": false
+            },
+            "photometer": {
+              "thresholdExceeded": false
+            }
+          }
+        }
+      ],
+      "required": [
+        "temp",
+        "location",
+        "sensors"
+      ],
+      "title": "The telemetry schema",
+      "type": "object",
+      "properties": {
+        "temp": {
+          "$id": "#/properties/telemetry/properties/temp",
+          "default": {},
+          "description": "Summary of crate ambient temperature data.",
+          "examples": [
+            {
+              "degreesFahrenheit": "68"
+            }
+          ],
+          "required": [
+            "degreesFahrenheit"
+          ],
+          "title": "The temp schema",
+          "type": "object",
+          "properties": {
+            "degreesFahrenheit": {
+              "$id": "#/properties/telemetry/properties/temp/properties/degreesFahrenheit",
+              "default": "",
+              "description": "An approximation of the crate current temperature in degrees Fahrenheit.",
+              "examples": [
+                "68"
+              ],
+              "title": "The degreesFahrenheit schema",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "location": {
+          "$id": "#/properties/telemetry/properties/location",
+          "type": "object",
+          "title": "The location schema",
+          "description": "A summary of location data from the crate sensor array.",
+          "default": {},
+          "examples": [
+            {
+              "coords": {
+                "lat": "40.7128",
+                "lng": "74.0060"
+              },
+              "zip": "40508-0000"
+            }
+          ],
+          "required": [
+            "coords",
+            "zip"
+          ],
+          "properties": {
+            "coords": {
+              "$id": "#/properties/telemetry/properties/location/properties/coords",
+              "type": "object",
+              "title": "The coords schema",
+              "description": "The current lattitude and longitude coordinates of the crate.",
+              "default": {},
+              "examples": [
+                {
+                  "lat": "40.7128",
+                  "lng": "74.0060"
+                }
+              ],
+              "required": [
+                "lat",
+                "lng"
+              ],
+              "properties": {
+                "lat": {
+                  "$id": "#/properties/telemetry/properties/location/properties/coords/properties/lat",
+                  "type": "string",
+                  "title": "The lat schema",
+                  "description": "The current lattitude of the crate.",
+                  "default": "",
+                  "examples": [
+                    "40.7128"
+                  ]
+                },
+                "lng": {
+                  "$id": "#/properties/telemetry/properties/location/properties/coords/properties/lng",
+                  "type": "string",
+                  "title": "The lng schema",
+                  "description": "The current longtitude of the crate.",
+                  "default": "",
+                  "examples": [
+                    "74.0060"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
+            "zip": {
+              "$id": "#/properties/telemetry/properties/location/properties/zip",
+              "type": "string",
+              "title": "The zip schema",
+              "description": "The current zip code of the crate.",
+              "default": "",
+              "examples": [
+                "40508-0000"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "sensors": {
+          "$id": "#/properties/telemetry/properties/sensors",
+          "default": {},
+          "description": "A summary of the status of each sensor in the sensor array.",
+          "examples": [
+            {
+              "moisture": {
+                "thresholdExceeded": true
+              },
+              "thermometer": {
+                "thresholdExceeded": false
+              },
+              "photometer": {
+                "thresholdExceeded": false
+              }
+            }
+          ],
+          "required": [
+            "moisture",
+            "thermometer",
+            "photometer"
+          ],
+          "title": "The sensors schema",
+          "type": "object",
+          "properties": {
+            "moisture": {
+              "$id": "#/properties/telemetry/properties/sensors/properties/moisture",
+              "default": {},
+              "description": "The moisture sensor data.",
+              "examples": [
+                {
+                  "thresholdExceeded": true
+                }
+              ],
+              "required": [
+                "thresholdExceeded"
+              ],
+              "title": "The moisture schema",
+              "type": "object",
+              "properties": {
+                "thresholdExceeded": {
+                  "$id": "#/properties/waypoints/items/allOf/0/properties/telemetry/properties/sensors/properties/moisture/properties/thresholdExceeded",
+                  "default": false,
+                  "description": "Indicates a value that exceeds the platform threshold for this sensor.",
+                  "examples": [
+                    true
+                  ],
+                  "title": "The thresholdExceeded schema",
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            },
+            "thermometer": {
+              "$id": "#/properties/telemetry/properties/sensors/properties/thermometer",
+              "default": {},
+              "description": "The thermometer sensor data.",
+              "examples": [
+                {
+                  "thresholdExceeded": false
+                }
+              ],
+              "required": [
+                "thresholdExceeded"
+              ],
+              "title": "The thermometer schema",
+              "type": "object",
+              "properties": {
+                "thresholdExceeded": {
+                  "$id": "#/properties/telemetry/properties/sensors/properties/thermometer/properties/thresholdExceeded",
+                  "default": false,
+                  "description": "Indicates a value that exceeds the platform threshold for this sensor.",
+                  "examples": [
+                    false
+                  ],
+                  "title": "The thresholdExceeded schema",
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            },
+            "photometer": {
+              "$id": "#/properties/w/telemetry/properties/sensors/properties/photometer",
+              "default": {},
+              "description": "The photometer sensor data.",
+              "examples": [
+                {
+                  "thresholdExceeded": false
+                }
+              ],
+              "required": [
+                "thresholdExceeded"
+              ],
+              "title": "The photometer schema",
+              "type": "object",
+              "properties": {
+                "thresholdExceeded": {
+                  "$id": "#/properties/telemetry/properties/sensors/properties/photometer/properties/thresholdExceeded",
+                  "default": false,
+                  "description": "Indicates a value that exceeds the platform threshold for this sensor.",
+                  "examples": [
+                    false
+                  ],
+                  "title": "The thresholdExceeded schema",
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
 }

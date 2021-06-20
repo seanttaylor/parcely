@@ -207,8 +207,8 @@ module.exports = {
             },
             location: {
               coords: {
-                lat: 40.7128,
-                lng: 74.0060,
+                lat: '40.7128',
+                lng: '74.0060',
               },
               zip: '40508-0000',
             },
