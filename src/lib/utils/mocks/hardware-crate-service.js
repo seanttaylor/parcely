@@ -44,7 +44,7 @@ const mockHardwareCrateServiceImplementation = {
   getCrateStatus(crateId) {
     return Object.assign(crateStatus, { id: crateId });
   },
-  shipCrate(crate) {
+  activateCrate(crate) {
     const shipmentReceipt = {
       date: new Date().toISOString(),
       crateId: crate.id,

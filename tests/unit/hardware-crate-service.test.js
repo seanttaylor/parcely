@@ -16,7 +16,7 @@ test('Should be able to get a diagnostic report (i.e. status) of a specified har
 
 test('Should be able to get confirmation that a hardware crate has started shipment', async () => {
   const mockCrate = {id: 'foobar'};
-  const response = await hardwareCrateService.shipCrate(mockCrate);
+  const response = await hardwareCrateService.activateCrate(mockCrate);
   expect(typeof response === 'object').toBe(true);
   expect(response.crateId === mockCrate.id).toBe(true);
   expect(response.date).toBeTruthy();

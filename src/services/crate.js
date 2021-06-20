@@ -57,18 +57,18 @@ function Crate({
   };
 
   /**
-    Saves a new crate to the data store
+    * Saves a new crate to the data store
     @returns {String} - a uuid for the new crate
     */
   this.save = async function () {
     const crateDTO = new CrateDTO(this._data);
     const crate = await this._repo.crate.create(crateDTO);
-    eventEmitter.emit('Crate.StorageBucketService.NewCrate', crate.id);
+    eventEmitter.emit('NewCrateCreated', crate.id);
     return crate.id;
   };
 
   /**
-    Associates the crate with a recipient user in the data store
+    * Associates the crate with a recipient user in the data store
     @param {String} recipientEmail - an email address for the recipient user
     */
   this.setRecipient = async function (recipientEmail) {
@@ -216,7 +216,8 @@ function Crate({
 * @typedef {Object} CrateShipment
 * @property {String} id - the uuid of the CrateShipment
 * @property {Object} _data - the CrateShipment data
-* @property {Object} _repo - the repository instance associated with this shipment
+* @property {Object} _repo - the repository instance associated with this
+* shipment
 */
 
 /**
@@ -306,7 +307,7 @@ function CrateShipment(repo, crateShipmentDTO) {
 /**
  * @param {Object} crateRepo - the crates repository
  * @param {Object} crateShipmentRepo - the crate_shipments repository
- * @param {QueueService} queueService - an instance of QueueService
+ * @param {StreamService} streamService - an instance of StreamService
  * @param {StorageBucketService} storageBucketService - an instance of StorageBucketService
  * @param {UserService} userService - an instance of UserService
  * @param {EventEmitter} eventEmitter - an instance of EventEmitter
@@ -314,7 +315,7 @@ function CrateShipment(repo, crateShipmentDTO) {
 function CrateService({
   crateRepo,
   crateShipmentRepo,
-  queueService,
+  streamService,
   storageBucketService,
   userService,
   eventEmitter,
@@ -324,18 +325,43 @@ function CrateService({
     crateShipment: crateShipmentRepo,
   };
 
-  eventEmitter.on('CrateAPI.QueueService.TelemetryUpdateReceived', async () => {
+  (async function (currentFnContext) {
+    try {
+      await streamService.connect();
+      await streamService.subscribe({
+        topic: 'incoming_crate_telemetry',
+        onMessageFn: onMessageFn.bind(currentFnContext),
+      });
+    } catch (e) {
+      /* istanbul ignore next */
+      console.error(e.message);
+    }
+  }(this));
+
+  // This and the preceding are ignored because the are related to pushing data to the Kafka stream (i.e. a side-effect)
+  /* istanbul ignore next */
+  async function onMessageFn({ message }) {
+    const { crateId, telemetry } = JSON.parse(message.value.toString());
+
+    const crate = await this.getCrateById(crateId);
+    const telemetryUpdate = await crate.pushTelemetry(telemetry);
+    const eventName = 'CrateTelemetryUpdateReceived';
+    eventEmitter.emit(eventName, [eventName, telemetryUpdate]);
+  }
+
+  /* eventEmitter.on('CrateTelemetryUpdateReceived', async () => {
     const messageList = await queueService.dequeue();
 
     messageList.map(async ({ crateId, telemetry }) => {
       const crate = await this.getCrateById(crateId);
       const telemetryUpdate = await crate.pushTelemetry(telemetry);
-      const eventName = 'SSEPublisher.TelemetryUpdateReceived';
+      const eventName = 'CrateTelemetryUpdateReceived';
       eventEmitter.emit(eventName, [eventName, telemetryUpdate]);
     });
   });
+  */
 
-  eventEmitter.on('Crate.StorageBucketService.NewCrate', async (crateId) => {
+  eventEmitter.on('NewCrateCreated', async (crateId) => {
     const dataURI = await QRCode.toDataURL(crateId);
     const QRCodeImage = Buffer.from(dataURI.split(',')[1], 'base64');
 

@@ -148,8 +148,8 @@ describe('CrateAccess', () => {
             },
             location: {
               coords: {
-                lat: Number(faker.address.latitude()),
-                lng: Number(faker.address.longitude()),
+                lat: faker.address.latitude(),
+                lng: faker.address.longitude(),
               },
               zip: faker.address.zipCode(),
             },
@@ -658,6 +658,7 @@ describe('ShipmentManagement', () => {
     expect(res8.body.entries[0].data.status[0] === 'complete').toBe(true);
   });
 
+ /* Commented because the '/rt-updates' endpoint is DEPRECATED 
   test('Platform should be able to ingest real-time updates from hardware crates', async () => {
     const res1 = await request.post('/api/v1/users/token')
       .send({
@@ -715,7 +716,7 @@ describe('ShipmentManagement', () => {
 
     const { shipmentId } = res5.body.entries[0].data;
 
-    const res6 = await request.post('/api/v1/crates/telemetry/rt-updates')
+    await request.post('/api/v1/crates/telemetry/rt-updates')
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
         crateId,
@@ -725,8 +726,8 @@ describe('ShipmentManagement', () => {
           },
           location: {
             coords: {
-              lat: Number(faker.address.latitude()),
-              lng: Number(faker.address.longitude()),
+              lat: faker.address.latitude(),
+              lng: faker.address.longitude(),
             },
             zip: faker.address.zipCode(),
           },
@@ -753,4 +754,5 @@ describe('ShipmentManagement', () => {
     expect(res7.body.entries[0].data.waypoints.length === 1).toBe(true);
     expect(res7.body.count === 1).toBe(true);
   });
+  */
 });

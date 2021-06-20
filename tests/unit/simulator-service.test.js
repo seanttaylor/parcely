@@ -43,10 +43,10 @@ const IStorageBucket = require('../../src/interfaces/storage-bucket');
 const { InMemoryStorageBucket } = require('../../src/lib/storage');
 const testStorageBucketService = new IStorageBucket(new InMemoryStorageBucket());
 
-/** Queue */
-const IQueue = require('../../src/interfaces/queue');
-const { InMemoryQueue } = require('../../src/lib/queue');
-const testQueueService = new IQueue(new InMemoryQueue());
+/** StreamService */
+const IStreamService = require('../../src/interfaces/stream');
+const { MockStream } = require('../../src/lib/stream');
+const streamService = new IStreamService(new MockStream());
 
 
 
@@ -54,7 +54,7 @@ const { ShipmentSimulatorService } = require('../../src/services/simulator');
 const testCrateService = new CrateService({
     crateRepo: testCrateRepo,
     crateShipmentRepo: testCrateShipmentRepo,
-    queueService: testQueueService,
+    streamService,
     storageBucketService: testStorageBucketService,
     eventEmitter,
     userService: testUserService

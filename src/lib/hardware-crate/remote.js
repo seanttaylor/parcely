@@ -16,7 +16,7 @@ function RemoteHardwareCrateService(config) {
   */
 
   this.getCrateStatus = async function (crateId) {
-    const response = await fetch(`${PARCELY_HW_API_URL}/${crateId}/status`, {
+    const response = await fetch(`${PARCELY_HW_API_URL}/api/v1/hw-crates/${crateId}/status`, {
       method: 'GET',
       headers: {
         'x-api-key': 'fooBar',
@@ -26,8 +26,10 @@ function RemoteHardwareCrateService(config) {
     if (response.status > 300) {
       return { ready: false };
     }
+    const responseJSON = await response.json();
+    const [hardwareCrateData] = responseJSON.entries;
 
-    return response.json();
+    return hardwareCrateData;
   };
 
   /**
@@ -36,17 +38,18 @@ function RemoteHardwareCrateService(config) {
    * @returns {Object}
   */
 
-  this.shipCrate = async function (crate) {
-    const response = await fetch(`${PARCELY_HW_API_URL}/${crate.id}/ship`, {
+  this.activateCrate = async function (crate) {
+    const response = await fetch(`${PARCELY_HW_API_URL}/api/v1/hw-crates/${crate.id}/activate`, {
       method: 'POST',
       headers: {
         'x-api-key': 'fooBar',
+        'content-type': 'application/json',
       },
       body: JSON.stringify(crate),
     });
 
     if (response.status > 300) {
-      throw Error(`HardwareCrateServiceError.CannotShipHardwareCrate => ${response.statusText}`);
+      throw Error(`HardwareCrateServiceError.CannotActivateHardwareCrate => ${response.statusText}`);
     }
 
     return response.json();

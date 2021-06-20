@@ -16,14 +16,14 @@ const ssePublishService = new IPublisher(new SSEPublisher(mocks.mockImpl.publish
 describe('Server-Sent Event Publisher', () => {
   test('Completes initialization of the SSE publisher', () => {
     ssePublishService.init(() => mocks.mockImpl.publishService.onPublishFn());
-    ssePublishService.publish(['SSEPublisher.TelemetryUpdateReceived', { toJSON: () => null }]);
+    ssePublishService.publish(['CrateTelemetryUpdateReceived', { toJSON: () => null }]);
 
     expect(mocks.mockImpl.publishService.calledMethods.onPublishFn).toBe(true);
   });
 
   test('Should NOT complete initialization of the SSE publisher without an onPublish function', () => {
     ssePublishService.init();
-    ssePublishService.publish(['SSEPublisher.TelemetryUpdateReceived', { toJSON: () => null }]);
+    ssePublishService.publish(['CrateTelemetryUpdateReceived', { toJSON: () => null }]);
 
     expect(mocks.mockImpl.publishService.calledMethods.onPublishFnCalledWithArg).toBe(false);
   });

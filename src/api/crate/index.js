@@ -166,7 +166,7 @@ function CrateRouter({
         trackingNumber,
       });
       // Maybe hardwareCrateService should be a dependency of CrateService?
-      await hardwareCrateService.shipCrate(crate);
+      await hardwareCrateService.activateCrate(crate);
 
       res.set('content-type', 'application/json');
       res.status(201);
@@ -221,13 +221,14 @@ function CrateRouter({
   });
 
   // OpenAPI operationId: receiveRealtimeUpdate
+  // DEPRECATED
   router.post('/telemetry/rt-updates', validateRequest(addShipmentWaypointSchema), validateJWT, authorizeRequest({ actionId: 'updateAny:crates' }), async (req, res, next) => {
     const { crateId, telemetry } = req.body;
 
     try {
       res.set('content-type', 'application/json');
       await queueService.enqueue({ crateId, telemetry });
-      eventEmitter.emit('CrateAPI.QueueService.TelemetryUpdateReceived');
+      eventEmitter.emit('CrateTelemetryUpdateReceived');
       res.status(204);
       res.send();
     } catch (e) {

@@ -33,7 +33,7 @@ function SSEPublisher(eventEmitter) {
     /* These lines are ignored because a connection to the server needs to be kept alive in order to successfully trigger the event. Inside of a test this would cause the test to hang indefinitely
     */
     /* istanbul ignore next */
-    eventEmitter.on('SSEPublisher.TelemetryUpdateReceived', this.publish);
+    eventEmitter.on('CrateTelemetryUpdateReceived', this.publish);
   }
 
   /**

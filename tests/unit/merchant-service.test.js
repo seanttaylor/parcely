@@ -20,7 +20,9 @@ const ICrateShipmentRepository = require('../../src/interfaces/shipment-reposito
 const IMerchantRepository = require('../../src/interfaces/merchant-repository');
 const MerchantRepository = require('../../src/lib/repository/merchant');
 const IStorageBucket = require('../../src/interfaces/storage-bucket');
-const {InMemoryStorageBucket} = require('../../src/lib/storage');
+const { InMemoryStorageBucket } = require('../../src/lib/storage');
+const IStreamService  = require('../../src/interfaces/stream');
+const { MockStream } = require('../../src/lib/stream');
 
 const testStorageBucketService = new IStorageBucket(new InMemoryStorageBucket())
 
@@ -32,6 +34,7 @@ const testCrateShipmentRepo = new ICrateShipmentRepository(new CrateShipmentRepo
 const testCrateService = new CrateService({
   crateRepo: testCrateRepo,
   crateShipmentRepo: testCrateShipmentRepo,
+  streamService: new IStreamService(new MockStream()),
   eventEmitter: new events.EventEmitter(),
   storageBucketService: testStorageBucketService
 });
@@ -314,8 +317,8 @@ describe('MerchantManagement', () => {
         },
         location: {
           coords: {
-            lat: Number(faker.address.latitude()),
-            lng: Number(faker.address.longitude()),
+            lat: faker.address.latitude(),
+            lng: faker.address.longitude(),
           },
           zip: faker.address.zipCode(),
         },
@@ -395,8 +398,8 @@ describe('MerchantManagement', () => {
         },
         location: {
           coords: {
-            lat: Number(faker.address.latitude()),
-            lng: Number(faker.address.longitude()),
+            lat: faker.address.latitude(),
+            lng: faker.address.longitude(),
           },
           zip: faker.address.zipCode(),
         },

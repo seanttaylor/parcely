@@ -159,7 +159,7 @@ function Application() {
     });
     app.config.sse = sse;
 
-    sse.addEventListener('SSEPublisher.TelemetryUpdateReceived', onTelemetryEvent);
+    sse.addEventListener('CrateTelemetryUpdateReceived', onTelemetryEvent);
 
     simulationSelector.node.addEventListener('change', onSelectSimulation);
     createSimButton.node.addEventListener('click', onClickCreateSimulation);

@@ -32,12 +32,16 @@ const IStorageBucket = require('../../src/interfaces/storage-bucket');
 const {InMemoryStorageBucket} = require('../../src/lib/storage');
 const testStorageBucketService = new IStorageBucket(new InMemoryStorageBucket())
 
+const IStreamService  = require('../../src/interfaces/stream');
+const { MockStream } = require('../../src/lib/stream');
+
 const testCrateRepo = new ICrateRepository(new CrateRepository(testDbConnector));
 const testCrateShipmentRepo = new ICrateShipmentRepository(new CrateShipmentRepository(testDbConnector));
 const testCrateService = new CrateService({
   crateRepo: testCrateRepo,
   crateShipmentRepo: testCrateShipmentRepo,
   eventEmitter: new events.EventEmitter(),
+  streamService: new IStreamService(new MockStream()),
   storageBucketService: testStorageBucketService,
   userService: testUserService
 });
@@ -118,8 +122,8 @@ describe('CrateManagement', () => {
       },
       location: {
         coords: {
-          lat: Number(faker.address.latitude()),
-          lng: Number(faker.address.longitude()),
+          lat: faker.address.latitude(),
+          lng: faker.address.longitude(),
         },
         zip: faker.address.zipCode(),
       },
@@ -180,8 +184,8 @@ describe('CrateManagement', () => {
       },
       location: {
         coords: {
-          lat: Number(faker.address.latitude()),
-          lng: Number(faker.address.longitude()),
+          lat: faker.address.latitude(),
+          lng: faker.address.longitude(),
         },
         zip: faker.address.zipCode(),
       },
@@ -376,8 +380,8 @@ describe('ShipmentManagement', () => {
       },
       location: {
         coords: {
-          lat: Number(faker.address.latitude()),
-          lng: Number(faker.address.longitude()),
+          lat: faker.address.latitude(),
+          lng: faker.address.longitude(),
         },
         zip: faker.address.zipCode(),
       },
@@ -437,8 +441,8 @@ describe('ShipmentManagement', () => {
       },
       location: {
         coords: {
-          lat: Number(faker.address.latitude()),
-          lng: Number(faker.address.longitude()),
+          lat: faker.address.latitude(),
+          lng: faker.address.longitude(),
         },
         zip: faker.address.zipCode(),
       },
@@ -499,8 +503,8 @@ describe('ShipmentManagement', () => {
       },
       location: {
         coords: {
-          lat: Number(faker.address.latitude()),
-          lng: Number(faker.address.longitude()),
+          lat: faker.address.latitude(),
+          lng: faker.address.longitude(),
         },
         zip: faker.address.zipCode(),
       },
@@ -559,8 +563,8 @@ describe('ShipmentManagement', () => {
       },
       location: {
         coords: {
-          lat: Number(faker.address.latitude()),
-          lng: Number(faker.address.longitude()),
+          lat: faker.address.latitude(),
+          lng: faker.address.longitude(),
         },
         zip: faker.address.zipCode(),
       },
@@ -622,8 +626,8 @@ describe('ShipmentManagement', () => {
       },
       location: {
         coords: {
-          lat: Number(faker.address.latitude()),
-          lng: Number(faker.address.longitude()),
+          lat: faker.address.latitude(),
+          lng: faker.address.longitude(),
         },
         zip: faker.address.zipCode(),
       },
@@ -753,8 +757,8 @@ describe('ShipmentManagement', () => {
       },
       location: {
         coords: {
-          lat: Number(faker.address.latitude()),
-          lng: Number(faker.address.longitude()),
+          lat: faker.address.latitude(),
+          lng: faker.address.longitude(),
         },
         zip: faker.address.zipCode(),
       },

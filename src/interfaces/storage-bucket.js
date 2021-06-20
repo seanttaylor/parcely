@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 /**
-* An object having the IStorageBucket API; a set of methods for managing storage bucktes
+* An object having the IStorageBucket API; a set of methods for managing storage buckets
 * @typedef {Object} IStorageBucketAPI
 * @property {Function} create - creates a new storage bucket
 * @property {Function} listBuckets - list all buckets
