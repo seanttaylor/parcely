@@ -73,6 +73,7 @@ function CrateRouter({
     try {
       const crate = await crateService.createCrate(crateData);
       await crate.save();
+      await hardwareCrateService.registerCrate(crate.id);
       res.set('content-type', 'application/json');
       res.status(201);
       res.json({
@@ -148,7 +149,8 @@ function CrateRouter({
 
     try {
       const crate = await crateService.getCrateById(crateId);
-      const { ready: crateReady } = await hardwareCrateService.getCrateStatus(crateId);
+      const crateStatus = await hardwareCrateService.getCrateStatus(crateId);
+      const [crateReady] = crateStatus.ready;
 
       if (!crateReady) {
         res.status(503);
@@ -166,7 +168,7 @@ function CrateRouter({
         trackingNumber,
       });
       // Maybe hardwareCrateService should be a dependency of CrateService?
-      await hardwareCrateService.activateCrate(crate);
+      await hardwareCrateService.activateCrate(crate.id);
 
       res.set('content-type', 'application/json');
       res.status(201);

@@ -28,6 +28,11 @@ function IHardwareCrateService(myImpl) {
     @param {Crate} crate - an instance of Crate
     */
   this.activateCrate = myImpl.activateCrate || required;
+
+  /**
+    @param {String} id - uuid of a crate
+    */
+  this.registerCrate = myImpl.registerCrate || required;
 }
 
 module.exports = IHardwareCrateService;
