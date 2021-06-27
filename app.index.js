@@ -177,7 +177,7 @@ app.use('/status', StatusAPI(config));
 
 app.use((req, res) => {
   // console.error(`Error 404 on ${req.url}.`);
-  res.status(404).send({ status: 404, error: 'NOT FOUND' });
+  res.status(404).send({ status: 404, error: 'Not Found' });
 });
 
 app.use((err, req, res) => {
