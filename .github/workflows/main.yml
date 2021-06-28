@@ -36,36 +36,37 @@ jobs:
           GCLOUD_PROJECT: fakeProjectId
           FIREBASE_CONFIG: "{\"projectId\":\"fakeProjectId\",\"storageBucket\":\"fakeProjectId.appspot.com\"}"
       
-      - name: "[STEP] Set deployment environment variables"
-        uses: w9jds/firebase-action@master
+      - name: "[STEP] Configure AWS Credentials"
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          args: functions:config:set env.commit_hash=${{ env.GIT_SHA_SHORT }}
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
-      - name: "[STEP] Deploy to Firebase"
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only functions
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      - name: "[STEP] Login to Amazon ECR"
+        uses: aws-actions/amazon-ecr-login@v1
+        id: login-ecr
       
-      #- name: "[STEP] Configure AWS Credentials"
-      #  uses: aws-actions/configure-aws-credentials@v1
+      - name: "[STEP] Build Docker image/push to AWS ECR"
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: parcely/core
+        run: |
+          echo "ECR_REGISTRY=$ECR_REGISTRY" >> $ECR_REGISTRY
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ env.GIT_SHA_SHORT }} .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:"${{ env.GIT_SHA_SHORT }}"
+      
+      #- name: "[STEP] Set deployment environment variables"
+      #  uses: w9jds/firebase-action@master
       #  with:
-      #    aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #    aws-region: us-east-1
-
-      #- name: "[STEP] Login to Amazon ECR"
-      #  uses: aws-actions/amazon-ecr-login@v1
-      #  id: login-ecr
-      
-      #- name: "[STEP] Build Docker image/push to AWS ECR"
+      #    args: functions:config:set env.commit_hash=${{ env.GIT_SHA_SHORT }}
       #  env:
-      #    ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-      #    ECR_REPOSITORY: parcely/core
-      #  run: |
-      #    echo "ECR_REGISTRY=$ECR_REGISTRY" >> $ECR_REGISTRY
-      #    docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ env.GIT_SHA_SHORT }} .
-      #    docker push $ECR_REGISTRY/$ECR_REPOSITORY:"${{ env.GIT_SHA_SHORT }}"
+      #    FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
+      #- name: "[STEP] Deploy to Firebase"
+      #  uses: w9jds/firebase-action@master
+      #  with:
+      #    args: deploy --only functions
+      #  env:
+      #    FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+     

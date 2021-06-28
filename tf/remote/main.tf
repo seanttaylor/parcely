@@ -211,11 +211,9 @@ resource "aws_alb_listener" "parcely_core_http" {
   }
 }
 
-# This is the role under which ECS will execute our task. This role becomes more important
-# as we add integrations with other AWS services later on.
+# This is the role under which ECS will execute our task. This role becomes more important as we add integrations with other AWS services later on.
 
-# The assume_role_policy field works with the following aws_iam_policy_document to allow
-# ECS tasks to assume this role we're creating.
+# The assume_role_policy field works with the following aws_iam_policy_document to allow ECS tasks to assume this role we're creating.
 resource "aws_iam_role" "default-task-execution-role" {
   name = "default-task-execution-role"
   assume_role_policy = data.aws_iam_policy_document.ecs-task-assume-role.json

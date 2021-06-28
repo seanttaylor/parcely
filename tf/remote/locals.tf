@@ -1,6 +1,6 @@
 locals {
   appOwner                      = "parcely-core"
-  categoryId                    = "services.core.app"
+  categoryId                    = "services.core"
   team                          = "platform"
   vpcSlug                       = "platform-vpc"
   databaseName                  = "muenster"
