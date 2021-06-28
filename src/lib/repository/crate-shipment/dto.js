@@ -1,18 +1,19 @@
 /* istanbul ignore file */
 
-const Ajv = require("ajv");
+const Ajv = require('ajv');
+
 const ajv = new Ajv();
-const crateShipmentSchema = require("../../../schemas/shipment.json");
+const crateShipmentSchema = require('../../../schemas/shipment.json');
+
 const crateShipmentSchemaValidation = ajv.compile(crateShipmentSchema);
 const crateTelemetrySchema = crateShipmentSchema.properties.waypoints;
 const crateTelemetrySchemaValidation = ajv.compile(crateTelemetrySchema);
 
-
 /**
  * @typedef {Object} CrateShipmentDTO
- * @property {String} id 
- * @property {String} crateId 
- * @property {String} tripId 
+ * @property {String} id
+ * @property {String} crateId
+ * @property {String} tripId
  * @property {String} departureTimestamp
  * @property {String} arrivalTimestamp
  * @property {String} departureZip
@@ -27,8 +28,10 @@ const crateTelemetrySchemaValidation = ajv.compile(crateTelemetrySchema);
  */
 
 /**
- * @param {String} id - uuid for a trip
- * @param {String} crateId - uuid for a crateId
+ * @param {String} id - uuid for a crate shipment
+ * @param {String} crateId - uuid for a crate
+ * @param {String} merchantId - uuid for a merchant
+ * @param {String} recipientId - uuid for a user
  * @param {String} departureTimestamp - datetime of crate departure (i.e. when the crate trip is initialized)
  * @param {String} arrivalTimestamp - datetime of crate arrival (i.e. when crate trip is concluded)
  * @param {String} departureZip - departue zip code
@@ -44,42 +47,42 @@ const crateTelemetrySchemaValidation = ajv.compile(crateTelemetrySchema);
  * @returns {CrateShipmentDTO}
  */
 
-function CrateShipmentDTO({id, crateId, recipientId, departureTimestamp, arrivalTimestamp=null, trackingNumber, departureZip, arrivalZip, waypoints=[], createdDate=new Date().toISOString(), lastModified=null, tripLengthMiles=null, status=["inProgress"], originAddress, destinationAddress}) {
+function CrateShipmentDTO({
+  id, crateId, recipientEmail, merchantId, departureTimestamp, trackingNumber, departureZip, arrivalZip, originAddress, destinationAddress, arrivalTimestamp = null, recipientId = null, waypoints = [], createdDate = new Date().toISOString(), lastModified = null, tripLengthMiles = null, status = ['inProgress'],
+}) {
+  const crateShipmentData = {
+    id,
+    crateId,
+    recipientId,
+    recipientEmail,
+    merchantId,
+    departureTimestamp,
+    arrivalTimestamp,
+    trackingNumber,
+    departureZip,
+    arrivalZip,
+    waypoints,
+    createdDate,
+    lastModified,
+    tripLengthMiles,
+    originAddress,
+    destinationAddress,
+    status,
+  };
 
-    const crateShipmentData = {
-      id,
-      crateId,
-      recipientId,
-      departureTimestamp, 
-      arrivalTimestamp, 
-      trackingNumber, 
-      departureZip, 
-      arrivalZip,
-      waypoints, 
-      createdDate, 
-      lastModified,
-      tripLengthMiles,
-      originAddress, 
-      destinationAddress,
-      status
-    };
-  
-
-  if(!crateShipmentSchemaValidation(crateShipmentData)) {
+  if (!crateShipmentSchemaValidation(crateShipmentData)) {
     throw new Error(`CrateShipmentDTOError/InvalidCrateShipmentDTO => ${JSON.stringify(crateShipmentSchemaValidation.errors, null, 2)}`);
   }
 
-  this.value = function() {
+  this.value = function () {
     return crateShipmentData;
-  }
-
+  };
 }
-
 
 /**
  * @typedef {Object} CrateTelemetryDTO
- * @property {String} timestamp 
- * @property {Object} telemetry 
+ * @property {String} timestamp
+ * @property {Object} telemetry
  */
 
 /**
@@ -88,25 +91,22 @@ function CrateShipmentDTO({id, crateId, recipientId, departureTimestamp, arrival
  * @returns {CrateTelemetry}
  */
 
-function CrateTelemetryDTO({timestamp, telemetry}) {
-    
-    const crateTelemetryData = {
-        timestamp,
-        telemetry
-    };
-        
-   
-  if(!crateTelemetrySchemaValidation([crateTelemetryData])) {
+function CrateTelemetryDTO({ timestamp, telemetry }) {
+  const crateTelemetryData = {
+    timestamp,
+    telemetry,
+  };
+
+  if (!crateTelemetrySchemaValidation([crateTelemetryData])) {
     throw new Error(`CrateTelemetryDTOError/InvalidCrateTelemetryDTO => ${JSON.stringify(crateTelemetrySchemaValidation.errors, null, 2)}`);
   }
 
-  this.value = function() {
+  this.value = function () {
     return crateTelemetryData;
-  }
-
+  };
 }
 
 module.exports = {
-    CrateShipmentDTO,
-    CrateTelemetryDTO
+  CrateShipmentDTO,
+  CrateTelemetryDTO,
 };

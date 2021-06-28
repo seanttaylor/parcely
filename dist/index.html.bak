@@ -1,0 +1,88 @@
+<html>
+   <head>
+      <title>Parcely | Simple real-time logistics</title>
+      <link rel="stylesheet" href="./css/main.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+   </head>
+   <body id="parcely" style="margin: 0px;">
+      <div class="header">
+         <a href="#default" class="logo">Parcely.Cerebro</a>
+         <div class="header-right">
+            <p>v0.0.1</p>
+         </div>
+      </div><!---.header--->
+      <div>
+         <div class="columns">
+            <div id="simulation-summary" class="column is-one-fifth">
+               <div class="sidenav">
+                  <form action="" id="simulation-metadata" style="margin: 15px;">
+                     <label for="simulations">Simulation name:</label>
+                     <br>
+                     <select name="cars" id="simulation-selector">
+                        <option value="---" selected >---</option>
+                        <option value="">breezy-badger</option>
+                        <option value="">tawny-tiger</option>
+                        <option value="">cranky-canine</option>
+                        <option value="">affable-aardvark</option>
+                     </select>
+                     <br><br>
+                     <label for="simuluation-id">id:</label>
+                     <br>
+                     <input type="text" id="simulation-id" value="1f06fa74-88d6-4c81-80fc-9978118d99e2" name="simulation-id" style="width: 296px;" disabled>
+                     <br>
+                     <br>
+                     <label for="created-date">createdDate:</label>
+                     <br>
+                     <input type="text" id="created-date" name="created-date" value="2021-05-03T17:45:09.648Z" style="width: 296px;" disabled>
+                     <br>
+                     <br>
+                     <label for="crates">crates:</label>
+                     <select name="crates" id="crate-list">
+                        <option value="volvo">16b81f36-537d-43d4-a56f-c224cbe5f2e1</option>
+                        <option value="saab">ef9e9900-4e31-4360-8b9f-5921ef85150b</option>
+                        <option value="mercedes">552fa7e5-d4f0-42a7-979d-aa28f90fcb0c</option>
+                        <option value="audi">04d4aa20-3dc7-4153-b37f-0ecb541b0bbd</option>
+                     </select>
+                     <br><br>
+                     <label for="status">status:</label>
+                     <br>
+                     <input type="text" value="running" id="status" name="status" disabled><br><br>
+                     <label for="instance-count">instanceCount:</label>
+                     <br>
+                     <input type="text" value="5" id="instance-count" name="instance-count" style="width: 36px;" disabled>
+                     <br><br>
+                  </form>
+               </div>
+               <!---#sidenav--->
+            </div>
+            <!---#simulation-summary---> 
+            <div class="column">
+               <div class="main">
+                  <div class="block"></div>
+                  <div class="box">
+                     <div class="container">
+                        <section class="hero is-medium">
+                           <div class="hero-body">
+                              <div class="">
+                                 <p class="title">
+                                    Create a new simulation
+                                 </p>
+                                 <p class="subtitle">
+                                    or select an existing simulation from the sidebar
+                                 </p>
+                              </div>
+                           </div>
+                        </section>
+                     </div>
+                  </div>
+                  <button class="button is-primary">Create a new simulation</button>
+               </div>
+               <!---#main--->
+            </div>
+         </div>
+         <!--- #columns --->
+      </div>
+      </div>
+      <script src="./js/index.js"></script>               
+   </body>
+</html>

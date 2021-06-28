@@ -1,180 +1,268 @@
 /* istanbul ignore file */
+const express = require('express');
+const createMerchantSchema = require('../../schemas/api/merchant/merchant.json');
+const updateMerchantPlanSchema = require('../../schemas/api/merchant/plan.json');
 
-const express = require("express");
 const router = new express.Router();
 const {
-    authorizeRequest, 
-    validateJWT,
-} = require("../../lib/middleware");
+  authorizeRequest,
+  validateRequest,
+  validateJWT,
+} = require('../../lib/middleware');
 
 /**
  * @param {MerchantService} merchantService - an instance of MerchantService
  * @param {CrateService} crateService - an instance of CrateService
- * @param {EventEmitter} eventEmitter - an instance of EventEmitter
  * @returns router - an instance of an Express router
  */
 
+function MerchantRouter({ merchantService, crateService }) {
+  function merchantAuthzOverride(merchantService) {
+    return async function (decodedToken) {
+      const existingMerchant = await merchantService.merchantExists(decodedToken.sub);
 
-function MerchantRouter({merchantService, crateService, eventEmitter}) {
+      return existingMerchant.userId === decodedToken.sub;
+    };
+  }
 
-    function merchantAuthzOverride(mechantService) {
-        return async function(decodedToken) {
-            const existingMerchant = await merchantService.merchantExists(decodedToken.sub);
+  // OpenAPI operationId: createMerchant
+  router.post('/', validateRequest(createMerchantSchema), validateJWT, authorizeRequest({ actionId: 'createAny:merchants' }), async (req, res, next) => {
+    const merchantData = req.body;
+    res.set('content-type', 'application/json');
 
-            return existingMerchant.userId === decodedToken.sub;
-        }
+    try {
+      const merchant = await merchantService.createMerchant(merchantData);
+      await merchant.save();
+
+      res.status(201);
+      res.json({
+        entries: [merchant],
+        error: null,
+        count: 1,
+      });
+    } catch (e) {
+      const [errorMessage] = e.message.split(' =>');
+
+      if (errorMessage.includes('MerchantServiceError.CannotCreateMerchant.BadRequest')) {
+        res.status(400);
+        res.json({
+          entries: [],
+          error: e.message,
+          count: 0,
+        });
+        return;
+      }
+      next(e);
     }
-    
-    /**POST**/
-    router.post("/", validateJWT, authorizeRequest({actionId: "createAny:merchants"}), async function createMerchant(req, res, next) {
-        const merchantData = req.body;
-        res.set("content-type", "application/json"); 
+  });
 
-        try {
-            const merchant = await merchantService.createMerchant(merchantData);
-            await merchant.save();
+  // OpenAPI operationId: cancelMerchantPlan
+  router.post('/:id/plan/cancel', validateJWT, authorizeRequest({
+    actionId: 'updateOwn:merchants',
+    authzOverride: merchantAuthzOverride(merchantService),
+  }), async (req, res, next) => {
+    const merchantId = req.params.id;
+    res.set('content-type', 'application/json');
 
-            res.status(201);
-            res.json({
-                entries: [merchant],
-                count: 1
-            });
+    try {
+      const merchant = await merchantService.getMerchantById(merchantId);
+      await merchant.cancelPlan();
+      res.status(204);
+      res.send();
+    } catch (e) {
+      const [errorMessage] = e.message.split(' =>');
 
-        } catch(e) {
-            const [errorMessage] = e.message.split(" =>")
-            if (errorMessage.includes( "MerchantServiceError.CannotCreateMerchant.BadRequest")) {
-                res.status(400);
-                res.json({
-                    entries: [],
-                    error: e.message,
-                    count: 0
-                });
-                return;
-            }
-            next(e);
-        }
+      if (errorMessage.includes('MerchantServiceError.CannotCreateMerchant.BadRequest')) {
+        res.status(400);
+        res.json({
+          entries: [],
+          error: e.message,
+          count: 0,
+        });
+        return;
+      }
+      next(e);
+    }
+  });
 
-    });
+  // OpenAPI operationId: archiveMerchant
+  router.post('/:id/status/archived', validateJWT, authorizeRequest({
+    actionId: 'updateAny:merchants',
+  }), async (req, res, next) => {
+    const merchantId = req.params.id;
 
-    router.post("/:id/plan/cancel", validateJWT, authorizeRequest({
-        actionId: "updateOwn:merchants",
-        authzOverride: merchantAuthzOverride(merchantService)
-    }), async function cancelPlan(req, res, next) {
-        const merchantId = req.params.id;
-        res.set("content-type", "application/json"); 
+    res.set('content-type', 'application/json');
 
-        try {
-            const merchant = await merchantService.getMerchantById(merchantId);
-            await merchant.cancelPlan();
-            res.status(204);
-            res.send();
+    try {
+      const merchant = await merchantService.getMerchantById(merchantId);
+      await merchantService.archiveMerchant(merchant);
 
-        } catch(e) {
-            const [errorMessage] = e.message.split(" =>");
+      res.status(204);
+      res.send();
+    } catch (e) {
+      next(e);
+    }
+  });
 
-            if (errorMessage.includes( "MerchantServiceError.CannotCreateMerchant.BadRequest")) {
-                res.status(400);
-                res.json({
-                    entries: [],
-                    error: e.message,
-                    count: 0
-                });
-                return;
-            }
-            next(e);
-        }
+  // OpenAPI operationId: getMerchantById
+  router.get('/:id', validateJWT, authorizeRequest({
+    actionId: 'readOwn:merchants',
+    authzOverride: merchantAuthzOverride(merchantService),
+  }), async (req, res, next) => {
+    const merchantId = req.params.id;
+    res.set('content-type', 'application/json');
 
-    });
+    try {
+      const merchant = await merchantService.getMerchantById(merchantId);
 
-    router.post("/:id/status/archive", validateJWT, authorizeRequest({
-        actionId: "updateAny:merchants",
-    }), async function archiveMerchant(req, res, next) {
-        const merchantId = req.params.id;
+      if (!merchant) {
+        res.status(404);
+        res.end();
+        return;
+      }
 
-        res.set("content-type", "application/json"); 
+      res.status(200);
+      res.json({
+        entries: [merchant],
+        error: null,
+        count: 1,
+      });
+    } catch (e) {
+      next(e);
+    }
+  });
 
-        try {
-            const merchant = await merchantService.getMerchantById(merchantId);
-            await merchantService.archiveMerchant(merchant);
+  // OpenAPI operationId: getCrateByMerchant
+  router.get('/:id/crates', validateJWT, authorizeRequest({
+    actionId: 'readOwn:merchants',
+    authzOverride: merchantAuthzOverride(merchantService),
+  }), async (req, res, next) => {
+    const merchantId = req.params.id;
+    res.set('content-type', 'application/json');
 
-            res.status(204);
-            res.send();
+    try {
+      const crateList = await crateService.getCratesByMerchantId(merchantId);
 
-        } catch(e) {
-            next(e);
-        }
+      res.status(200);
+      res.json({
+        entries: crateList,
+        error: null,
+        count: crateList.length,
+      });
+    } catch (e) {
+      next(e);
+    }
+  });
 
-    });
+  // OpenAPI operationId: getShipmentsByMerchantId
+  router.get('/:id/shipments', validateJWT, authorizeRequest({
+    actionId: 'readOwn:merchants',
+    authzOverride: merchantAuthzOverride(merchantService),
+  }), async (req, res, next) => {
+    const merchantId = req.params.id;
+    const { asDigest } = req.query;
+    res.set('content-type', 'application/json');
 
-    /**GET**/
-    router.get("/:id", validateJWT, authorizeRequest({
-        actionId: "readOwn:merchants",
-        authzOverride: merchantAuthzOverride(merchantService)
-    }), async function getMerchantById(req, res, next) {
-        const merchantId = req.params.id;
-        res.set("content-type", "application/json"); 
+    try {
+      const merchant = await merchantService.getMerchantById(merchantId);
 
-        try {
-            const merchant = await merchantService.getMerchantById(merchantId);
+      if (!merchant) {
+        res.status(404);
+        res.end();
+        return;
+      }
+      const shipmentList = await crateService.getShipmentsByMerchantId({ merchantId, asDigest });
 
-            res.status(200);
-            res.json({
-                entries: [merchant],
-                count: 1
-            });
+      res.status(200);
+      res.json({
+        entries: shipmentList,
+        error: null,
+        count: shipmentList.length,
+      });
+    } catch (e) {
+      next(e);
+    }
+  });
 
-        } catch(e) {
-            next(e);
-        }
+  // OpenAPI operationId: getMerchantShipmentById
+  router.get('/:id/shipments/:shipmentId', validateJWT, authorizeRequest({ actionId: 'readOwn:crates' }), async (req, res, next) => {
+    const merchantId = req.params.id;
+    const { shipmentId } = req.params;
+    const { asDigest } = req.query;
 
-    });
+    try {
+      const shipmentList = await crateService.getShipmentsByMerchantId({ merchantId, asDigest });
+      const currentShipment = shipmentList.find((shipment) => shipment.id === shipmentId);
 
-    router.get("/:id/crates", validateJWT, authorizeRequest({
-        actionId: "readOwn:merchants",
-        authzOverride: merchantAuthzOverride(merchantService)
-    }), async function getCratesByMerchant(req, res, next) {
-        const merchantId = req.params.id;
-        res.set("content-type", "application/json"); 
+      if (!currentShipment) {
+        next();
+        return;
+      }
 
-        try {
-            const crateList = await crateService.getCratesByMerchantId(merchantId);
+      res.set('content-type', 'application/json');
+      res.status(200);
+      res.json({
+        entries: [currentShipment],
+        error: null,
+        count: 1,
+      });
+    } catch (e) {
+      next(e);
+    }
+  });
 
-            res.status(200);
-            res.json({
-                entries: crateList,
-                count: crateList.length
-            });
+  // OpenAPI operationId: getShipmentWaypoints
+  router.get('/:id/shipments/:shipmentId/waypoints', validateJWT, authorizeRequest({ actionId: 'readOwn:crates' }), async (req, res, next) => {
+    const merchantId = req.params.id;
+    const { asDigest } = req.query;
+    const { shipmentId } = req.params;
 
-        } catch(e) {
-            next(e);
-        }
+    try {
+      const shipmentList = await crateService.getShipmentsByMerchantId({
+        merchantId,
+        asDigest,
+      });
+      const currentShipment = shipmentList.find((shipment) => shipment.id === shipmentId);
 
-    });
+      if (!currentShipment) {
+        next();
+        return;
+      }
 
-    /**PUT**/
-    router.put("/:id/plan", validateJWT, authorizeRequest({
-        actionId: "updateOwn:merchants",
-        authzOverride: merchantAuthzOverride(merchantService)
-    }), async function updatePlan(req, res, next) {
-        const merchantId = req.params.id;
-        const updatedPlan = req.body;
+      res.set('content-type', 'application/json');
+      res.status(200);
+      res.json({
+        entries: currentShipment.waypoints,
+        error: null,
+        count: currentShipment.waypoints.length,
+      });
+    } catch (e) {
+      next(e);
+    }
+  });
 
-        res.set("content-type", "application/json"); 
+  // OpenAPI operationId: updateMerchantPlan
+  router.put('/:id/plan', validateRequest(updateMerchantPlanSchema), validateJWT, authorizeRequest({
+    actionId: 'updateOwn:merchants',
+    authzOverride: merchantAuthzOverride(merchantService),
+  }), async (req, res, next) => {
+    const merchantId = req.params.id;
+    const updatedPlan = req.body;
 
-        try {
-            const merchant = await merchantService.getMerchantById(merchantId);
-            await merchant.updatePlan(updatedPlan);
+    res.set('content-type', 'application/json');
 
-            res.status(204);
-            res.send();
+    try {
+      const merchant = await merchantService.getMerchantById(merchantId);
+      await merchant.updatePlan(updatedPlan);
 
-        } catch(e) {
-            next(e);
-        }
+      res.status(204);
+      res.send();
+    } catch (e) {
+      next(e);
+    }
+  });
 
-    });
-
-    return router;
+  return router;
 }
 
-module.exports =  MerchantRouter;
+module.exports = MerchantRouter;

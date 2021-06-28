@@ -9,7 +9,7 @@ function deepFreeze(object) {
   for (const name of propNames) {
     const value = object[name];
 
-    if (value && typeof value === "object") {
+    if (value && typeof value === 'object') {
       deepFreeze(value);
     }
   }
@@ -18,5 +18,5 @@ function deepFreeze(object) {
 }
 
 module.exports = {
-    deepFreeze
+  deepFreeze,
 };

@@ -1,10 +1,9 @@
-const SQSQueue = require("./sqs");
+const SQSQueue = require('./sqs');
 
-/* Implements the IQueue interface 
+/* Implements the IQueue interface
 * See interfaces/queue for method documentation
 * Manages queue entries
 */
-
 
 /**
  * @implements {IQueueAPI}
@@ -12,34 +11,32 @@ const SQSQueue = require("./sqs");
  */
 
 function Queue() {
+  const currentQueue = [];
 
-    const currentQueue = [];
-
-    /**
+  /**
      * @returns {Integer} the size of the current queue
      */
-    this.enqueue = async function(entry) {
-        return currentQueue.unshift(entry);
-    }
+  this.enqueue = async function (entry) {
+    return currentQueue.unshift(entry);
+  };
 
-    /**
+  /**
      * @returns {Array} - a list containing a queue entry or entries
      */
-    this.dequeue = async function(key) {
-        return [currentQueue.pop()];
-    }
+  this.dequeue = async function () {
+    return [currentQueue.pop()];
+  };
 
-    /**
-     * @returns {Integer} - the size of the queue 
+  /**
+     * @returns {Integer} - the size of the queue
      */
 
-    this.size = async function() {
-        return currentQueue.length;
-    }
+  this.size = async function () {
+    return currentQueue.length;
+  };
 }
 
-
 module.exports = {
-    InMemoryQueue: Queue,
-    SQSQueue
+  InMemoryQueue: Queue,
+  SQSQueue,
 };

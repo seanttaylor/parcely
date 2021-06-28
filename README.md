@@ -12,8 +12,8 @@ This repository houses code facilitating the software-defined Parcely crate and 
 3. Run `npm tests`
 4. To launch the application do `docker-compose up`
 
-> You will need to setup the Terraform configuration in order to launch the application outside test mode (see below.)
 
+### Deployment
 
 #### Gotchas and Other Field Notes
 
@@ -27,15 +27,6 @@ In development, note there is a _temporal dependency_ between and entities, thei
 ```
 
 In the example above the user entity is actually saved in the datastore until the `save` method is called. Obvious here but this behavior has been the cause of more than one time-sink in development. This behavior _will eventually be deprecated_ but until it is, keep this in mind. Particularly when investigating why a created entity does not appear to be saving.
-
-##### Local Development with AWS, LocalStack and Terraform 
->LocalStack is used to mock critical AWS infrastructure components in local development prior to standing up live (paid) resources on AWS Cloud. 
->
->Terraform is used to document and provision infrastructure in our codebase in keeping with the Infrastructure-as-Code (IaC) paradigm.
-
-In order to launch the application with mocked AWS resources ensure the Docker daemon is running and do `docker-compose`. Most likely unit tests _will fail_ because the local terraform configuration has not been applied. Change to `/tf/local` directiory. Run `terraform init` **if this is the first time launching the app**. Once the terraform configuration has been initialized do `terraform apply` to create the resources specified in the terraform files on LocalStack.
-
-If the application _has been previously launched_ and AWS resources have _been previously provisioned_, doing a `terraform apply` should refresh the configuration with the resources specified in the terraform files.
 
 ##### Ignored Unit Tests
 

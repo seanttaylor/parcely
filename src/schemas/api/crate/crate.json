@@ -1,0 +1,46 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://schemas.parcely.com/api/crate.json?version=0.0.1",
+    "type": "object",
+    "title": "The Crate schema",
+    "description": "The API schema use for validating the creation of new crates",
+    "default": {},
+    "examples": [
+        {
+            "merchantId": "1f3aaf85-539e-4a0b-9b6b-507ae10d1b9c",
+            "size": [
+                "L"
+            ]
+        }
+    ],
+    "required": [
+        "size"
+    ],
+    "properties": {
+        "merchantId": {
+            "$id": "#/properties/merchantId",
+            "type": ["string", "null"],
+            "title": "The merchantId schema",
+            "description": "The merchant associated with this crate",
+            "default": "",
+            "examples": [
+                "1f3aaf85-539e-4a0b-9b6b-507ae10d1b9c"
+            ]
+        },
+        "size": {
+            "$id": "#/properties/size",
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": ["S", "M", "L"]
+            },
+            "title": "The size schema",
+            "description": "The size specification of a crate.",
+            "default": "",
+            "examples": [
+                "L"
+            ]
+        }
+    },
+    "additionalProperties": false
+}

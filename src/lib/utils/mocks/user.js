@@ -5,7 +5,7 @@
  * See /src/interfaces/user for documentation
  */
 const mockUserImplementation = {
-    _data: {}
+  _data: {},
 };
 
 module.exports = mockUserImplementation;

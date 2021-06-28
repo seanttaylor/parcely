@@ -15,20 +15,19 @@
 */
 
 function ICache(myImpl) {
-    function required() {
-        throw Error("Missing implementation");
-    }
+  function required() {
+    throw Error('Missing implementation');
+  }
 
-    this.set = myImpl.set || required;
+  this.set = myImpl.set || required;
 
-    this.get = myImpl.get || required;
+  this.get = myImpl.get || required;
 
-    this.clear = myImpl.clear || required;
+  this.clear = myImpl.clear || required;
 
-    this.delete = myImpl.delete || required;
+  this.delete = myImpl.delete || required;
 
-    this.has = myImpl.has || required;
+  this.has = myImpl.has || required;
 }
-
 
 module.exports = ICache;

@@ -1,147 +1,191 @@
 /* istanbul ignore file */
-const express = require("express");
+const express = require('express');
+const createCrateSchema = require('../../schemas/api/crate/crate.json');
+const startCrateShipmentSchema = require('../../schemas/api/crate/shipment.json');
+const addShipmentWaypointSchema = require('../../schemas/api/crate/waypoint.json');
+const setRecipientSchema = require('../../schemas/api/crate/recipient.json');
+
 const router = new express.Router();
 const {
-    authorizeRequest, 
-    validateJWT,
-} = require("../../lib/middleware");
+  authorizeRequest,
+  validateJWT,
+  validateRequest,
+} = require('../../lib/middleware');
 
 /**
  * @param {CrateService} crateService - an instance of the CrateService
  * @param {EventEmitter} eventEmitter - an instance of EventEmitter
  * @param {QueueService} queueService - an instance of QueueService
+ * @param {PublishService} publishService - an instance of PublishService
+ * @param {HardwareCrateService} hardwareCrateService - an instance of HardwareCrateService
+
  * @returns router - an instance of an Express router
  */
 
- function CrateRouter({crateService, queueService, eventEmitter}) {
+function CrateRouter({
+  crateService, queueService, publishService, eventEmitter, hardwareCrateService,
+}) {
+  // OpenAPI operationId: getAllCrates
+  router.get('/', validateJWT, authorizeRequest({ actionId: 'readAny:crates' }), async (req, res, next) => {
+    try {
+      const crateList = await crateService.getAllCrates();
+      res.set('content-type', 'application/json');
+      res.status(200);
+      res.json({
+        entries: crateList.map((c) => c.toJSON()),
+        error: null,
+        count: crateList.length,
+      });
+    } catch (e) {
+      next(e);
+    }
+  });
 
-   /****** GET *******/
+  // OpenAPI operationId: getCrateById
+  router.get('/:id', validateJWT, authorizeRequest({ actionId: 'readAny:crates' }), async (req, res, next) => {
+    const crateId = req.params.id;
 
-   router.get("/", validateJWT, authorizeRequest({actionId: "readAny:crates"}), async function getAllCrates(req, res, next) {
+    try {
+      const crate = await crateService.getCrateById(crateId);
+      res.set('content-type', 'application/json');
 
-        try {
-            const crateList = await crateService.getAllCrates();
-            res.set("content-type", "application/json");
-            res.status(200);
-            res.json({
-                entries: crateList.map(c => c.toJSON()),
-                count: crateList.length
-            });
-        }
-        catch (e) {
-            next(e);
-        }
-    });
+      if (!crate) {
+        res.status(404);
+        res.end();
+        return;
+      }
 
-    router.get("/:id", validateJWT, authorizeRequest({actionId: "readAny:crates"}), async function getCrateById(req, res, next) {
-        const crateId = req.params.id;
+      res.status(200);
+      res.json({
+        entries: [crate],
+        error: null,
+        count: 1,
+      });
+    } catch (e) {
+      next(e);
+    }
+  });
 
-        try {
-            const crate = await crateService.getCrateById(crateId);
-            res.set("content-type", "application/json");
+  // OpenAPI operationId: createCrate
+  router.post('/', validateRequest(createCrateSchema), validateJWT, authorizeRequest({ actionId: 'createAny:crates' }), async (req, res, next) => {
+    const crateData = req.body;
 
-            if (!crate) {
-                res.status(404);
-                res.end();
-                return;  
-            }
-            
-            res.status(200);
-            res.json({
-                entries: [crate.toJSON()],
-                count: 1
-            });
-        }
-        catch (e) {
-            next(e);
-        }
-    });
+    try {
+      const crate = await crateService.createCrate(crateData);
+      await crate.save();
+      await hardwareCrateService.registerCrate(crate.id);
+      res.set('content-type', 'application/json');
+      res.status(201);
+      res.json({
+        entries: [crate.toJSON()],
+        error: null,
+        count: 1,
+      });
+    } catch (e) {
+      next(e);
+    }
+  });
 
-    router.get("/:id/shipments", validateJWT, authorizeRequest({actionId: "readAny:crates"}), async function getCrateShipmentsByCrateId(req, res, next) {
-        const crateId = req.params.id;
+  // OpenAPI operationId: deleteCrate
+  router.delete('/:id', validateJWT, authorizeRequest({ actionId: 'deleteAny:crates' }), async (req, res, next) => {
+    const crateId = req.params.id;
 
-        try {
-            const crate = await crateService.getCrateById(crateId);
-            const shipmentList = await crateService.getCrateShipments(crate);
-            res.set("content-type", "application/json");
-            
-            res.status(200);
-            res.json({
-                entries: shipmentList.map((s) => s.toJSON()),
-                count: shipmentList.length
-            });
-        }
-        catch (e) {
-            next(e);
-        }
-    });
+    try {
+      await crateService.deleteCrate(crateId);
 
-    router.get("/:id/shipments/:shipmentId", validateJWT, authorizeRequest({actionId: "readOwn:crates", allowResourceOwnerOnly: false}), async function getCrateShipmentById(req, res, next) {
-        const crateId = req.params.id;
-        const shipmentId = req.params.shipmentId;
-        const {includeWaypoints} = req.query;
-        const boolMap = {"true": true, "false": false};
-        
-        try {
-            const shipment = await crateService.getCrateShipmentById(shipmentId, {includeWaypoints: boolMap[includeWaypoints]});
-            res.set("content-type", "application/json");
-            
-            res.status(200);
-            res.json({
-                entries: [shipment],
-                count: 1
-            });
-        }
-        catch (e) {
-            next(e);
-        }
-    });
+      res.set('content-type', 'application/json');
+      res.status(204);
+      res.send();
+    } catch (e) {
+      next(e);
+    }
+  });
 
+  // OpenAPI operationId: getShipmentsByCrateId
+  router.get('/:id/shipments', validateJWT, authorizeRequest({ actionId: 'readAny:crates' }), async (req, res, next) => {
+    const crateId = req.params.id;
 
-    /****** POST *******/
+    try {
+      const crate = await crateService.getCrateById(crateId);
+      const shipmentList = await crateService.getShipmentsByCrate(crate);
+      res.set('content-type', 'application/json');
 
-    router.post("/", validateJWT, authorizeRequest({actionId: "createAny:crates"}), async function createCrate(req, res, next) {
-        const crateData = req.body;
+      res.status(200);
+      res.json({
+        entries: shipmentList.map((s) => s.toJSON()),
+        error: null,
+        count: shipmentList.length,
+      });
+    } catch (e) {
+      next(e);
+    }
+  });
 
-        try {
-            const crate = await crateService.createCrate(crateData);
-            await crate.save();
-            res.set("content-type", "application/json");
-            res.status(201);
-            res.json({
-                entries: [crate.toJSON()],
-                count: 1
-            });
-        }
-        catch (e) {
-            next(e);
-        }
-    });
+  // OpenAPI operationId: getCrateShipmentById
+  router.get('/:id/shipments/:shipmentId', validateJWT, authorizeRequest({ actionId: 'readOwn:crates', allowResourceOwnerOnly: false }), async (req, res, next) => {
+    const { shipmentId } = req.params;
+    const { includeWaypoints } = req.query;
+    const boolMap = { true: true, false: false };
 
-    router.post("/:id/shipments", validateJWT, authorizeRequest({actionId: "createAny:crates"}), async function startCrateShipment(req, res, next) {
-        const crateId = req.params.id;
-        const {originAddress, destinationAddress, trackingNumber} = req.body;
+    try {
+      const shipment = await crateService.getCrateShipmentById(shipmentId, { includeWaypoints: boolMap[includeWaypoints] });
+      res.set('content-type', 'application/json');
 
-        try {
-            const crate = await crateService.getCrateById(crateId);
-            await crate.startShipment({
-                originAddress, 
-                destinationAddress, 
-                trackingNumber
-            });
-            res.set("content-type", "application/json");
-            res.status(201);
-            res.json({
-                entries: [crate.toJSON()],
-                count: 1
-            });
-        }
-        catch (e) {
-            next(e);
-        }
-    });
+      res.status(200);
+      res.json({
+        entries: [shipment],
+        error: null,
+        count: 1,
+      });
+    } catch (e) {
+      next(e);
+    }
+  });
 
-    router.post("/:id/shipments/:shipmentId/waypoints", validateJWT, authorizeRequest({actionId: "createAny:crates"}), async function addShipmentWaypoint(req, res, next) {
+  // OpenAPI operationId: startCrateShipment
+  router.post('/:id/shipments', validateRequest(startCrateShipmentSchema), validateJWT, authorizeRequest({ actionId: 'createAny:crates' }), async (req, res, next) => {
+    const crateId = req.params.id;
+    const { originAddress, destinationAddress, trackingNumber } = req.body;
+
+    try {
+      const crate = await crateService.getCrateById(crateId);
+      const crateStatus = await hardwareCrateService.getCrateStatus(crateId);
+      const [crateReady] = crateStatus.ready;
+
+      if (!crateReady) {
+        res.status(503);
+        res.json({
+          entries: [],
+          error: 'Service Unavailable',
+          count: 0,
+        });
+        return;
+      }
+
+      await crate.startShipment({
+        originAddress,
+        destinationAddress,
+        trackingNumber,
+      });
+      // Maybe hardwareCrateService should be a dependency of CrateService?
+      await hardwareCrateService.activateCrate(crate.id);
+
+      res.set('content-type', 'application/json');
+      res.status(201);
+      res.json({
+        entries: [crate.toJSON()],
+        error: null,
+        count: 1,
+      });
+    } catch (e) {
+      next(e);
+    }
+  });
+
+  // DEPRECATED
+  // OpenAPI operationId: addShipmentWaypoints
+  /*
+    router.post("/:id/shipments/:shipmentId/waypoints", validateRequest(addShipmentWaypointSchema), validateJWT, authorizeRequest({actionId: "createAny:crates"}), async function addShipmentWaypoint(req, res, next) {
         const crateId = req.params.id;
         const telemetry = req.body;
 
@@ -152,6 +196,7 @@ const {
             res.status(201);
             res.json({
                 entries: [crate.toJSON()],
+                error: null,
                 count: 1
             });
         }
@@ -159,92 +204,87 @@ const {
             next(e);
         }
     });
+    */
 
-    router.post("/telemetry/rt-updates", validateJWT, authorizeRequest({actionId: "updateAny:crates"}), async function receiveRealtimeUpdate(req, res, next) {
-        const {crateId, telemetry } = req.body;
-      
-        try {
-            res.set("content-type", "application/json");
-            await queueService.enqueue({crateId, telemetry});
-            eventEmitter.emit("CrateAPI.QueueService.TelemetryUpdateReceived");
-            res.status(201);
-            res.send();
-        }
-        catch(e) {
-            next(e);
-        }
+  // OpenAPI operationId: subscribeToRealtimeUpdates
+  router.get('/telemetry/rt-updates/subscribe', async (req, res) => {
+    res.status(200).set({
+      connection: 'keep-alive',
+      'cache-control': 'no-cache',
+      'content-type': 'text/event-stream',
     });
 
-
-    /****** PUT *******/
-
-    router.put("/:id/recipient", validateJWT, authorizeRequest({actionId: "updateAny:crates"}), async function setRecipient(req, res, next) {
-        const crateId = req.params.id;
-        const recipientId = req.body.recipientId;
-
-        try {
-            const crate = await crateService.getCrateById(crateId);
-            await crate.setRecipient(recipientId);
-
-            res.set("content-type", "application/json");
-            res.status(204);
-            res.send();
-        }
-        catch (e) {
-            next(e);
-        }
+    // An initial OK response must be sent clients to establish a connection
+    res.write('data: CONNECTION_OK \n\n');
+    publishService.init(([eventName, eventData]) => {
+      res.write(eventData);
+      res.write(eventName);
     });
+  });
 
-    router.put("/:id/shipments/:shipmentId/status", validateJWT, authorizeRequest({actionId: "updateAny:crates"}), async function setShipmentStatus(req, res, next) {
-        const crateId = req.params.id;
+  // OpenAPI operationId: receiveRealtimeUpdate
+  // DEPRECATED
+  router.post('/telemetry/rt-updates', validateRequest(addShipmentWaypointSchema), validateJWT, authorizeRequest({ actionId: 'updateAny:crates' }), async (req, res, next) => {
+    const { crateId, telemetry } = req.body;
 
-        try {
-            const crate = await crateService.getCrateById(crateId);
-            await crate.completeShipment();
-            res.status(204);
-            res.send();
-        }
-        catch (e) {
-            next(e);
-        }
-    });
+    try {
+      res.set('content-type', 'application/json');
+      await queueService.enqueue({ crateId, telemetry });
+      eventEmitter.emit('CrateTelemetryUpdateReceived');
+      res.status(204);
+      res.send();
+    } catch (e) {
+      next(e);
+    }
+  });
 
-    router.put("/:id/status", validateJWT, authorizeRequest({actionId: "updateAny:crates"}), async function setCrateStatus(req, res, next) {
-        const crateId = req.params.id;
+  // OpenAPI operationId: completeCrateShipment
+  router.post('/:id/shipments/:shipmentId/status/complete', validateJWT, authorizeRequest({ actionId: 'updateAny:crates' }), async (req, res, next) => {
+    const crateId = req.params.id;
 
-        try {
-            const crate = await crateService.getCrateById(crateId);
-            await crateService.markCrateReturned(crate);
+    try {
+      const crate = await crateService.getCrateById(crateId);
+      await crate.completeShipment();
+      res.status(204);
+      res.send();
+    } catch (e) {
+      next(e);
+    }
+  });
 
-            res.set("content-type", "application/json");
-            res.status(204);
-            res.send();
-        }
-        catch (e) {
-            next(e);
-        }
-    });
+  // OpenAPI operationId: markCrateReturned
+  router.post('/:id/status/pending-return', validateJWT, authorizeRequest({ actionId: 'updateAny:crates' }), async (req, res, next) => {
+    const crateId = req.params.id;
 
+    try {
+      const crate = await crateService.getCrateById(crateId);
+      await crateService.markCrateReturned(crate);
 
-    /****** DELETE *******/
+      res.set('content-type', 'application/json');
+      res.status(204);
+      res.send();
+    } catch (e) {
+      next(e);
+    }
+  });
 
-    router.delete("/:id", validateJWT, authorizeRequest({actionId: "deleteAny:crates"}), async function deleteCrate(req, res, next) {
-        const crateId = req.params.id;
+  // OpenAPI operationId: setCrateRecipient
+  router.put('/:id/recipient', validateRequest(setRecipientSchema), validateJWT, authorizeRequest({ actionId: 'updateAny:crates' }), async (req, res, next) => {
+    const crateId = req.params.id;
+    const { recipientEmail } = req.body;
 
-        try {
-            const crate = await crateService.deleteCrate(crateId);
+    try {
+      const crate = await crateService.getCrateById(crateId);
+      await crate.setRecipient(recipientEmail);
 
-            res.set("content-type", "application/json");
-            res.status(204);
-            res.send();
-        }
-        catch (e) {
-            next(e);
-        }
-    });
+      res.set('content-type', 'application/json');
+      res.status(204);
+      res.send();
+    } catch (e) {
+      next(e);
+    }
+  });
+  return router;
+}
 
-
-    return router;
- }
-
- module.exports = CrateRouter;
+module.exports = CrateRouter;

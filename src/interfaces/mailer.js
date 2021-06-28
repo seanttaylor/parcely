@@ -8,19 +8,17 @@
 /**
 * Interface for an email message service
 * @param {IMailerAPI} myImpl - Object containing methods implementing the IMailerAPI
-* @returns 
+* @returns
 */
 
 function IMailer(myImpl) {
-    function required() {
-        throw Error("Missing implementation");
-    }
+  function required() {
+    throw Error('Missing implementation');
+  }
 
-    this.addAttachments = myImpl.addAttachments || required;
+  this.addAttachments = myImpl.addAttachments || required;
 
-    this.send = myImpl.send || required;
-
-    return;
+  this.send = myImpl.send || required;
 }
 
 module.exports = IMailer;

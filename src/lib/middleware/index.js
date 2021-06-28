@@ -1,5 +1,9 @@
+const authorizeRequest = require('./authorize');
+const validateJWT = require('./jwt');
+const validateRequest = require('./validate');
+
 module.exports = {
-    //validateRequestBodyWith: require("./validate"),
-    authorizeRequest: require("./authorize"),
-    validateJWT: require("./jwt")
-}
+  authorizeRequest,
+  validateJWT,
+  validateRequest,
+};

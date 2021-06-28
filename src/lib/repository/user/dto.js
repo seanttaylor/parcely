@@ -1,28 +1,29 @@
 /* istanbul ignore file */
 
-const Ajv = require("ajv");
+const Ajv = require('ajv');
+
 const ajv = new Ajv();
-const userSchema = require("../../../schemas/user.json");
-const userRoleSchema = require("../../../schemas/user-role.json");
-const userCredentialsSchema = require("../../../schemas/user-credentials.json");
+const userSchema = require('../../../schemas/user.json');
+const userRoleSchema = require('../../../schemas/user-role.json');
+const userCredentialsSchema = require('../../../schemas/user-credentials.json');
+
 const userSchemaValidation = ajv.compile(userSchema);
 const userRoleSchemaValidation = ajv.compile(userRoleSchema);
 const userCredentialsSchemaValidation = ajv.compile(userCredentialsSchema);
 
-
 /**
  * @typedef {Object} UserDTO
- * @property {String} id 
+ * @property {String} id
  * @property {String} emailAddress
  * @property {String} phoneNumber
  * @property {String} firstName
  * @property {String} lastName
  * @property {Boolean} isVerified
- * @property {String} createdDate  
+ * @property {String} createdDate
  * @property {String|null} lastModified
  */
 
- /**
+/**
   * @param {String} id - uuid for a user
   * @param {String} emailAddress - email address for a user
   * @param {String} phoneNumber - phone number for a user
@@ -34,38 +35,38 @@ const userCredentialsSchemaValidation = ajv.compile(userCredentialsSchema);
   * @returns {UserDTO}
   */
 
-function UserDTO({id, emailAddress, phoneNumber, firstName, lastName, createdDate=new Date().toISOString(), lastModified=null, isVerified=false }) {
-    const userData = {
-      id,  
-      emailAddress, 
-      phoneNumber: String(phoneNumber),
-      firstName, 
-      lastName,
-      isVerified,
-      createdDate, 
-      lastModified
-    };
-  
-  if(!userSchemaValidation(userData)) {
+function UserDTO({
+  id, emailAddress, phoneNumber, firstName, lastName, createdDate = new Date().toISOString(), lastModified = null, isVerified = false,
+}) {
+  const userData = {
+    id,
+    emailAddress,
+    phoneNumber: String(phoneNumber),
+    firstName,
+    lastName,
+    isVerified,
+    createdDate,
+    lastModified,
+  };
+
+  if (!userSchemaValidation(userData)) {
     throw new Error(`UserDTOError/InvalidUserDTO => ${JSON.stringify(userSchemaValidation.errors, null, 2)}`);
   }
 
-  this.value = function() {
+  this.value = function () {
     return userData;
-  }
-
+  };
 }
-
 
 /**
  * @typedef {Object} UserRoleDTO
- * @property {String} id 
+ * @property {String} id
  * @property {String} role
- * @property {String} createdDate  
+ * @property {String} createdDate
  * @property {String|null} lastModified
  */
 
- /**
+/**
   * @param {String} id - uuid for a user
   * @param {String} role - role for a user
   * @param {String} createdDate - date the role was created
@@ -73,39 +74,35 @@ function UserDTO({id, emailAddress, phoneNumber, firstName, lastName, createdDat
   * @returns {UserRoleDTO}
   */
 
- function UserRoleDTO({id, role="user", createdDate=new Date().toISOString(), lastModified=null}) {
-    const userRoleData = {
-        id,
-        role,
-        createdDate,
-        lastModified
-    };
-  
-  if(!userRoleSchemaValidation(userRoleData)) {
+function UserRoleDTO({
+  id, role = 'user', createdDate = new Date().toISOString(), lastModified = null,
+}) {
+  const userRoleData = {
+    id,
+    role,
+    createdDate,
+    lastModified,
+  };
+
+  if (!userRoleSchemaValidation(userRoleData)) {
     throw new Error(`UserRoleDTOError/InvalidUserRoleDTO => ${JSON.stringify(userRoleSchemaValidation.errors, null, 2)}`);
   }
 
-  this.value = function() {
+  this.value = function () {
     return userRoleData;
-  }
-
+  };
 }
-
-
-
-
-
 
 /**
  * @typedef {Object} UserCredentialsDTO
- * @property {String} userId 
+ * @property {String} userId
  * @property {String} emailAddress
  * @property {String[]} password
- * @property {String} createdDate  
+ * @property {String} createdDate
  * @property {String|null} lastModified
  */
 
- /**
+/**
   * @param {String} id - uuid for a user
   * @param {String} emailAddress - email address for a user
   * @param {String} password - user password hash
@@ -114,30 +111,29 @@ function UserDTO({id, emailAddress, phoneNumber, firstName, lastName, createdDat
   * @returns {UserCredentialsDTO}
   */
 
- function UserCredentialsDTO({id, emailAddress, password, createdDate=new Date().toISOString(), lastModified=null}) {
-    const userCredentialData = {
-        id: emailAddress,
-        userId: id,
-        emailAddress,
-        password,
-        createdDate,
-        lastModified
-    };
-  
-  if(!userCredentialsSchemaValidation(userCredentialData)) {
+function UserCredentialsDTO({
+  id, emailAddress, password, createdDate = new Date().toISOString(), lastModified = null,
+}) {
+  const userCredentialData = {
+    id: emailAddress,
+    userId: id,
+    emailAddress,
+    password,
+    createdDate,
+    lastModified,
+  };
+
+  if (!userCredentialsSchemaValidation(userCredentialData)) {
     throw new Error(`UserCredentialsDTOError/InvalidUserCredentialsDTO => ${JSON.stringify(userCredentialsSchemaValidation.errors, null, 2)}`);
   }
 
-  this.value = function() {
+  this.value = function () {
     return userCredentialData;
-  }
-
+  };
 }
 
-
-
 module.exports = {
-    UserDTO, 
-    UserRoleDTO, 
-    UserCredentialsDTO
+  UserDTO,
+  UserRoleDTO,
+  UserCredentialsDTO,
 };
