@@ -115,7 +115,7 @@ resource "aws_ecs_task_definition" "parcely_core" {
       ],
       "environment": [{
         "name": "NODE_ENV",
-        "value": "dev"
+        "value": "local"
       },
       {
         "name": "COMMIT_HASH",
@@ -132,6 +132,10 @@ resource "aws_ecs_task_definition" "parcely_core" {
       {
         "name": "PLATFORM_OUTBOUND_EMAIL_PASSWORD",
         "value": "${data.aws_ssm_parameter.platform_outbound_email_password.value}"
+      },
+      {
+        "name": "KAFKA_HOST_NAME",
+        "value": "kafka"
       }],
       "logConfiguration": {
         "logDriver": "awslogs",
