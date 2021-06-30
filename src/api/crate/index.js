@@ -150,6 +150,7 @@ function CrateRouter({
     try {
       const crate = await crateService.getCrateById(crateId);
       const crateStatus = await hardwareCrateService.getCrateStatus(crateId);
+      console.log(crateStatus);
       const [crateReady] = crateStatus.ready;
 
       if (!crateReady) {

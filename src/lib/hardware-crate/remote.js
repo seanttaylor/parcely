@@ -24,7 +24,7 @@ function RemoteHardwareCrateService(config) {
     });
 
     if (response.status > 300) {
-      return { ready: false };
+      return { ready: [false] };
     }
     const responseJSON = await response.json();
     const [hardwareCrateData] = responseJSON.entries;
@@ -34,18 +34,17 @@ function RemoteHardwareCrateService(config) {
 
   /**
    * Sends command to specified hardware crate to begin pushing telemetry data
-   * @param {Crate} crate - an instance of of Crate
+   * @param {String} crateId - uuid for a Crate
    * @returns {Object}
   */
 
-  this.activateCrate = async function (crate) {
-    const response = await fetch(`${PARCELY_HW_API_URL}/api/v1/hw-crates/${crate.id}/activate`, {
+  this.activateCrate = async function (crateId) {
+    const response = await fetch(`${PARCELY_HW_API_URL}/api/v1/hw-crates/${crateId}/activate`, {
       method: 'POST',
       headers: {
         'x-api-key': 'fooBar',
         'content-type': 'application/json',
       },
-      body: JSON.stringify(crate),
     });
 
     if (response.status > 300) {
@@ -53,6 +52,26 @@ function RemoteHardwareCrateService(config) {
     }
 
     return response.json();
+  };
+
+  /**
+   * Registers a new crate with the Hardware Crate Server
+   * @param {String} crateId - uuid for a Crate
+   * @returns {Object}
+  */
+
+  this.registerCrate = async function (crateId) {
+    const response = await fetch(`${PARCELY_HW_API_URL}/api/v1/hw-crates/register/${crateId}`, {
+      method: 'PUT',
+      headers: {
+        'x-api-key': 'fooBar',
+        'content-type': 'application/json',
+      },
+    });
+
+    if (response.status > 300) {
+      throw Error(`HardwareCrateServiceError.CannotRegisterHardwareCrate => ${response.statusText}`);
+    }
   };
 }
 
