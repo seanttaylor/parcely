@@ -16,7 +16,7 @@ const config = require('./src/config');
 const app = express();
 const eventEmitter = new events.EventEmitter();
 const asiagoDatabaseConnector = new DatabaseConnector({ console });
-const serverPort = process.env.SERVER_PORT || 3000;
+const serverPort = process.env.PORT || 3000;
 
 /** ******************************SERVICES******************************** */
 
