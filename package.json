@@ -7,7 +7,7 @@
     "lint:fix": "eslint --fix .",
     "serve": "firebase emulators:start --only functions",
     "shell": "firebase functions:shell",
-    "start": "npm run shell",
+    "start": "node app.index.js",
     "start:app": "node app.index.js",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
