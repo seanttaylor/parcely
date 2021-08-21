@@ -5,7 +5,7 @@
 /** ******************************************* */
 process.env.NODE_ENV = 'ci/cd/test';
 const supertest = require('supertest');
-const app = require('../../app.index');
+const app = require('../../index');
 const furyEmailAddress = 'nfury@shield.gov';
 const superSecretPassword = 'superSecretPassword';
 
