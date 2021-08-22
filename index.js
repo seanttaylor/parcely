@@ -50,11 +50,13 @@ const queueService = new IQueue(new InMemoryQueue());
 const IStreamService = require('./src/interfaces/stream');
 const { LocalStream, RemoteStream, MockStream } = require('./src/lib/stream');
 
+console.log(process.env.NODE_ENV);
+
 const streamServiceImplMap = {
   'ci/cd/test': MockStream,
   local: LocalStream,
-  prod: RemoteStream,
-  undefined: LocalStream,
+  production: RemoteStream,
+  undefined: MockStream,
 };
 
 const StreamServiceImpl = streamServiceImplMap[process.env.NODE_ENV];
