@@ -8,7 +8,7 @@ services:
     environment:
       - JWT_SECRET=superSecret
       - COMMIT_HASH=13626a216c8a4b38079d91a3750fa6c435adb0dd
-      - PARCELY_HW_API_URL=http://parcely_hw:3001
+      - HARDWARE_CRATE_SERVICE_URL=http://parcely_hw:3001
       - KAFKA_HOST_NAME=kafka
       - KAFKA_BOOTSTRAP_SERVER
       - KAFKA_CLUSTER_API_KEY

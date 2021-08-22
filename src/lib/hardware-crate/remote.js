@@ -8,7 +8,7 @@ const fetch = require('node-fetch');
  */
 
 function RemoteHardwareCrateService(config) {
-  const PARCELY_HW_API_URL = config.environment.get('PARCELY_HW_API_URL');
+  const HARDWARE_CRATE_SERVICE_URL = config.environment.get('HARDWARE_CRATE_SERVICE_URL');
   /**
    * Returns the status of a specified hardware crate
    * @param {String} crateId - uuid for a hardware crate
@@ -16,7 +16,7 @@ function RemoteHardwareCrateService(config) {
   */
 
   this.getCrateStatus = async function (crateId) {
-    const response = await fetch(`${PARCELY_HW_API_URL}/api/v1/hw-crates/${crateId}/status`, {
+    const response = await fetch(`${HARDWARE_CRATE_SERVICE_URL}/api/v1/hw-crates/${crateId}/status`, {
       method: 'GET',
       headers: {
         'x-api-key': 'fooBar',
@@ -39,7 +39,7 @@ function RemoteHardwareCrateService(config) {
   */
 
   this.activateCrate = async function (crateId) {
-    const response = await fetch(`${PARCELY_HW_API_URL}/api/v1/hw-crates/${crateId}/activate`, {
+    const response = await fetch(`${HARDWARE_CRATE_SERVICE_URL}/api/v1/hw-crates/${crateId}/activate`, {
       method: 'POST',
       headers: {
         'x-api-key': 'fooBar',
@@ -61,7 +61,7 @@ function RemoteHardwareCrateService(config) {
   */
 
   this.registerCrate = async function (crateId) {
-    const response = await fetch(`${PARCELY_HW_API_URL}/api/v1/hw-crates/register/${crateId}`, {
+    const response = await fetch(`${HARDWARE_CRATE_SERVICE_URL}/api/v1/hw-crates/register/${crateId}`, {
       method: 'PUT',
       headers: {
         'x-api-key': 'fooBar',
