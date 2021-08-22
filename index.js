@@ -48,10 +48,17 @@ const queueService = new IQueue(new InMemoryQueue());
 
 /** StreamService */
 const IStreamService = require('./src/interfaces/stream');
-const { KafkaStream, MockStream } = require('./src/lib/stream');
+const { LocalStream, RemoteStream, MockStream } = require('./src/lib/stream');
 
-const streamServiceImpl = process.env.NODE_ENV === 'ci/cd/test' ? new MockStream() : new KafkaStream();
-const streamService = new IStreamService(streamServiceImpl);
+const streamServiceImplMap = {
+  'ci/cd/test': MockStream,
+  local: LocalStream,
+  prod: RemoteStream,
+  undefined: LocalStream,
+};
+
+const StreamServiceImpl = streamServiceImplMap[process.env.NODE_ENV];
+const streamService = new IStreamService(new StreamServiceImpl());
 
 /** AuthService* */
 const { UserAuthService } = require('./src/services/auth');

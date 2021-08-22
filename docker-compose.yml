@@ -4,15 +4,16 @@ services:
   parcely_core:
     container_name: parcely_core.api
     image: parcely_core:0.0.1
-    command: npm run start:app
+    command: npm start
     environment:
       - JWT_SECRET=superSecret
       - COMMIT_HASH=13626a216c8a4b38079d91a3750fa6c435adb0dd
-      - GCLOUD_PROJECT=fakeProjectId
-      - FIREBASE_CONFIG="{\"projectId\":\"fakeProjectId\",\"storageBucket\":\"fakeProjectId.appspot.com\"}"
       - PARCELY_HW_API_URL=http://parcely_hw:3001
       - KAFKA_HOST_NAME=kafka
-      - NODE_ENV=local
+      - KAFKA_BOOTSTRAP_SERVER
+      - KAFKA_CLUSTER_API_KEY
+      - KAFKA_CLUSTER_SECRET
+      - NODE_ENV
     ports:
       - 3000:3000
     volumes:
@@ -26,10 +27,11 @@ services:
     image: parcely_hw:0.0.1
     environment:
       - COMMIT_HASH=13626a216c8a4b38079d91a3750fa6c435adb0dd
-      - GCLOUD_PROJECT=fakeProjectId
-      - FIREBASE_CONFIG="{\"projectId\":\"fakeProjectId\",\"storageBucket\":\"fakeProjectId.appspot.com\"}"
       - KAFKA_HOST_NAME=kafka
-      - NODE_ENV=local
+      - KAFKA_BOOTSTRAP_SERVER
+      - KAFKA_CLUSTER_API_KEY
+      - KAFKA_CLUSTER_SECRET
+      - NODE_ENV
     ports:
       - 3001:3001
     volumes: 
