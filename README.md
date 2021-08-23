@@ -33,6 +33,12 @@ In the example above the user entity is actually saved in the datastore until th
 In _some_ cases services or components (a Queue, for example) whose interface already has unit tests _will not_  have unit tests for a different _implementation_ of the same interface (e.g. the AWS SQS implementation of the same Queue interface mentioned above.) In such cases, integration or end-to-end tests will be used to verify the correct behavior of interfaces that have multiple implementations used differently in local development versus production.
 
 
+##### Kafka 
+
+Kafka has very rich capabilities and a complex set of configurations as a result. Below are references to common encounters using Kafka in development
+
+* [Kafka keeps re-processing old messages even after restarting containers and destroying volumes](https://github.com/wurstmeister/kafka-docker/issues/366#issuecomment-556043529)
+
 ## References
 
 Find additional documentation in the `/docs` folder.
