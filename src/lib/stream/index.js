@@ -42,7 +42,7 @@ function RemoteKafkaStreamService() {
     if (typeof (onMessageFn) !== 'function') {
       throw Error(`StreamService.BadRequest => onMessage must be of type function, not (${typeof onMessageFn})`);
     }
-    await this.consumer.subscribe({ topic, fromBeginning: true });
+    await this.consumer.subscribe({ topic, fromBeginning: false });
     await this.consumer.run({
       eachMessage: onMessageFn,
     });

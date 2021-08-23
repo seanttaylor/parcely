@@ -342,7 +342,6 @@ function CrateService({
   /* istanbul ignore next */
   async function onMessageFn({ message }) {
     const { crateId, telemetry } = JSON.parse(message.value.toString());
-
     const crate = await this.getCrateById(crateId);
     const telemetryUpdate = await crate.pushTelemetry(telemetry);
     const eventName = 'CrateTelemetryUpdateReceived';

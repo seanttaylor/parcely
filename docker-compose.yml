@@ -10,6 +10,8 @@ services:
       - COMMIT_HASH=13626a216c8a4b38079d91a3750fa6c435adb0dd
       - HARDWARE_CRATE_SERVICE_URL=http://parcely_hw:3001
       - KAFKA_HOST_NAME=kafka
+      - KAFKA_LOG_RETENTION_MS=10000
+      - KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS=5000
       - KAFKA_BOOTSTRAP_SERVER
       - KAFKA_CLUSTER_API_KEY
       - KAFKA_CLUSTER_SECRET
@@ -28,6 +30,8 @@ services:
     environment:
       - COMMIT_HASH=13626a216c8a4b38079d91a3750fa6c435adb0dd
       - KAFKA_HOST_NAME=kafka
+      - KAFKA_LOG_RETENTION_MS=10000
+      - KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS=5000
       - KAFKA_BOOTSTRAP_SERVER
       - KAFKA_CLUSTER_API_KEY
       - KAFKA_CLUSTER_SECRET
@@ -38,24 +42,24 @@ services:
       - ../parcely-hw/:/src
     networks:
       - shared_network
-  zookeeper:
-    container_name: zookeeper
-    image: wurstmeister/zookeeper
-    ports:
-      - 2181:2181
-    networks:
-      - shared_network
-  kafka:
-    container_name: kafka
-    image: wurstmeister/kafka
-    depends_on: 
-      - zookeeper
-    ports:
-      - 9092:9092
-    environment: 
-      KAFKA_ADVERTISED_HOST_NAME: kafka
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "incoming_crate_telemetry:1:1"
+  #zookeeper:
+  #  container_name: zookeeper
+  #  image: wurstmeister/zookeeper
+  #  ports:
+  #    - 2181:2181
+  #  networks:
+  #    - shared_network
+  #kafka:
+  #  container_name: kafka
+  #  image: wurstmeister/kafka
+  #  depends_on: 
+  #    - zookeeper
+  #  ports:
+  #    - 9092:9092
+  #  environment: 
+  #    KAFKA_ADVERTISED_HOST_NAME: kafka
+  #    KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  #    KAFKA_CREATE_TOPICS: "incoming_crate_telemetry:1:1"
     networks:
       - shared_network
 networks:
