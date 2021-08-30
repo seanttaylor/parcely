@@ -287,7 +287,7 @@ function CrateShipment(repo, crateShipmentDTO) {
 
     const crateTelemetryDTO = new CrateTelemetryDTO({ timestamp, telemetry });
     const crateTelemetry = crateTelemetryDTO.value();
-    this._data.waypoints.push(crateTelemetry);
+    this._data.waypoints.unshift(crateTelemetry);
     // freeze all telemetry objects in the waypoints list
     this._data.waypoints = this._data.waypoints.map(coreUtils.deepFreeze);
 
