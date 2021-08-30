@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - issno-* 
-      - tf-*
+      - master
 
 jobs:
   build-and-push:
@@ -14,14 +14,10 @@ jobs:
       - name: "[STEP] Checkout"
         uses: actions/checkout@v2
 
-      - name: "[STEP] Setup pipeline environment variables"
-        run: |
-          echo "GIT_SHA_SHORT=$(echo "$(git rev-parse --short "$GITHUB_SHA")")" >> $GITHUB_ENV
-
       - name: "[STEP] Set Node.js version"
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 14.x
 
       - name: "[STEP] Install app dependencies"
         run: npm install
@@ -33,9 +29,30 @@ jobs:
         run: npm test
         env:
           JWT_SECRET: superSecret
-          GCLOUD_PROJECT: fakeProjectId
-          FIREBASE_CONFIG: "{\"projectId\":\"fakeProjectId\",\"storageBucket\":\"fakeProjectId.appspot.com\"}"
-      
+
+  deploy:
+    name: deploy
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: "[STEP] Checkout"
+        uses: actions/checkout@master
+
+      - name: "[STEP] Setup pipeline environment variables"
+        run: |
+          echo "GIT_SHA_SHORT=$(echo "$(git rev-parse --short "$GITHUB_SHA")")" >> $GITHUB_ENV
+
+      - name: "[STEP] Deploy to Heroku"
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: evening-bastion-52298
+          heroku_email: sean.travis.taylor@gmail.com
+          healthcheck: https://evening-bastion-52298.herokuapp.com/status
+        env: 
+          HD_COMMIT_HASH: ${{ env.GIT_SHA_SHORT }}    
+
       #- name: "[STEP] Configure AWS Credentials"
       #  uses: aws-actions/configure-aws-credentials@v1
       #  with:
