@@ -1,0 +1,10 @@
+resource(s), business rule, comments
+crates, When a Crate entity is created it may or may NOT be associated with a Merchant upon creation.,	
+crates, When a new crate is created a new QR code embedded with the uuid of the crate is also created. The png image of the QR code is saved in a storage bucket.,	
+crates, The uuid of a new crate can be used to reference the QR code generated upon creation via API like so: /api/v1/storage/buckets/crate-qr-codes/{uuid}.png,	
+crates, A crate cannot be created without specifying a size.,
+"crates, shipments", Merchants currently associated with a specified crates may access crate data as well as admins and agents with an API key allowing access to such resources.,	
+"crates, shipments", Crates are associated with and contain shipments,
+"crates, shipments", A new crate shipment cannot begin without an assigned Merchant and recipient as well as an origin and destination address,
+"crates, shipments", Shipment entities contain list of waypoints (i.e. every singled telemetry data point transmitted from a crate),
+crates, Crate resources always contain the last known telemetry data point transmitted,
