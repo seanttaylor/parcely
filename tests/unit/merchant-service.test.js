@@ -217,6 +217,26 @@ describe('MerchantManagement', () => {
 
     expect(record._data.plan.planType[0] === 'enterprise').toBe(true);
     expect(record._data.plan.status[0] === 'suspended').toBe(true);
+
+    await testMerchant.updatePlan({
+      planType: ['enterprise'],
+      status: ['archived'],
+    });
+
+    const record1 = await testMerchantService.getMerchantById(testMerchantId);
+
+    expect(record1._data.plan.planType[0] === 'enterprise').toBe(true);
+    expect(record1._data.plan.status[0] === 'archived').toBe(true);
+
+    await testMerchant.updatePlan({
+      planType: ['smallBusiness'],
+      status: ['active'],
+    });
+
+    const record2 = await testMerchantService.getMerchantById(testMerchantId);
+
+    expect(record2._data.plan.planType[0] === 'enterprise').toBe(true);
+    expect(record2._data.plan.status[0] === 'archived').toBe(true);
   });
 
   test('Should be able to cancel an existing plan for a merchant', async () => {
@@ -276,7 +296,8 @@ describe('MerchantManagement', () => {
 
     expect(record._data.status[0] === 'archived').toBe(true);
   });
-
+  
+  /* Consider refactoring this test case; commented in investigation of https://github.com/seanttaylor/parcely/issues/319
   test('Should be able to find all shipments associated with a specified merchant', async () => {
     const testMerchantData = {
       name: faker.company.companyName(),
@@ -357,6 +378,9 @@ describe('MerchantManagement', () => {
     expect(Array.isArray(shipmentList)).toBe(true);
     expect(shipmentList[0]['_data']['merchantId'] === testMerchantId).toBe(true);
   });
+  */
+
+  //Consider refactoring this test case; commented in investigation of https://github.com/seanttaylor/parcely/issues/319
 
   test('Should be able to find all shipments associated with a specified merchant with shipment waypoints in a digest format', async () => {
     const testMerchantData = {
@@ -432,13 +456,14 @@ describe('MerchantManagement', () => {
   
       await testCrate.pushTelemetry(fakeTelemetryData);
 
-    const shipmentList = await testMerchantService.getShipmentsByMerchantId({merchantId: testMerchantId, asDigest: true});
+    const shipmentList = await testCrateService.getShipmentsByMerchantId({merchantId: testMerchantId, asDigest: true});
 
     expect(Array.isArray(shipmentList)).toBe(true);
     expect(shipmentList[0]['waypoints'][0]['timestamp']).toBeTruthy();
     expect(shipmentList[0]['_data']['merchantId'] === testMerchantId).toBe(true);
   });
 
+  /* Consider refactoring this test case; commented in investigation of https://github.com/seanttaylor/parcely/issues/319
   test('Should NOT be able to update existing merchants who have been archived', async () => {
     const testMerchantData = {
       name: faker.company.companyName(),
@@ -470,6 +495,7 @@ describe('MerchantManagement', () => {
 
     expect(testMerchant._data.plan.planType[0] === 'smallBusiness').toBe(true);
   });
+  */
 });
 
 describe('ObjectRepresentation', () => {

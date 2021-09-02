@@ -66,6 +66,7 @@ function Merchant(repo, merchantDTO) {
     await this._repo.updateMerchantPlan(merchantDTO);
 
     this._data.plan = updatedPlan;
+    this._data.status = this._data.plan.status;
   };
 
   /**
@@ -172,10 +173,10 @@ function MerchantService({ repo, userService, crateService }) {
   /**
    * @param {String} merchantId - a uuid of a merchant
    */
-  this.getShipmentsByMerchantId = async function (merchantId) {
+  /* this.getShipmentsByMerchantId = async function (merchantId) {
     const shipmentList = await crateService.getShipmentsByMerchantId(merchantId);
     return shipmentList;
-  };
+  }; */
 }
 
 module.exports = { MerchantService };
