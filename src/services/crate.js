@@ -570,8 +570,8 @@ function CrateService({
  */
 function VendorDigestTelemetry(waypoint) {
   const exceededThresholdStatusIconMap = {
-    true: '✓',
-    false: '⚠',
+    false: '✓',
+    true: '⚠',
   };
   if (!waypoint) {
     return {
@@ -588,7 +588,8 @@ function VendorDigestTelemetry(waypoint) {
 
   return {
     timestamp: String(waypoint.timestamp),
-    temp: String(waypoint.telemetry.temp.degreesFahrenheit),
+    // Slicing the stringified temperature is a temporary here; solely to ensure the proper rendering of temperature in the UI (i.e. no line breaks) when temperature sensor readings are produced by FakerJS
+    temp: String(waypoint.telemetry.temp.degreesFahrenheit).slice(0, 3),
     lat: String(waypoint.telemetry.location.coords.lat),
     lng: String(waypoint.telemetry.location.coords.lng),
     zip: String(waypoint.telemetry.location.zip),
