@@ -12,6 +12,7 @@ const request = supertest(app);
 const faker = require('faker');
 
 const starkUserId = 'e98417a8-d912-44e0-8d37-abe712ca840f';
+const starkMerchantId = 'dd8b20dd-1637-4396-bba5-bcd6d65e2d5d';
 const starkEmailAddress = 'tstark@avengers.io';
 const furyUserId = '5298b9ab-9493-4fee-bf7e-805e47bb5d42';
 const furyEmailAddress = 'nfury@shield.gov';
@@ -103,7 +104,7 @@ describe('CrateAccess', () => {
         .set('authorization', `Bearer ${furyAccessToken}`)
         .send({
           size: ['L'],
-          merchantId: faker.datatype.uuid(),
+          merchantId: starkMerchantId,
         })
         .expect(201);
 
@@ -370,13 +371,12 @@ describe('CrateManagement', () => {
       .expect(201);
 
     const furyAccessToken = res1.body.accessToken;
-    const fakeMerchantId = faker.datatype.uuid();
 
     const res2 = await request.post('/api/v1/crates')
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
         size: ['L'],
-        merchantId: fakeMerchantId,
+        merchantId: starkMerchantId,
       })
       .expect(201);
 
@@ -414,7 +414,7 @@ describe('CrateManagement', () => {
 
     expect(res4.body.entries[0].id === crateId).toBe(true);
     expect(res4.body.entries[0].data.shipmentId).toBeTruthy();
-    expect(res4.body.entries[0].data.merchantId === fakeMerchantId).toBe(true);
+    expect(res4.body.entries[0].data.merchantId === starkMerchantId).toBe(true);
 
     const res5 = await request.get(`/api/v1/crates/${crateId}`)
       .set('authorization', `Bearer ${furyAccessToken}`)
@@ -466,13 +466,12 @@ describe('ShipmentManagement', () => {
       .expect(201);
 
     const furyAccessToken = res1.body.accessToken;
-    const fakeMerchantId = faker.datatype.uuid();
 
     const res2 = await request.post('/api/v1/crates')
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
         size: ['L'],
-        merchantId: fakeMerchantId,
+        merchantId: starkMerchantId,
       })
       .expect(201);
 
@@ -508,7 +507,7 @@ describe('ShipmentManagement', () => {
 
     expect(res4.body.entries[0].id === crateId).toBe(true);
     expect(res4.body.entries[0].data.shipmentId).toBeTruthy();
-    expect(res4.body.entries[0].data.merchantId === fakeMerchantId).toBe(true);
+    expect(res4.body.entries[0].data.merchantId === starkMerchantId).toBe(true);
 
     const res5 = await request.get(`/api/v1/crates/${crateId}`)
       .set('authorization', `Bearer ${furyAccessToken}`)
@@ -527,13 +526,12 @@ describe('ShipmentManagement', () => {
       .expect(201);
 
     const furyAccessToken = res1.body.accessToken;
-    const fakeMerchantId = faker.datatype.uuid();
 
     const res2 = await request.post('/api/v1/crates')
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
         size: ['L'],
-        merchantId: fakeMerchantId,
+        merchantId: starkMerchantId,
       })
       .expect(201);
 
@@ -585,13 +583,12 @@ describe('ShipmentManagement', () => {
       .expect(201);
 
     const furyAccessToken = res1.body.accessToken;
-    const fakeMerchantId = faker.datatype.uuid();
 
     const res2 = await request.post('/api/v1/crates')
       .set('authorization', `Bearer ${furyAccessToken}`)
       .send({
         size: ['L'],
-        merchantId: fakeMerchantId,
+        merchantId: starkMerchantId,
       })
       .expect(201);
 
@@ -629,7 +626,7 @@ describe('ShipmentManagement', () => {
 
     expect(res4.body.entries[0].id === crateId).toBe(true);
     expect(res4.body.entries[0].data.shipmentId).toBeTruthy();
-    expect(res4.body.entries[0].data.merchantId === fakeMerchantId).toBe(true);
+    expect(res4.body.entries[0].data.merchantId === starkMerchantId).toBe(true);
 
     const res5 = await request.get(`/api/v1/crates/${crateId}`)
       .set('authorization', `Bearer ${furyAccessToken}`)

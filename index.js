@@ -65,6 +65,14 @@ const { UserAuthService } = require('./src/services/auth');
 
 const authService = new UserAuthService({ cacheService, userService, config });
 
+/** MerchantService* */
+const { MerchantService } = require('./src/services/merchant');
+const MerchantRepository = require('./src/lib/repository/merchant');
+const IMerchantRepository = require('./src/interfaces/merchant-repository');
+
+const merchantRepo = new IMerchantRepository(new MerchantRepository(asiagoDatabaseConnector));
+const merchantService = new MerchantService({ repo: merchantRepo, userService });
+
 /** CrateService* */
 const { CrateService } = require('./src/services/crate');
 const CrateRepository = require('./src/lib/repository/crate');
@@ -77,20 +85,12 @@ const crateShipmentRepo = new ICrateShipmentRepository(new CrateShipmentReposito
 const crateService = new CrateService({
   crateRepo,
   crateShipmentRepo,
-  streamService,
-  queueService,
   eventEmitter,
-  userService,
+  queueService,
+  streamService,
   storageBucketService,
+  userService,
 });
-
-/** MerchantService* */
-const { MerchantService } = require('./src/services/merchant');
-const MerchantRepository = require('./src/lib/repository/merchant');
-const IMerchantRepository = require('./src/interfaces/merchant-repository');
-
-const merchantRepo = new IMerchantRepository(new MerchantRepository(asiagoDatabaseConnector));
-const merchantService = new MerchantService({ repo: merchantRepo, userService });
 
 /** PublishService */
 const IPublisher = require('./src/interfaces/publisher');
@@ -102,10 +102,10 @@ const ssePublishService = new IPublisher(new SSEPublisher(eventEmitter));
 const { ShipmentSimulatorService } = require('./src/services/simulator');
 
 const simulatorService = new ShipmentSimulatorService({
-  userService,
-  merchantService,
   crateService,
   eventEmitter,
+  merchantService,
+  userService,
 });
 
 /** HardwareCrateService* */
@@ -147,24 +147,25 @@ app.use(express.static('dist'));
 app.use('/api/v1/users', UserAPI({
   authService,
   crateService,
-  userService,
   eventEmitter,
+  userService,
 }));
 
 app.use('/api/v1/crates', CrateAPI({
   authService,
   crateService,
-  hardwareCrateService,
-  queueService,
   eventEmitter,
-  userService,
+  hardwareCrateService,
+  merchantService,
   publishService: ssePublishService,
+  queueService,
+  userService,
 }));
 
 app.use('/api/v1/merchants', MerchantAPI({
-  merchantService,
   crateService,
   eventEmitter,
+  merchantService,
 }));
 
 app.use('/api/v1/simulations', SimulatorAPI(simulatorService));

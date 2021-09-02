@@ -18,12 +18,12 @@ const {
  * @param {QueueService} queueService - an instance of QueueService
  * @param {PublishService} publishService - an instance of PublishService
  * @param {HardwareCrateService} hardwareCrateService - an instance of HardwareCrateService
-
+ * @param {MerchantService} merchantService - an instance of MerchantService
  * @returns router - an instance of an Express router
  */
 
 function CrateRouter({
-  crateService, queueService, publishService, eventEmitter, hardwareCrateService,
+  crateService, queueService, publishService, eventEmitter, hardwareCrateService, merchantService,
 }) {
   // OpenAPI operationId: getAllCrates
   router.get('/', validateJWT, authorizeRequest({ actionId: 'readAny:crates' }), async (req, res, next) => {
@@ -145,12 +145,14 @@ function CrateRouter({
   // OpenAPI operationId: startCrateShipment
   router.post('/:id/shipments', validateRequest(startCrateShipmentSchema), validateJWT, authorizeRequest({ actionId: 'createAny:crates' }), async (req, res, next) => {
     const crateId = req.params.id;
-    const { originAddress, destinationAddress, trackingNumber } = req.body;
+    const { destinationAddress, trackingNumber } = req.body;
 
     try {
       const crate = await crateService.getCrateById(crateId);
       const crateStatus = await hardwareCrateService.getCrateStatus(crateId);
       const [crateReady] = crateStatus.ready;
+      const merchant = await merchantService.getMerchantById(crate._data.merchantId);
+      const { address: originAddress } = merchant._data;
 
       if (!crateReady) {
         res.status(503);

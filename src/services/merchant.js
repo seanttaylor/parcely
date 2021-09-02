@@ -98,10 +98,9 @@ function Merchant(repo, merchantDTO) {
  *
  * @param {Object} repo - the repositories associated with this service
  * @param {UserService} userService - an instance of the UserService
- * @param {CrateService} crateService - an instance of the CrateService
  */
 
-function MerchantService({ repo, userService, crateService }) {
+function MerchantService({ repo, userService }) {
   this._repo = repo;
 
   /**
