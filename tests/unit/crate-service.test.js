@@ -356,6 +356,46 @@ describe('ShipmentManagement', () => {
     expect(testCrate._data.status[0] === 'inTransit');
   });
 
+  test('Should be able to get a list of shipments associated with a specified merchant', async () => {
+    const testMerchantId = faker.datatype.uuid();
+    const originAddress = {
+      street: faker.address.streetName(),
+      apartmentNumber: '7',
+      city: faker.address.city(),
+      state: faker.address.stateAbbr(),
+      zip: faker.address.zipCode(),
+    };
+    const destinationAddress = {
+      street: faker.address.streetName(),
+      city: faker.address.city(),
+      state: faker.address.stateAbbr(),
+      zip: faker.address.zipCode(),
+    };
+    const testCrate = await testCrateService.createCrate({
+      size: ['S'],
+      merchantId: testMerchantId
+    });
+
+    await testCrate.save();
+    await testCrate.setRecipient(faker.internet.email());
+    await testCrate.startShipment({
+      originAddress,
+      destinationAddress,
+      trackingNumber: faker.datatype.uuid(),
+    });
+
+    const shipmentList = await testCrateService.getShipmentsByMerchantId({merchantId: testMerchantId});
+    
+    //Solely to exercise the code path that transforms waypoints in to digest representation
+    await testCrateService.getShipmentsByMerchantId({
+      merchantId: testMerchantId, 
+      asDigest: true
+    });
+
+    expect(shipmentList[0]["_data"]["merchantId"] === testMerchantId).toBe(true);
+    expect(Array.isArray(shipmentList)).toBe(true);
+  });
+
   test('Should be able to push the hardware crate telemetry data to the platform', async () => {
     const testCrate = await testCrateService.createCrate({
       size: ['S'],
