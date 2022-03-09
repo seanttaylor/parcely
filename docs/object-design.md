@@ -3,7 +3,7 @@
 
 ## Dependency Injection
 
-Without splitting hairs, getting into the weeds (or arguments,) for the purposes of Parcely object design, dependency injection is a pattern for providing (or injecting) all dependencies required by a module when that module is invoked.
+Without splitting hairs, getting into the weeds (or arguments), for the purposes of Parcely object design, dependency injection is a pattern for providing (or injecting) all dependencies required by a module when that module is invoked.
 
 ```
     const dependencies = {};
@@ -38,9 +38,9 @@ By way of dependency injection, we can replace one or all of the dependencies wi
 
 ```
 
-Maybe we're on Mongo but we want to try Google Cloud Firestore or go full on relational with MySQL or Postgres. Providing (or injecting) a database connector that exposes the interface our module depends upon is the extent of the effort required to change a non-trivial portion of our application infrastructure.
+Maybe we are using MongoDB but we want to try Google Cloud Firestore or to migrate to a relational with MySQL or Postgres. Providing (or injecting) a database connector that exposes the interface our module depends upon is the extent of the effort required to change a non-trivial portion of our application infrastructure.
 
-This also enables parallel development (which product managers love.) While the implementation of the updated dependency is in development, our teammates aren't blocked; they can mock the updated dependency. When the production version of the dependency is available, we don't need to touch _any_ other code in our module. We just instantiate our module with the new dependency.
+This also enables parallel development (which product managers love). While the implementation of the updated dependency is in development, our teammates aren't blocked; they can mock the updated dependency. When the production version of the dependency is available, we don't need to touch _any_ other code in our module. We just instantiate our module with the new dependency.
 
 Though this workflow is well-known and well-documented it isn't practiced as much as it should be, with a lot of blocked devs, project delays and wasted time as the inevitable result. 
 
@@ -57,21 +57,21 @@ Services are objects that:
 * Produce side effects in other systems (both internal and external)
 * Advance a business objective
 
-If our business is a bakery we'd most likely have a `CakeService` or a `PastyService` and a `BillingService` to help us manage our business accounts and catering orders. We _wouldn't_ have a `QuickBooksService` because QuickBooks is an implementation detail related to _how_ we complete billing-related tasks. 
+If our business is a bakery we would most likely have a `CakeService` or a `PastryService` and a `BillingService` to help us manage our business accounts and catering orders. We _wouldn't_ have a `QuickBooksService` because QuickBooks is an implementation detail related to _how_ we complete billing-related tasks. 
 
-In this example, whatever QuickBooks functionality we need would best be represented as a library (see below.) 
+In this example, whatever QuickBooks functionality we need would best be represented as a library (see below). 
 
 #### A Note on Names
 
 Services and their methods should be as generic as possible and their names should reflect this. Methods should describe business capabilities foremost. This is an aspiration however and won't always be achievable. 
 
-Above all, business users should be able to ascertain the point of a _majority_ of methods exposed on an API and API methods should map as closely to the business doman and operations as possible.  
+Above all, business users should be able to ascertain the point of a _majority_ of methods exposed on an API and API methods should map as closely to the business domain and operations as possible.  
 
 ### Interfaces
 
 Interfaces are a defined contract for the API an object exposes to its consumers. The value of the interface is that it is _static_ for an object's consumers, obscuring any complexity _within_ the object's implementation. 
 
-When we combine interfaces with dependency injection we create objects that have the quality attributes of composability, extensibility (the ability of a solution to incorporate new functionality) and maintainability (the ease with which a solution or component can be modified to correct faults, improve performance or other attributes, or adapt to a changed environment.)
+When we combine interfaces with dependency injection we create objects that have the quality attributes of composability, extensibility (the ability of a solution to incorporate new functionality) and maintainability (the ease with which a solution or component can be modified to correct faults, improve performance or other attributes, or adapt to a changed environment).
 
 ```
 /**
@@ -100,7 +100,7 @@ const IRepository = function(myImpl={}) {
 ```
 Above is an example of an interface for any CRUD-able datasource (i.e. any datasource we can perform CRUD operations upon.) This datasource could be in-memory, cloud-based and accessible only via REST API, a document store or a traditional relational database. 
 
-Thing is: for consumers of the interface it doesn't and _shouldn't_ matter. What matters is the business capabilities exposed on the API. Further, what consumers should **depend** on is the interface, _not_ the implementation.
+What is important is that for consumers of the interface it doesn't and _shouldn't_ matter. What matters is the business capabilities exposed on the API. Further, what consumers should **depend** on is the interface, _not_ the implementation.
 
 In the example above (a naive example of an interface in JavaScript) we must provide an implementation for all of the methods on the interface. If we don't, an error is thrown when a method for which no implementation exists is called. 
 
@@ -171,15 +171,15 @@ To break it down:
 2) The `IRepository` interface remains untouched; there is no need to refactor its implementation after composition
 3) Original non-prod behavior is _still_ available if desired
 
-The cherry on top is that all of our unit tests will pass in each of these instances because all of our implementations respect the `IRepository` interface. They all produce the same return type, in this case a boolean `true`.
+The cherry on top is that all of our unit tests will pass in each of these instances because all of our implementations respect the `IRepository` interface. They all produce the same return type, in this case a Boolean `true`.
 
 These patterns allow us maximum freedom to experiment while limiting the scope of required change to our codebase when we need new or different business outcomes. 
 
 The implementation for this interface could even be provided _by_ the consumer or be the result of a remote call to an API endpoint. So long as the interface is respected it doesn't matter where the implementation comes from or how it's designed. 
 
-Quite often its argued that we don't switch out major pieces of our application infrastructure that often so approaches like these aren't that valuable. 
+Quite often it's argued that we don't switch out major pieces of our application infrastructure that often so approaches like these aren't that valuable. 
 
-While it's true we don't often swap or switch major application components, this is as much because we _can't_ as it is the case we _won't_. 
+While it is true we don't often swap or switch major application components, this is as much because we _can't_ as it is the case we _won't_. 
 
 When our systems do not have the attributes of composability or extensibility, change of this kind is a non-starter in _any_ case. The result is that we're blocked in by irreversible architectural decisions we've made by programming to an implementation. 
 
@@ -207,7 +207,7 @@ Because of the volatility of this library it would be a good idea to wrap the ne
 
 Note our interface methods and method signatures should serve _our_ needs. If the SendGrid API requires an array of email addresses in order to send our email but we want our email contacts to be represented as an object on our `sendEmail` interface method, we should by all means design our interface in this manner.
 
->If our interfaces mirror the SendGrid API methods one to one, we don't have an interface, we have a _façade_.
+>If our interfaces mirror the SendGrid API methods more or less one to one, we don't have an interface, we have a _façade_.
 
 With our library interface in place, we're free to experiment with SendGrid or switch to MailGun or our own home brewed email marketing solution.
 
@@ -218,14 +218,14 @@ Using dependency injection we can provide our library of choice to the mail inte
 
 When it comes to creating objects, we prefer Factory Functions to shiny new ES6 classes. This is because Factory Functions can provide private methods via closures. 
 
-We can opt out of the new syntax for designating private methods which, in our opinion, make for code that is harder to read and steer developers toward class-oriented development practices that often result in brittle codebases (e.g. Inheritance, see [Fragile Base Class Problem](https://en.wikipedia.org/wiki/Fragile_base_class).)
+We can opt out of the new syntax for designating private methods which, in our opinion, make for code that is harder to read and steers developers toward class-oriented development practices that often result in brittle codebases (e.g. Inheritance, see [Fragile Base Class Problem](https://en.wikipedia.org/wiki/Fragile_base_class).)
 
 Factory Functions combined with composition (as opposed to class inheritance) provides flexibility and stability of object design with arguably cleaner code.
 
 
 ## Data Transfer Objects (DTOs)
 
-Data-Transfer Objects hae a specific meaning in Object-Oriented programming but Parcely Engineering uses them somewhat differently. 
+Data-Transfer Objects have a specific meaning in Object-Oriented programming but Parcely Engineering uses them somewhat differently. 
 
 We use DTOs to move immutable data across our application, especially between the business logic and the data access layer where our persistence solution lives.
 
@@ -235,7 +235,7 @@ We try to use objects to move data around the application instead of language pr
 
 If we want to edit our DTO we have to create a new one.
 
-If we want to extract the data from our DTO we call the object's one and only `value` method, which returns the object's contents.
+If we want to extract the data from our DTO, we call the object's one and only `value` method which returns the object's contents.
 
 We can of course use TypeScript or a strongly typed programming language to enforce the correct type usage during our application's execution but correct types are distinct from data that is valid for our business logic. 
 
@@ -322,8 +322,8 @@ We pass our data from our business logic to the data access layer, here implemen
 ## Key Themes
 
 The major insights about Parcely object design to take away can be summarized as: 
-1) Object API contracts are first-class citizens, not afterthoughts
+1) Object API contracts are first-class citizens, not afterthoughts.
 2) Interfaces are invaluable because consumers know what they can depend upon and they are excellent examples of documentation as code. Interfaces should be used to wrap volatile dependencies and and libraries _always_.
 3) We should always strive to make modules as composable as possible. This allows us maximum freedom of choice of implementation both now and in the future. 
-4) Where and when it's suitable objects should be immutable
+4) Where and when it's suitable objects should be immutable.
 5) _Why_ a design decision is made is at least as important as _what_ design decision is made. Justify all the things.
